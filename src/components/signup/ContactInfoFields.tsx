@@ -2,10 +2,9 @@
 import React from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Control, UseFormSetValue } from 'react-hook-form';
-import { COUNTRIES } from '@/lib/countries';
 import { FormValues } from './SignupFormSchema';
+import CountrySelector from './CountrySelector';
 
 interface ContactInfoFieldsProps {
   control: Control<FormValues>;
@@ -13,15 +12,6 @@ interface ContactInfoFieldsProps {
 }
 
 const ContactInfoFields: React.FC<ContactInfoFieldsProps> = ({ control, setValue }) => {
-  const handleCountryChange = (countryValue: string) => {
-    setValue('country', countryValue);
-    
-    const selectedCountry = COUNTRIES.find(country => country.code === countryValue);
-    if (selectedCountry && selectedCountry.phoneCode) {
-      setValue('countryCode', selectedCountry.phoneCode);
-    }
-  };
-
   return (
     <>
       <FormField
@@ -44,23 +34,7 @@ const ContactInfoFields: React.FC<ContactInfoFieldsProps> = ({ control, setValue
         render={({ field }) => (
           <FormItem>
             <FormLabel>Country</FormLabel>
-            <Select 
-              onValueChange={handleCountryChange} 
-              defaultValue={field.value}
-            >
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your country" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent className="max-h-[200px]">
-                {COUNTRIES.map(country => (
-                  <SelectItem key={country.code} value={country.code}>
-                    <span className="mr-2">{country.flag}</span> {country.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <CountrySelector value={field.value} setValue={setValue} />
             <FormMessage />
           </FormItem>
         )}
