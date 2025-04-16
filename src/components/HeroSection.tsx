@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, Link as LinkIcon, QrCode, BarChart4, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   const [url, setUrl] = useState('');
@@ -50,9 +50,15 @@ const HeroSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="btn-primary">
-              Start for Free
-              <ArrowRight className="ml-2 h-5 w-5" />
+            <Button 
+              size="lg" 
+              className="btn-primary" 
+              asChild
+            >
+              <Link to="/signup">
+                Start for Free
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
             <Button size="lg" variant="outline" className="btn-secondary">
               Explore Features
