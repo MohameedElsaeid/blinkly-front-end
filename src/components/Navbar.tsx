@@ -57,7 +57,9 @@ const Navbar = () => {
                 <Twitter size={18} />
               </a>
             </div>
-            <Button variant="ghost" className="text-gray-800 hover:text-blinkly-blue">Login</Button>
+            <Button variant="ghost" className="text-gray-800 hover:text-blinkly-blue" asChild>
+              <Link to="/login">Login</Link>
+            </Button>
             <Button className="bg-blinkly-blue hover:bg-blinkly-violet text-white" asChild>
               <Link to="/signup">Sign Up</Link>
             </Button>
@@ -99,7 +101,9 @@ const Navbar = () => {
                 </a>
               </div>
               <div className="flex space-x-2">
-                <Button variant="ghost" size="sm" className="text-gray-800">Login</Button>
+                <Button variant="ghost" size="sm" className="text-gray-800" asChild>
+                  <Link to="/login">Login</Link>
+                </Button>
                 <Button size="sm" className="bg-blinkly-blue hover:bg-blinkly-violet text-white" asChild>
                   <Link to="/signup">Sign Up</Link>
                 </Button>

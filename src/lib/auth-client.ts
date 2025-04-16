@@ -24,6 +24,12 @@ export interface SignupRequestData {
   csrfToken: string;
 }
 
+export interface LoginRequestData {
+  email: string;
+  password: string;
+  csrfToken: string;
+}
+
 // Function to fetch CSRF token from the API
 export const fetchCSRFToken = async (): Promise<string> => {
   try {
@@ -103,6 +109,50 @@ export const signupUser = async (data: SignupRequestData): Promise<void> => {
     // Handle API error responses
     if (error.response) {
       const message = error.response.data.message || 'Signup failed. Please try again.';
+      throw new Error(message);
+    }
+    
+    // Handle other errors
+    throw error;
+  }
+};
+
+// Function to login a user
+export const loginUser = async (data: LoginRequestData): Promise<void> => {
+  try {
+    // Prepare request data
+    const requestData = {
+      email: data.email,
+      password: data.password,
+    };
+
+    // For demonstration purposes, we're simulating a successful response
+    // In a real application, uncomment the API call below
+    /*
+    await authClient.post('/auth/login', requestData, {
+      headers: {
+        'x-csrf-token': data.csrfToken
+      }
+    });
+    */
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Simulate API validation
+    if (!data.email.includes('@')) {
+      throw new Error('Invalid email format');
+    }
+    
+    // If we get here, the login was successful
+    console.log('Login successful with data:', requestData);
+    return;
+  } catch (error: any) {
+    console.error('Error during login:', error);
+    
+    // Handle API error responses
+    if (error.response) {
+      const message = error.response.data.message || 'Login failed. Please try again.';
       throw new Error(message);
     }
     

@@ -6,8 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import SignupForm from "./components/SignupForm"; // Add this import
-import SignupSuccessful from "./components/SignupSuccessful"; // Add this import
+import SignupForm from "./components/SignupForm";
+import SignupSuccessful from "./components/SignupSuccessful";
+import LoginForm from "./components/LoginForm"; // Add LoginForm import
 
 const queryClient = new QueryClient();
 
@@ -19,8 +20,9 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/signup" element={<SignupForm />} /> {/* Add signup route */}
-          <Route path="/signup-successful" element={<SignupSuccessful />} /> {/* Add signup success route */}
+          <Route path="/signup" element={<SignupForm />} />
+          <Route path="/signup-successful" element={<SignupSuccessful />} />
+          <Route path="/login" element={<LoginForm />} /> {/* Add login route */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
