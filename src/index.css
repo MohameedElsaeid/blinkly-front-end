@@ -1,3 +1,6 @@
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,16 +16,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 236 100% 62%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 164 100% 45%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
+    --accent: 260 100% 59%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -32,22 +35,15 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -96,6 +92,44 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-dm font-bold;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg;
+  }
+  
+  .feature-card {
+    @apply rounded-xl p-6 transition-all duration-300 hover:translate-y-[-5px] shadow-lg;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+  
+  .btn-primary {
+    @apply bg-blinkly-blue hover:bg-blinkly-violet text-white font-medium py-3 px-6 rounded-full transition-all duration-300 flex items-center justify-center;
+  }
+  
+  .btn-secondary {
+    @apply border-2 border-blinkly-blue text-blinkly-blue hover:bg-blinkly-blue/10 font-medium py-3 px-6 rounded-full transition-all duration-300 flex items-center justify-center;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold mb-4 text-center;
+  }
+  
+  .section-description {
+    @apply text-lg text-gray-600 mb-10 max-w-3xl mx-auto text-center;
+  }
+  
+  .container-section {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24;
   }
 }
