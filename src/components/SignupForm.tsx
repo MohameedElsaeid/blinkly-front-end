@@ -149,7 +149,7 @@ const SignupForm = () => {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-grow flex items-center justify-center bg-gray-50 p-4">
+      <main className="flex-grow flex items-center justify-center bg-gray-50 p-4 pt-24">  {/* Added pt-24 for top padding */}
         <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8">
           <div className="text-center mb-6">
             <Link to="/" className="inline-block">
@@ -352,3 +352,4 @@ const SignupForm = () => {
 };
 
 export default SignupForm;
+
