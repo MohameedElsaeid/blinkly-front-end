@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -10,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link } from 'react-router-dom';
-import { fetchCSRFToken, signupUser } from '@/lib/auth-client';
+import { fetchCSRFToken, signupUser, SignupRequestData } from '@/lib/auth-client';
 import { COUNTRIES } from '@/lib/countries';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -111,11 +112,20 @@ const SignupForm = () => {
         ? values.phoneNumber 
         : `${values.countryCode}${values.phoneNumber.replace(/^0+/, '')}`;
       
-      await signupUser({
-        ...values,
+      // Ensure all required fields are explicitly passed
+      const signupData: SignupRequestData = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        password: values.password,
+        passwordConfirmation: values.passwordConfirmation,
+        country: values.country,
+        countryCode: values.countryCode,
         phoneNumber: formattedPhoneNumber,
         csrfToken
-      });
+      };
+      
+      await signupUser(signupData);
 
       toast({
         title: 'Success!',

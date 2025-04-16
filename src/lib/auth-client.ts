@@ -12,7 +12,7 @@ const authClient = axios.create({
 });
 
 // Types for the API requests and responses
-interface SignupRequestData {
+export interface SignupRequestData {
   email: string;
   password: string;
   passwordConfirmation: string;
