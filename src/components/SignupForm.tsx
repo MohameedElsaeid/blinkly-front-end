@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -13,8 +12,9 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link } from 'react-router-dom';
 import { fetchCSRFToken, signupUser } from '@/lib/auth-client';
 import { COUNTRIES } from '@/lib/countries';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
-// Define the form schema with Zod
 const formSchema = z.object({
   firstName: z.string()
     .min(2, { message: "First name must be at least 2 characters" })
@@ -53,7 +53,6 @@ const SignupForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Setup form with validation
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,7 +67,6 @@ const SignupForm = () => {
     },
   });
 
-  // Fetch CSRF token on component mount
   useEffect(() => {
     const getCSRFToken = async () => {
       try {
@@ -87,18 +85,15 @@ const SignupForm = () => {
     getCSRFToken();
   }, [toast]);
 
-  // Auto-populate country code when country changes
   const handleCountryChange = (countryValue: string) => {
     form.setValue('country', countryValue);
     
-    // Find the country in our list
     const selectedCountry = COUNTRIES.find(country => country.code === countryValue);
     if (selectedCountry && selectedCountry.phoneCode) {
       form.setValue('countryCode', selectedCountry.phoneCode);
     }
   };
 
-  // Handle form submission
   const onSubmit = async (values: FormValues) => {
     if (!csrfToken) {
       toast({
@@ -112,7 +107,6 @@ const SignupForm = () => {
     setIsLoading(true);
 
     try {
-      // Format phone number to E.164 format if needed
       const formattedPhoneNumber = values.phoneNumber.startsWith('+') 
         ? values.phoneNumber 
         : `${values.countryCode}${values.phoneNumber.replace(/^0+/, '')}`;
@@ -142,201 +136,207 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8">
-        <div className="text-center mb-6">
-          <Link to="/" className="inline-block">
-            <img 
-              src="/lovable-uploads/42155296-07ef-4530-b05e-fc8ee23eeb8b.png" 
-              alt="Blinkly Logo" 
-              className="h-10 mx-auto mb-4"
-            />
-          </Link>
-          <h2 className="text-2xl font-bold text-gray-900">Create Your Blinkly Account</h2>
-          <p className="text-sm text-gray-600 mt-1">Join our community and start using Blinkly</p>
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      
+      <main className="flex-grow flex items-center justify-center bg-gray-50 p-4">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-md p-8">
+          <div className="text-center mb-6">
+            <Link to="/" className="inline-block">
+              <img 
+                src="/lovable-uploads/42155296-07ef-4530-b05e-fc8ee23eeb8b.png" 
+                alt="Blinkly Logo" 
+                className="h-10 mx-auto mb-4"
+              />
+            </Link>
+            <h2 className="text-2xl font-bold text-gray-900">Create Your Blinkly Account</h2>
+            <p className="text-sm text-gray-600 mt-1">Join our community and start using Blinkly</p>
+          </div>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="your@email.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input 
+                          type={showPassword ? "text" : "password"} 
+                          placeholder="••••••••" 
+                          {...field} 
+                        />
+                        <button 
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="passwordConfirmation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input 
+                          type={showConfirmPassword ? "text" : "password"} 
+                          placeholder="••••••••" 
+                          {...field} 
+                        />
+                        <button 
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        >
+                          {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Country</FormLabel>
+                    <Select 
+                      onValueChange={handleCountryChange} 
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your country" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="max-h-[200px]">
+                        {COUNTRIES.map(country => (
+                          <SelectItem key={country.code} value={country.code}>
+                            <span className="mr-2">{country.flag}</span> {country.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-5 gap-2">
+                <FormField
+                  control={form.control}
+                  name="countryCode"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>Code</FormLabel>
+                      <FormControl>
+                        <Input disabled placeholder="+1" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem className="col-span-4">
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input placeholder="1234567890" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <Button 
+                type="submit" 
+                disabled={isLoading} 
+                className="w-full bg-blinkly-blue hover:bg-blinkly-violet"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating Account...
+                  </>
+                ) : (
+                  'Create Account'
+                )}
+              </Button>
+
+              <div className="text-center mt-4">
+                <p className="text-sm text-gray-600">
+                  Already have an account? <Link to="/login" className="text-blinkly-blue hover:underline">Log in</Link>
+                </p>
+              </div>
+            </form>
+          </Form>
         </div>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="John" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="your@email.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input 
-                        type={showPassword ? "text" : "password"} 
-                        placeholder="••••••••" 
-                        {...field} 
-                      />
-                      <button 
-                        type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="passwordConfirmation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input 
-                        type={showConfirmPassword ? "text" : "password"} 
-                        placeholder="••••••••" 
-                        {...field} 
-                      />
-                      <button 
-                        type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      >
-                        {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="country"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Country</FormLabel>
-                  <Select 
-                    onValueChange={handleCountryChange} 
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your country" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="max-h-[200px]">
-                      {COUNTRIES.map(country => (
-                        <SelectItem key={country.code} value={country.code}>
-                          <span className="mr-2">{country.flag}</span> {country.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-5 gap-2">
-              <FormField
-                control={form.control}
-                name="countryCode"
-                render={({ field }) => (
-                  <FormItem className="col-span-1">
-                    <FormLabel>Code</FormLabel>
-                    <FormControl>
-                      <Input disabled placeholder="+1" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem className="col-span-4">
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input placeholder="1234567890" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <Button 
-              type="submit" 
-              disabled={isLoading} 
-              className="w-full bg-blinkly-blue hover:bg-blinkly-violet"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating Account...
-                </>
-              ) : (
-                'Create Account'
-              )}
-            </Button>
-
-            <div className="text-center mt-4">
-              <p className="text-sm text-gray-600">
-                Already have an account? <Link to="/login" className="text-blinkly-blue hover:underline">Log in</Link>
-              </p>
-            </div>
-          </form>
-        </Form>
-      </div>
+      </main>
+      
+      <Footer />
     </div>
   );
 };
