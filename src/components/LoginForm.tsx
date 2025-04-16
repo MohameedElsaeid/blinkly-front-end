@@ -3,41 +3,30 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link } from 'react-router-dom';
-import { fetchCSRFToken, loginUser, LoginRequestData } from '@/lib/auth-client';
+import { fetchCSRFToken, loginUser } from '@/lib/auth-client';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
-// Login form schema
-const loginFormSchema = z.object({
-  email: z.string()
-    .email('Please enter a valid email address')
-    .min(3, 'Email must be at least 3 characters')
-    .max(255, 'Email must be less than 255 characters'),
-  password: z.string()
-    .min(8, 'Password must be at least 8 characters')
-    .max(32, 'Password must be less than 32 characters')
-});
-
-// Form data type
-type LoginFormValues = z.infer<typeof loginFormSchema>;
+// Import refactored components
+import { formSchema, FormValues } from './login/LoginFormSchema';
+import LoginHeader from './login/LoginHeader';
+import EmailField from './login/EmailField';
+import PasswordField from './login/PasswordField';
+import LoginButton from './login/LoginButton';
+import ForgotPasswordLink from './login/ForgotPasswordLink';
 
 const LoginForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [csrfToken, setCsrfToken] = useState('');
 
   // Initialize the form
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginFormSchema),
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
       password: ''
@@ -63,13 +52,8 @@ const LoginForm = () => {
     getCSRFToken();
   }, [toast]);
 
-  // Toggle password visibility
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
   // Form submission handler
-  const onSubmit = async (values: LoginFormValues) => {
+  const onSubmit = async (values: FormValues) => {
     if (!csrfToken) {
       toast({
         title: 'Error',
@@ -82,14 +66,11 @@ const LoginForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Prepare login data
-      const loginData: LoginRequestData = {
+      await loginUser({
         email: values.email,
         password: values.password,
         csrfToken
-      };
-      
-      await loginUser(loginData);
+      });
 
       toast({
         title: 'Success!',
@@ -116,82 +97,15 @@ const LoginForm = () => {
       
       <main className="flex-grow bg-gradient-to-b from-slate-50 to-white">
         <div className="container mx-auto px-4 py-8 md:py-16 max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-            <p className="text-gray-600">Log in to your Blinkly account</p>
-          </div>
+          <LoginHeader />
           
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="your.email@example.com" 
-                          type="email" 
-                          {...field} 
-                          autoComplete="email"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <div className="relative">
-                        <FormControl>
-                          <Input 
-                            placeholder="Enter your password" 
-                            type={showPassword ? "text" : "password"} 
-                            {...field} 
-                            autoComplete="current-password"
-                          />
-                        </FormControl>
-                        <button 
-                          type="button"
-                          onClick={togglePasswordVisibility}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-500"
-                          tabIndex={-1}
-                        >
-                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <div className="text-right">
-                  <a href="#" className="text-sm text-blinkly-blue hover:underline">
-                    Forgot password?
-                  </a>
-                </div>
-                
-                <Button 
-                  type="submit" 
-                  className="w-full bg-blinkly-blue hover:bg-blinkly-violet"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Logging in...
-                    </>
-                  ) : (
-                    'Log In'
-                  )}
-                </Button>
+                <EmailField control={form.control} />
+                <PasswordField control={form.control} />
+                <ForgotPasswordLink />
+                <LoginButton isSubmitting={isSubmitting} />
               </form>
             </Form>
             
