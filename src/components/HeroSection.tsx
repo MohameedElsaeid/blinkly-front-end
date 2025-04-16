@@ -93,7 +93,7 @@ const HeroSection = () => {
           <img 
             src="/lovable-uploads/737e5a7a-ea9e-42fe-88fe-1802554c6e86.png" 
             alt="Blinkly Dashboard" 
-            className="relative z-10 w-full rounded-lg shadow-2xl border border-white/20"
+            className="relative z-10 w-full h-[30%] rounded-lg shadow-2xl border border-white/20"
           />
         </div>
       </div>
