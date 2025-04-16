@@ -58,7 +58,9 @@ const Navbar = () => {
               </a>
             </div>
             <Button variant="ghost" className="text-gray-800 hover:text-blinkly-blue">Login</Button>
-            <Button className="bg-blinkly-blue hover:bg-blinkly-violet text-white">Sign Up</Button>
+            <Button className="bg-blinkly-blue hover:bg-blinkly-violet text-white" asChild>
+              <Link to="/signup">Sign Up</Link>
+            </Button>
           </div>
           <div className="md:hidden flex items-center">
             <button
@@ -98,7 +100,9 @@ const Navbar = () => {
               </div>
               <div className="flex space-x-2">
                 <Button variant="ghost" size="sm" className="text-gray-800">Login</Button>
-                <Button size="sm" className="bg-blinkly-blue hover:bg-blinkly-violet text-white">Sign Up</Button>
+                <Button size="sm" className="bg-blinkly-blue hover:bg-blinkly-violet text-white" asChild>
+                  <Link to="/signup">Sign Up</Link>
+                </Button>
               </div>
             </div>
           </div>
