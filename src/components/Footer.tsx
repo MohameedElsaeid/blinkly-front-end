@@ -102,7 +102,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <img 
-              src="/lovable-uploads/340d3bab-1fcc-460c-9090-9ccd664c8efd.png" 
+              src="/lovable-uploads/42155296-07ef-4530-b05e-fc8ee23eeb8b.png" 
               alt="Blinkly Logo" 
               className="h-8" 
             />

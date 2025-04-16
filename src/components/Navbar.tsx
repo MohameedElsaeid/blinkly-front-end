@@ -30,7 +30,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
               <img 
-                src="/lovable-uploads/340d3bab-1fcc-460c-9090-9ccd664c8efd.png" 
+                src="/lovable-uploads/42155296-07ef-4530-b05e-fc8ee23eeb8b.png" 
                 alt="Blinkly Logo" 
                 className="h-10 w-auto" 
               />
