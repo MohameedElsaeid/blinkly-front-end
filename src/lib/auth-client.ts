@@ -1,15 +1,10 @@
 
+import BaseHttpClient, { API_BASE_URL } from './base-http-client';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://api.blinkly.app';
-
-// Setup axios instance with default configuration
-const authClient = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+// Setup HTTP client
+const baseClient = new BaseHttpClient();
+const authClient = baseClient.getAxiosInstance();
 
 // Types for the API requests and responses
 export interface SignupRequestData {
@@ -21,31 +16,27 @@ export interface SignupRequestData {
   countryCode: string;
   phoneNumber: string;
   country: string;
-  csrfToken: string;
 }
 
 export interface LoginRequestData {
   email: string;
   password: string;
-  csrfToken: string;
+}
+
+export interface AuthResponse {
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
+  token: string;
+  refreshToken: string;
 }
 
 // Function to fetch CSRF token from the API
 export const fetchCSRFToken = async (): Promise<string> => {
-  try {
-    // For demonstration purposes, we're simulating a successful response
-    // In a real application, uncomment the API call below
-    /*
-    const response = await authClient.get('/auth/csrf-token');
-    return response.data.token;
-    */
-    
-    // Mock response for development
-    return 'mock-csrf-token-' + Math.random().toString(36).substring(2, 15);
-  } catch (error) {
-    console.error('Error fetching CSRF token:', error);
-    throw new Error('Failed to fetch security token');
-  }
+  return baseClient.refreshCsrfToken();
 };
 
 // Function to fetch client IP address
@@ -60,7 +51,7 @@ export const fetchIpAddress = async (): Promise<string> => {
 };
 
 // Function to signup a user
-export const signupUser = async (data: SignupRequestData): Promise<void> => {
+export const signupUser = async (data: SignupRequestData): Promise<AuthResponse> => {
   try {
     // Get IP address
     const ipAddress = await fetchIpAddress();
@@ -81,11 +72,8 @@ export const signupUser = async (data: SignupRequestData): Promise<void> => {
     // For demonstration purposes, we're simulating a successful response
     // In a real application, uncomment the API call below
     /*
-    await authClient.post('/auth/signup', requestData, {
-      headers: {
-        'x-csrf-token': data.csrfToken
-      }
-    });
+    const response = await authClient.post('/auth/signup', requestData);
+    return response.data;
     */
     
     // Simulate API delay
@@ -100,9 +88,19 @@ export const signupUser = async (data: SignupRequestData): Promise<void> => {
       throw new Error('Passwords do not match');
     }
     
-    // If we get here, the signup was successful
-    console.log('Signup successful with data:', requestData);
-    return;
+    // Mock successful response
+    const mockResponse: AuthResponse = {
+      user: {
+        id: 'user_' + Math.random().toString(36).substring(2, 10),
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName
+      },
+      token: 'mock_token_' + Math.random().toString(36).substring(2, 15),
+      refreshToken: 'mock_refresh_' + Math.random().toString(36).substring(2, 15)
+    };
+    
+    return mockResponse;
   } catch (error: any) {
     console.error('Error during signup:', error);
     
@@ -118,7 +116,7 @@ export const signupUser = async (data: SignupRequestData): Promise<void> => {
 };
 
 // Function to login a user
-export const loginUser = async (data: LoginRequestData): Promise<void> => {
+export const loginUser = async (data: LoginRequestData): Promise<AuthResponse> => {
   try {
     // Prepare request data
     const requestData = {
@@ -129,11 +127,8 @@ export const loginUser = async (data: LoginRequestData): Promise<void> => {
     // For demonstration purposes, we're simulating a successful response
     // In a real application, uncomment the API call below
     /*
-    await authClient.post('/auth/login', requestData, {
-      headers: {
-        'x-csrf-token': data.csrfToken
-      }
-    });
+    const response = await authClient.post('/auth/login', requestData);
+    return response.data;
     */
     
     // Simulate API delay
@@ -144,9 +139,19 @@ export const loginUser = async (data: LoginRequestData): Promise<void> => {
       throw new Error('Invalid email format');
     }
     
-    // If we get here, the login was successful
-    console.log('Login successful with data:', requestData);
-    return;
+    // Mock successful response
+    const mockResponse: AuthResponse = {
+      user: {
+        id: 'user_' + Math.random().toString(36).substring(2, 10),
+        email: data.email,
+        firstName: 'John', // Mock data
+        lastName: 'Doe'    // Mock data
+      },
+      token: 'mock_token_' + Math.random().toString(36).substring(2, 15),
+      refreshToken: 'mock_refresh_' + Math.random().toString(36).substring(2, 15)
+    };
+    
+    return mockResponse;
   } catch (error: any) {
     console.error('Error during login:', error);
     

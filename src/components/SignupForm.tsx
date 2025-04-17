@@ -1,11 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { fetchCSRFToken, signupUser } from '@/lib/auth-client';
+import { signupUser } from '@/lib/auth-client';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
@@ -19,9 +20,9 @@ import SubmitButton from './signup/SubmitButton';
 
 const SignupForm = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [csrfToken, setCsrfToken] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login } = useAuth();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -37,34 +38,7 @@ const SignupForm = () => {
     },
   });
 
-  useEffect(() => {
-    const getCSRFToken = async () => {
-      try {
-        const token = await fetchCSRFToken();
-        setCsrfToken(token);
-      } catch (error) {
-        console.error('Failed to fetch CSRF token:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to initialize form security. Please try again later.',
-          variant: 'destructive',
-        });
-      }
-    };
-
-    getCSRFToken();
-  }, [toast]);
-
   const onSubmit = async (values: FormValues) => {
-    if (!csrfToken) {
-      toast({
-        title: 'Error',
-        description: 'Security token missing. Please refresh the page and try again.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
     setIsLoading(true);
 
     try {
@@ -72,7 +46,8 @@ const SignupForm = () => {
         ? values.phoneNumber 
         : `${values.countryCode}${values.phoneNumber.replace(/^0+/, '')}`;
       
-      await signupUser({
+      // Sign up the user with the auth system
+      const response = await signupUser({
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
@@ -80,8 +55,15 @@ const SignupForm = () => {
         passwordConfirmation: values.passwordConfirmation,
         country: values.country,
         countryCode: values.countryCode,
-        phoneNumber: formattedPhoneNumber,
-        csrfToken
+        phoneNumber: formattedPhoneNumber
+      });
+
+      // Store user info in auth context
+      login({
+        email: response.user.email,
+        firstName: response.user.firstName,
+        lastName: response.user.lastName,
+        token: response.token
       });
 
       toast({
@@ -90,10 +72,7 @@ const SignupForm = () => {
       });
       
       // Navigate to dashboard after successful signup
-      // We'll add a small delay to show the success message first
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 1500);
+      navigate('/dashboard');
     } catch (error: any) {
       console.error('Signup failed:', error);
       toast({

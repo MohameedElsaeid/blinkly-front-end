@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from 'react-router-dom';
 import { fetchCSRFToken, loginUser } from '@/lib/auth-client';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
@@ -21,8 +21,9 @@ import ForgotPasswordLink from './login/ForgotPasswordLink';
 const LoginForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [csrfToken, setCsrfToken] = useState('');
 
   // Initialize the form
   const form = useForm<FormValues>({
@@ -33,43 +34,26 @@ const LoginForm = () => {
     }
   });
 
-  // Fetch CSRF token on component mount
-  useEffect(() => {
-    const getCSRFToken = async () => {
-      try {
-        const token = await fetchCSRFToken();
-        setCsrfToken(token);
-      } catch (error) {
-        console.error('Failed to fetch CSRF token:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to initialize security. Please try again later.',
-          variant: 'destructive',
-        });
-      }
-    };
-
-    getCSRFToken();
-  }, [toast]);
+  // Determine where to redirect after login
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/dashboard';
 
   // Form submission handler
   const onSubmit = async (values: FormValues) => {
-    if (!csrfToken) {
-      toast({
-        title: 'Error',
-        description: 'Security token is missing. Please refresh the page and try again.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
-      await loginUser({
+      // Login the user with the auth system
+      const response = await loginUser({
         email: values.email,
         password: values.password,
-        csrfToken
+      });
+
+      // Store user info in auth context
+      login({
+        email: response.user.email,
+        firstName: response.user.firstName,
+        lastName: response.user.lastName,
+        token: response.token
       });
 
       toast({
@@ -77,8 +61,8 @@ const LoginForm = () => {
         description: 'You have successfully logged in.',
       });
 
-      // Navigate to dashboard after successful login
-      navigate('/dashboard');
+      // Navigate to the intended destination or dashboard after successful login
+      navigate(from);
     } catch (error: any) {
       console.error('Login error:', error);
       toast({
