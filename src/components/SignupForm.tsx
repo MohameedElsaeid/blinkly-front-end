@@ -89,7 +89,11 @@ const SignupForm = () => {
         description: 'Your account has been created successfully.',
       });
       
-      navigate('/signup-successful');
+      // Navigate to dashboard after successful signup
+      // We'll add a small delay to show the success message first
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1500);
     } catch (error: any) {
       console.error('Signup failed:', error);
       toast({

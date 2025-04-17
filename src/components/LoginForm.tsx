@@ -77,8 +77,8 @@ const LoginForm = () => {
         description: 'You have successfully logged in.',
       });
 
-      // Navigate to dashboard or home page after successful login
-      navigate('/');
+      // Navigate to dashboard after successful login
+      navigate('/dashboard');
     } catch (error: any) {
       console.error('Login error:', error);
       toast({
