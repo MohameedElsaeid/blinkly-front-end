@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const handleSubmit = (e: React.FormEvent) => {
@@ -19,10 +19,9 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-lg mb-4">Product</h3>
             <ul className="space-y-2">
-              <li><a href="#features" className="text-gray-300 hover:text-white transition-colors">Features</a></li>
-              <li><a href="#pricing" className="text-gray-300 hover:text-white transition-colors">Pricing</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Blog</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Help Center</a></li>
+              <li><Link to="/features" className="text-gray-300 hover:text-white transition-colors">Features</Link></li>
+              <li><Link to="/pricing" className="text-gray-300 hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link to="/help" className="text-gray-300 hover:text-white transition-colors">Help Center</Link></li>
             </ul>
           </div>
           
@@ -30,10 +29,10 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-lg mb-4">Company</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Contact</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><Link to="/about" className="text-gray-300 hover:text-white transition-colors">About Us</Link></li>
+              <li><Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Contact</Link></li>
+              <li><Link to="/terms" className="text-gray-300 hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link to="/privacy" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</Link></li>
             </ul>
           </div>
           

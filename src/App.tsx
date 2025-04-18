@@ -6,24 +6,39 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+
+// Import pages
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SignupForm from "./components/SignupForm";
 import SignupSuccessful from "./components/SignupSuccessful";
 import LoginForm from "./components/LoginForm";
 import Dashboard from "./pages/Dashboard";
+import Features from "./pages/Features";
+import Pricing from "./pages/Pricing";
+import HelpCenter from "./pages/HelpCenter";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
-      {/* Wrap the app in AuthProvider to provide auth context */}
       <AuthProvider>
         <TooltipProvider>
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/help" element={<HelpCenter />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/signup-successful" element={<SignupSuccessful />} />
             <Route path="/login" element={<LoginForm />} />
