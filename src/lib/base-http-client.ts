@@ -1,59 +1,86 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 export const API_BASE_URL = 'https://api.blinkly.app';
 
-// Generate and store a unique device ID
-const getDeviceId = (): string => {
-  let deviceId = localStorage.getItem('blinkly_device_id');
-  if (!deviceId) {
-    deviceId = uuidv4();
-    localStorage.setItem('blinkly_device_id', deviceId);
-  }
-  return deviceId;
-};
-
-// Get Facebook browser ID from cookie if available
-const getFbBrowserId = (): string => {
-  const cookies = document.cookie.split(';');
-  const fbpCookie = cookies.find(cookie => cookie.trim().startsWith('_fbp='));
-  return fbpCookie ? fbpCookie.split('=')[1] : '';
-};
-
-// Get Facebook click ID from cookie if available
-const getFbClickId = (): string => {
-  const cookies = document.cookie.split(';');
-  const fbcCookie = cookies.find(cookie => cookie.trim().startsWith('_fbc='));
-  return fbcCookie ? fbcCookie.split('=')[1] : '';
-};
-
-function generateDeviceId(): string {
-  const navigatorInfo = window.navigator;
-  const screenInfo = window.screen;
-
-  const rawId = [
-    navigatorInfo.userAgent,
-    navigatorInfo.language,
-    navigatorInfo.platform,
-    screenInfo.width,
-    screenInfo.height,
-    screenInfo.colorDepth,
-    Intl.DateTimeFormat().resolvedOptions().timeZone,
-    navigator.hardwareConcurrency,
-    (navigator as any).deviceMemory || 'unknown',
-  ].join('|');
-
-  return uuidv4() + '-' + btoa(rawId).slice(0, 20);
-}
-
-// Create the base HTTP client
 class BaseHttpClient {
   private axiosInstance: AxiosInstance;
   private csrfToken: string | null = null;
   private deviceId: string;
 
   constructor() {
-    this.deviceId = generateDeviceId();
+    this.deviceId = this.generateDeviceId();
+    
+    this.axiosInstance = axios.create({
+      baseURL: API_BASE_URL,
+      timeout: 30000,
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
+  private generateDeviceId(): string {
+    const navigatorInfo = window.navigator;
+    const screenInfo = window.screen;
+
+    const rawId = [
+      navigatorInfo.userAgent,
+      navigatorInfo.language,
+      navigatorInfo.platform,
+      screenInfo.width,
+      screenInfo.height,
+      screenInfo.colorDepth,
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+      navigator.hardwareConcurrency,
+      (navigator as any).deviceMemory || 'unknown',
+    ].join('|');
+
+    return uuidv4() + '-' + btoa(rawId).slice(0, 20);
+  }
+
+  private getCookie(name: string): string {
+    const cookies = document.cookie.split(';');
+    const cookie = cookies.find(c => c.trim().startsWith(`${name}=`));
+    return cookie ? cookie.split('=')[1] : '';
+  }
+
+  private getFacebookHeaders(): Record<string, string> {
+    return {
+      'X-FB-Browser-ID': this.getCookie('_fbp') || '',
+      'X-FB-Click-ID': this.getCookie('_fbc') || ''
+    };
+  }
+
+  private getCommonHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'x-csrf-token': this.csrfToken || '',
+      'X-XSRF-TOKEN': this.csrfToken || '',
+      'X-Request-ID': uuidv4(),
+      'X-Request-Time': new Date().toISOString(),
+      'DNT': navigator.doNotTrack === '1' ? '1' : '0',
+      'x-requested-with': 'XMLHttpRequest',
+      'Device-ID': this.deviceId,
+      'Priority': 'u=1, i',
+      'X-User-Agent': navigator.userAgent,
+      'X-Language': navigator.language || 'en-US',
+      'X-Platform': navigator.platform,
+      'X-Screen-Width': screen.width.toString(),
+      'X-Screen-Height': screen.height.toString(),
+      'X-Time-Zone': Intl.DateTimeFormat().resolvedOptions().timeZone,
+      'X-Color-Depth': screen.colorDepth.toString(),
+      'X-Hardware-Concurrency': (navigator.hardwareConcurrency || 'unknown').toString(),
+      'X-Device-Memory': ((navigator as any).deviceMemory || 'unknown').toString(),
+      'X-Custom-Header': localStorage.getItem('custom_header') || 'not-set',
+    };
+
+    return headers;
+  }
+
+  constructor() {
+    this.deviceId = this.generateDeviceId();
     
     this.axiosInstance = axios.create({
       baseURL: API_BASE_URL,
@@ -64,10 +91,8 @@ class BaseHttpClient {
       },
     });
 
-    // Request interceptor to add headers
     this.axiosInstance.interceptors.request.use(
       async (config) => {
-        // If we don't have a CSRF token, get one
         if (!this.csrfToken) {
           try {
             // For testing/demo purposes, using a mock token
@@ -83,41 +108,19 @@ class BaseHttpClient {
           }
         }
 
-        // Add all required headers
-        config.headers = {
-          ...config.headers,
-          'Content-Type': 'application/json',
-          'x-csrf-token': this.csrfToken,
-          'X-XSRF-TOKEN': this.csrfToken,
-          'X-Request-ID': uuidv4(),
-          'X-Request-Time': new Date().toISOString(),
-          'DNT': navigator.doNotTrack === '1' ? '1' : '0',
-          'Sec-CH-UA': navigator.userAgentData?.brands?.map(b => `"${b.brand}";v="${b.version}"`).join(', ') || '',
-          'Sec-CH-UA-Mobile': navigator.userAgentData?.mobile ? '?1' : '?0',
-          'Sec-CH-UA-Platform': `"${navigator.userAgentData?.platform || 'Unknown'}"`,
-          'x-requested-with': 'XMLHttpRequest',
-          'Device-ID': this.deviceId,
-          'Priority': 'u=1, i',
-          'X-User-Agent': navigator.userAgent,
-          'X-Language': navigator.language || 'en-US',
-          'X-Platform': navigator.platform,
-          'X-Screen-Width': screen.width.toString(),
-          'X-Screen-Height': screen.height.toString(),
-          'X-Time-Zone': Intl.DateTimeFormat().resolvedOptions().timeZone,
-          'X-Color-Depth': screen.colorDepth.toString(),
-          'X-Hardware-Concurrency': (navigator.hardwareConcurrency || 'unknown').toString(),
-          'X-Device-Memory': ((navigator as any).deviceMemory || 'unknown').toString(),
-          'X-Custom-Header': localStorage.getItem('custom_header') || 'not-set',
-          'X-FB-Browser-ID': getFbBrowserId(),
-          'X-FB-Click-ID': getFbClickId(),
-        };
+        // Create new headers instance
+        const headers = new AxiosHeaders({
+          ...this.getCommonHeaders(),
+          ...this.getFacebookHeaders()
+        });
 
         // Add auth token if available
         const token = localStorage.getItem('blinkly_token');
         if (token) {
-          config.headers['Authorization'] = `Bearer ${token}`;
+          headers.set('Authorization', `Bearer ${token}`);
         }
 
+        config.headers = headers;
         return config;
       },
       (error) => {
@@ -125,7 +128,6 @@ class BaseHttpClient {
       }
     );
 
-    // Response interceptor
     this.axiosInstance.interceptors.response.use(
       (response) => {
         return response;
