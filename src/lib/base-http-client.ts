@@ -1,4 +1,3 @@
-
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,16 +27,38 @@ const getFbClickId = (): string => {
   return fbcCookie ? fbcCookie.split('=')[1] : '';
 };
 
+function generateDeviceId(): string {
+  const navigatorInfo = window.navigator;
+  const screenInfo = window.screen;
+
+  const rawId = [
+    navigatorInfo.userAgent,
+    navigatorInfo.language,
+    navigatorInfo.platform,
+    screenInfo.width,
+    screenInfo.height,
+    screenInfo.colorDepth,
+    Intl.DateTimeFormat().resolvedOptions().timeZone,
+    navigator.hardwareConcurrency,
+    (navigator as any).deviceMemory || 'unknown',
+  ].join('|');
+
+  return uuidv4() + '-' + btoa(rawId).slice(0, 20);
+}
+
 // Create the base HTTP client
 class BaseHttpClient {
   private axiosInstance: AxiosInstance;
   private csrfToken: string | null = null;
+  private deviceId: string;
 
   constructor() {
+    this.deviceId = generateDeviceId();
+    
     this.axiosInstance = axios.create({
       baseURL: API_BASE_URL,
       timeout: 30000,
-      withCredentials: true, // Important for cookie handling
+      withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -56,39 +77,46 @@ class BaseHttpClient {
             this.csrfToken = response.data.token;
             */
             
-            // Mock token for development
             this.csrfToken = 'mock-csrf-token-' + Math.random().toString(36).substring(2, 15);
           } catch (error) {
             console.error('Failed to fetch CSRF token:', error);
           }
         }
 
+        // Add all required headers
+        config.headers = {
+          ...config.headers,
+          'Content-Type': 'application/json',
+          'x-csrf-token': this.csrfToken,
+          'X-XSRF-TOKEN': this.csrfToken,
+          'X-Request-ID': uuidv4(),
+          'X-Request-Time': new Date().toISOString(),
+          'DNT': navigator.doNotTrack === '1' ? '1' : '0',
+          'Sec-CH-UA': navigator.userAgentData?.brands?.map(b => `"${b.brand}";v="${b.version}"`).join(', ') || '',
+          'Sec-CH-UA-Mobile': navigator.userAgentData?.mobile ? '?1' : '?0',
+          'Sec-CH-UA-Platform': `"${navigator.userAgentData?.platform || 'Unknown'}"`,
+          'x-requested-with': 'XMLHttpRequest',
+          'Device-ID': this.deviceId,
+          'Priority': 'u=1, i',
+          'X-User-Agent': navigator.userAgent,
+          'X-Language': navigator.language || 'en-US',
+          'X-Platform': navigator.platform,
+          'X-Screen-Width': screen.width.toString(),
+          'X-Screen-Height': screen.height.toString(),
+          'X-Time-Zone': Intl.DateTimeFormat().resolvedOptions().timeZone,
+          'X-Color-Depth': screen.colorDepth.toString(),
+          'X-Hardware-Concurrency': (navigator.hardwareConcurrency || 'unknown').toString(),
+          'X-Device-Memory': ((navigator as any).deviceMemory || 'unknown').toString(),
+          'X-Custom-Header': localStorage.getItem('custom_header') || 'not-set',
+          'X-FB-Browser-ID': getFbBrowserId(),
+          'X-FB-Click-ID': getFbClickId(),
+        };
+
         // Add auth token if available
         const token = localStorage.getItem('blinkly_token');
         if (token) {
           config.headers['Authorization'] = `Bearer ${token}`;
         }
-
-        // Add all required headers
-        config.headers['x-csrf-token'] = this.csrfToken;
-        config.headers['X-XSRF-TOKEN'] = this.csrfToken;
-        config.headers['X-Request-ID'] = uuidv4();
-        config.headers['X-Request-Time'] = new Date().toISOString();
-        config.headers['X-User-Agent'] = navigator.userAgent;
-        config.headers['X-Language'] = navigator.language;
-        config.headers['X-Platform'] = navigator.platform;
-        config.headers['X-Screen-Width'] = window.screen.width;
-        config.headers['X-Screen-Height'] = window.screen.height;
-        config.headers['X-Time-Zone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        config.headers['X-Color-Depth'] = window.screen.colorDepth;
-        config.headers['X-Hardware-Concurrency'] = navigator.hardwareConcurrency || 'unknown';
-        config.headers['X-Device-Memory'] = (navigator as any).deviceMemory || 'unknown';
-        config.headers['Device-ID'] = getDeviceId();
-        config.headers['X-Custom-Header'] = localStorage.getItem('custom_header') || 'not-set';
-        config.headers['X-FB-Browser-ID'] = getFbBrowserId();
-        config.headers['X-FB-Click-ID'] = getFbClickId();
-        config.headers['X-Requested-With'] = 'XMLHttpRequest';
-        config.headers['Priority'] = 'u=1, i';
 
         return config;
       },
