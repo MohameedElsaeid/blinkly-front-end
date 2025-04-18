@@ -31,8 +31,8 @@ export interface AuthResponse {
     email: string;
     firstName: string;
     lastName: string;
-    token: string;
   };
+  token: string; // Added token at the top level
 }
 
 // Function to fetch CSRF token from the API
@@ -74,8 +74,8 @@ export const signupUser = async (data: SignupRequestData): Promise<AuthResponse>
     const response = await authClient.post('/auth/signup', requestData);
     
     // Store token in localStorage for future API calls
-    if (response.data.user && response.data.user.token) {
-      localStorage.setItem('blinkly_token', response.data.user.token);
+    if (response.data.token) {
+      localStorage.setItem('blinkly_token', response.data.token);
       localStorage.setItem('blinkly_user', JSON.stringify(response.data.user));
     }
     
@@ -106,12 +106,12 @@ export const signupUser = async (data: SignupRequestData): Promise<AuthResponse>
           email: data.email,
           firstName: data.firstName,
           lastName: data.lastName,
-          token: 'mock_token_' + Math.random().toString(36).substring(2, 15)
-        }
+        },
+        token: 'mock_token_' + Math.random().toString(36).substring(2, 15)
       };
       
       // Store mock token
-      localStorage.setItem('blinkly_token', mockResponse.user.token);
+      localStorage.setItem('blinkly_token', mockResponse.token);
       localStorage.setItem('blinkly_user', JSON.stringify(mockResponse.user));
       
       return mockResponse;
@@ -141,8 +141,8 @@ export const loginUser = async (data: LoginRequestData): Promise<AuthResponse> =
     const response = await authClient.post('/auth/login', requestData);
     
     // Store token in localStorage for future API calls
-    if (response.data.user && response.data.user.token) {
-      localStorage.setItem('blinkly_token', response.data.user.token);
+    if (response.data.token) {
+      localStorage.setItem('blinkly_token', response.data.token);
       localStorage.setItem('blinkly_user', JSON.stringify(response.data.user));
     }
     
@@ -168,12 +168,12 @@ export const loginUser = async (data: LoginRequestData): Promise<AuthResponse> =
           email: data.email,
           firstName: 'John', 
           lastName: 'Doe',
-          token: 'mock_token_' + Math.random().toString(36).substring(2, 15)
-        }
+        },
+        token: 'mock_token_' + Math.random().toString(36).substring(2, 15)
       };
       
       // Store mock token
-      localStorage.setItem('blinkly_token', mockResponse.user.token);
+      localStorage.setItem('blinkly_token', mockResponse.token);
       localStorage.setItem('blinkly_user', JSON.stringify(mockResponse.user));
       
       return mockResponse;

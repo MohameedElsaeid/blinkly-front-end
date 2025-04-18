@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
 
 // Base configuration for API requests
 const baseConfig: AxiosRequestConfig = {
@@ -18,10 +19,12 @@ axiosInstance.interceptors.request.use(
     // Add auth token if available
     const token = localStorage.getItem('blinkly_token');
     if (token) {
-      config.headers = {
-        ...config.headers,
-        'Authorization': `Bearer ${token}`
-      };
+      // Create new headers object
+      if (!config.headers) {
+        config.headers = new AxiosHeaders();
+      }
+      // Set Authorization header
+      config.headers.set('Authorization', `Bearer ${token}`);
     }
     return config;
   },
@@ -104,19 +107,16 @@ const httpClient = {
       .then(response => response.data);
   },
 
-  // Generic POST method with type safety
   post: <T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
     return axiosInstance.post<T, AxiosResponse<T>, D>(url, data, config)
       .then(response => response.data);
   },
 
-  // Generic PUT method with type safety
   put: <T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
     return axiosInstance.put<T, AxiosResponse<T>, D>(url, data, config)
       .then(response => response.data);
   },
 
-  // Generic DELETE method with type safety
   delete: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
     return axiosInstance.delete<T, AxiosResponse<T>>(url, config)
       .then(response => response.data);

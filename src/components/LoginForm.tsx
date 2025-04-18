@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -53,7 +52,7 @@ const LoginForm = () => {
         email: response.user.email,
         firstName: response.user.firstName,
         lastName: response.user.lastName,
-        token: response.token
+        token: response.token // Updated to use token from response root
       });
 
       toast({
