@@ -63,12 +63,12 @@ const SignupForm = () => {
         email: response.user.email,
         firstName: response.user.firstName,
         lastName: response.user.lastName,
-        token: response.token
+        token: response.user.token
       });
 
       toast({
         title: 'Success!',
-        description: 'Your account has been created successfully.',
+        description: response.message || 'Your account has been created successfully.',
       });
       
       // Navigate to dashboard after successful signup

@@ -24,14 +24,15 @@ export interface LoginRequestData {
 }
 
 export interface AuthResponse {
+  success: boolean;
+  message: string;
   user: {
     id: string;
     email: string;
     firstName: string;
     lastName: string;
+    token: string;
   };
-  token: string;
-  refreshToken: string;
 }
 
 // Function to fetch CSRF token from the API
@@ -69,40 +70,52 @@ export const signupUser = async (data: SignupRequestData): Promise<AuthResponse>
       ipAddress
     };
 
-    // For demonstration purposes, we're simulating a successful response
-    // In a real application, uncomment the API call below
-    /*
+    // Make the API call to signup
     const response = await authClient.post('/auth/signup', requestData);
+    
+    // Store token in localStorage for future API calls
+    if (response.data.user && response.data.user.token) {
+      localStorage.setItem('blinkly_token', response.data.user.token);
+      localStorage.setItem('blinkly_user', JSON.stringify(response.data.user));
+    }
+    
     return response.data;
-    */
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Simulate API validation
-    if (!data.email.includes('@')) {
-      throw new Error('Invalid email format');
-    }
-    
-    if (data.password !== data.passwordConfirmation) {
-      throw new Error('Passwords do not match');
-    }
-    
-    // Mock successful response
-    const mockResponse: AuthResponse = {
-      user: {
-        id: 'user_' + Math.random().toString(36).substring(2, 10),
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName
-      },
-      token: 'mock_token_' + Math.random().toString(36).substring(2, 15),
-      refreshToken: 'mock_refresh_' + Math.random().toString(36).substring(2, 15)
-    };
-    
-    return mockResponse;
   } catch (error: any) {
     console.error('Error during signup:', error);
+    
+    // For demonstration purposes only - in case the real API is not available
+    // This block will provide a mock response similar to the expected API response
+    if (process.env.NODE_ENV === 'development' && !error.response) {
+      console.log('Using mock signup response for development');
+      
+      // Simulate API validation
+      if (!data.email.includes('@')) {
+        throw new Error('Invalid email format');
+      }
+      
+      if (data.password !== data.passwordConfirmation) {
+        throw new Error('Passwords do not match');
+      }
+      
+      // Mock successful response
+      const mockResponse: AuthResponse = {
+        success: true,
+        message: "User registered successfully",
+        user: {
+          id: 'user_' + Math.random().toString(36).substring(2, 10),
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          token: 'mock_token_' + Math.random().toString(36).substring(2, 15)
+        }
+      };
+      
+      // Store mock token
+      localStorage.setItem('blinkly_token', mockResponse.user.token);
+      localStorage.setItem('blinkly_user', JSON.stringify(mockResponse.user));
+      
+      return mockResponse;
+    }
     
     // Handle API error responses
     if (error.response) {
@@ -124,36 +137,47 @@ export const loginUser = async (data: LoginRequestData): Promise<AuthResponse> =
       password: data.password,
     };
 
-    // For demonstration purposes, we're simulating a successful response
-    // In a real application, uncomment the API call below
-    /*
+    // Make the API call
     const response = await authClient.post('/auth/login', requestData);
-    return response.data;
-    */
     
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Simulate API validation
-    if (!data.email.includes('@')) {
-      throw new Error('Invalid email format');
+    // Store token in localStorage for future API calls
+    if (response.data.user && response.data.user.token) {
+      localStorage.setItem('blinkly_token', response.data.user.token);
+      localStorage.setItem('blinkly_user', JSON.stringify(response.data.user));
     }
     
-    // Mock successful response
-    const mockResponse: AuthResponse = {
-      user: {
-        id: 'user_' + Math.random().toString(36).substring(2, 10),
-        email: data.email,
-        firstName: 'John', // Mock data
-        lastName: 'Doe'    // Mock data
-      },
-      token: 'mock_token_' + Math.random().toString(36).substring(2, 15),
-      refreshToken: 'mock_refresh_' + Math.random().toString(36).substring(2, 15)
-    };
-    
-    return mockResponse;
+    return response.data;
   } catch (error: any) {
     console.error('Error during login:', error);
+    
+    // For demonstration purposes only - in case the real API is not available
+    if (process.env.NODE_ENV === 'development' && !error.response) {
+      console.log('Using mock login response for development');
+      
+      // Simulate API validation
+      if (!data.email.includes('@')) {
+        throw new Error('Invalid email format');
+      }
+      
+      // Mock successful response
+      const mockResponse: AuthResponse = {
+        success: true,
+        message: "User logged in successfully",
+        user: {
+          id: 'user_' + Math.random().toString(36).substring(2, 10),
+          email: data.email,
+          firstName: 'John', 
+          lastName: 'Doe',
+          token: 'mock_token_' + Math.random().toString(36).substring(2, 15)
+        }
+      };
+      
+      // Store mock token
+      localStorage.setItem('blinkly_token', mockResponse.user.token);
+      localStorage.setItem('blinkly_user', JSON.stringify(mockResponse.user));
+      
+      return mockResponse;
+    }
     
     // Handle API error responses
     if (error.response) {

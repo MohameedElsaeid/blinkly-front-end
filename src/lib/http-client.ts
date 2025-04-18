@@ -15,7 +15,14 @@ const axiosInstance: AxiosInstance = axios.create(baseConfig);
 // Request interceptor for adding auth tokens, etc.
 axiosInstance.interceptors.request.use(
   (config) => {
-    // You can add auth tokens here if needed
+    // Add auth token if available
+    const token = localStorage.getItem('blinkly_token');
+    if (token) {
+      config.headers = {
+        ...config.headers,
+        'Authorization': `Bearer ${token}`
+      };
+    }
     return config;
   },
   (error) => {
@@ -29,7 +36,15 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Handle common errors (401, 403, 500, etc.)
+    // Handle unauthorized errors (401)
+    if (error.response && error.response.status === 401) {
+      // Clear auth tokens
+      localStorage.removeItem('blinkly_token');
+      localStorage.removeItem('blinkly_user');
+      
+      // Redirect to login page
+      window.location.href = '/login';
+    }
     return Promise.reject(error);
   }
 );
@@ -95,7 +110,17 @@ const httpClient = {
       .then(response => response.data);
   },
 
-  // Other methods (PUT, DELETE, etc.) can be added as needed
+  // Generic PUT method with type safety
+  put: <T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
+    return axiosInstance.put<T, AxiosResponse<T>, D>(url, data, config)
+      .then(response => response.data);
+  },
+
+  // Generic DELETE method with type safety
+  delete: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
+    return axiosInstance.delete<T, AxiosResponse<T>>(url, config)
+      .then(response => response.data);
+  },
 
   // Specific API methods
   getPackages: (): Promise<PackagesResponse> => {

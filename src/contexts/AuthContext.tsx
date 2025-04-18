@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 // Define types for our auth context
 type User = {
+  id?: string;
   email: string;
   firstName?: string;
   lastName?: string;
