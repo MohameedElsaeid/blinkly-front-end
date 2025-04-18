@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { 
   BarChart, 
   Link as LinkIcon, 
@@ -19,8 +20,30 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import httpClient from '@/lib/http-client';
 
 const Dashboard = () => {
+  // Fetch data using React Query
+  const { data: totalClicksData } = useQuery({
+    queryKey: ['dashboardTotalClicks'],
+    queryFn: httpClient.getDashboardTotalClicks,
+  });
+
+  const { data: topLinksData } = useQuery({
+    queryKey: ['dashboardTopLinks'],
+    queryFn: httpClient.getDashboardTopLinks,
+  });
+
+  const { data: tipsData } = useQuery({
+    queryKey: ['dashboardTips'],
+    queryFn: httpClient.getDashboardTips,
+  });
+
+  const { data: tricksData } = useQuery({
+    queryKey: ['dashboardTricks'],
+    queryFn: httpClient.getDashboardTricks,
+  });
+
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
@@ -49,10 +72,12 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline">
-                    <span className="text-2xl font-bold">1,248</span>
+                    <span className="text-2xl font-bold">
+                      {totalClicksData?.totalClicks?.toLocaleString() ?? '...'}
+                    </span>
                     <span className="ml-2 text-sm font-medium text-green-600 flex items-center">
                       <TrendingUp className="h-4 w-4 mr-1" />
-                      +12.5%
+                      {totalClicksData?.trend ? `+${totalClicksData.trend}%` : '...'}
                     </span>
                   </div>
                 </CardContent>
@@ -70,14 +95,16 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm truncate max-w-[120px]">blinkly.app/promo</span>
-                      <span className="text-sm font-semibold">432</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm truncate max-w-[120px]">blinkly.app/sale</span>
-                      <span className="text-sm font-semibold">287</span>
-                    </div>
+                    {topLinksData?.links.slice(0, 2).map((link) => (
+                      <div key={link.id} className="flex justify-between items-center">
+                        <span className="text-sm truncate max-w-[120px]">
+                          {link.alias}
+                        </span>
+                        <span className="text-sm font-semibold">
+                          {link.clickCount}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
                 <CardFooter className="pt-0">
@@ -194,18 +221,21 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex">
-                    <Tag className="h-5 w-5 mr-3 text-blinkly-blue" />
-                    <p className="text-sm">Organize links using tags for better management</p>
-                  </div>
-                  <div className="flex">
-                    <Palette className="h-5 w-5 mr-3 text-blinkly-blue" />
-                    <p className="text-sm">Customize QR codes with your brand colors</p>
-                  </div>
-                  <div className="flex">
-                    <Target className="h-5 w-5 mr-3 text-blinkly-blue" />
-                    <p className="text-sm">Target users by platform with dynamic links</p>
-                  </div>
+                  {tipsData?.tips.map((tip) => (
+                    <div key={tip.title} className="flex">
+                      <Tag className="h-5 w-5 mr-3 text-blinkly-blue" />
+                      <div>
+                        <p className="font-medium">{tip.title}</p>
+                        <p className="text-sm text-gray-600">{tip.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {tricksData?.tricks.map((trick, index) => (
+                    <div key={index} className="flex">
+                      <Target className="h-5 w-5 mr-3 text-blinkly-blue" />
+                      <p className="text-sm">{trick}</p>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>

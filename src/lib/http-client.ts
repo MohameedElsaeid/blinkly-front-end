@@ -49,6 +49,38 @@ export interface PackagesResponse {
   yearly: Package[];
 }
 
+// New interface definitions for dashboard APIs
+export interface TotalClicksResponse {
+  totalClicks: number;
+  trend: number;
+  periodStart: string;
+  periodEnd: string;
+}
+
+export interface TopLink {
+  id: string;
+  alias: string;
+  originalUrl: string;
+  clickCount: number;
+}
+
+export interface TopLinksResponse {
+  links: TopLink[];
+}
+
+export interface Tip {
+  title: string;
+  description: string;
+}
+
+export interface TipsResponse {
+  tips: Tip[];
+}
+
+export interface TricksResponse {
+  tricks: string[];
+}
+
 // API client with typed methods
 const httpClient = {
   // Generic GET method with type safety
@@ -68,7 +100,24 @@ const httpClient = {
   // Specific API methods
   getPackages: (): Promise<PackagesResponse> => {
     return httpClient.get<PackagesResponse>('/packages');
-  }
+  },
+
+  // Dashboard specific API methods
+  getDashboardTotalClicks: (): Promise<TotalClicksResponse> => {
+    return httpClient.get<TotalClicksResponse>('/dashboard/total-clicks');
+  },
+
+  getDashboardTopLinks: (): Promise<TopLinksResponse> => {
+    return httpClient.get<TopLinksResponse>('/dashboard/top-links');
+  },
+
+  getDashboardTips: (): Promise<TipsResponse> => {
+    return httpClient.get<TipsResponse>('/dashboard/tips');
+  },
+
+  getDashboardTricks: (): Promise<TricksResponse> => {
+    return httpClient.get<TricksResponse>('/dashboard/tricks');
+  },
 };
 
 export default httpClient;
