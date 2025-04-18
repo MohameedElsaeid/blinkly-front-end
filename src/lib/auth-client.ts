@@ -37,7 +37,9 @@ export interface AuthResponse {
 
 // Function to fetch CSRF token from the API
 export const fetchCSRFToken = async (): Promise<string> => {
-  return baseClient.refreshCsrfToken();
+  // CSRF token functionality temporarily disabled
+  // Return empty string instead
+  return '';
 };
 
 // Function to fetch client IP address
