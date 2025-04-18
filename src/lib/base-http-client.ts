@@ -10,8 +10,6 @@ interface CsrfResponse {
 
 class BaseHttpClient {
   private axiosInstance: AxiosInstance;
-  private csrfToken: string | null = null;
-  private csrfTokenExpiresAt: Date | null = null;
   private deviceId: string;
 
   constructor() {
@@ -28,11 +26,6 @@ class BaseHttpClient {
 
     this.axiosInstance.interceptors.request.use(
       async (config) => {
-        // Check if CSRF token is missing or expired
-        if (!this.csrfToken || this.isCsrfTokenExpired()) {
-          await this.refreshCsrfToken();
-        }
-
         // Create new headers instance
         const headers = new AxiosHeaders({
           ...this.getCommonHeaders(),
@@ -58,19 +51,14 @@ class BaseHttpClient {
         return response;
       },
       async (error) => {
-        // Handle 403 (CSRF token mismatch) or 401 (unauthorized)
-        if (error.response && (error.response.status === 403 || error.response.status === 401)) {
-          // Clear CSRF token to force a refresh on next request
-          this.csrfToken = null;
+        // Handle 401 (unauthorized)
+        if (error.response && error.response.status === 401) {
+          // Clear auth tokens
+          localStorage.removeItem('blinkly_token');
+          localStorage.removeItem('blinkly_user');
           
-          // If 401, clear auth tokens
-          if (error.response.status === 401) {
-            localStorage.removeItem('blinkly_token');
-            localStorage.removeItem('blinkly_user');
-            
-            // Redirect to login page
-            window.location.href = '/login';
-          }
+          // Redirect to login page
+          window.location.href = '/login';
         }
         
         return Promise.reject(error);
@@ -113,8 +101,8 @@ class BaseHttpClient {
   private getCommonHeaders(): Record<string, string> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'x-csrf-token': this.csrfToken || '',
-      'X-XSRF-TOKEN': this.csrfToken || '',
+      'x-csrf-token': '',
+      'X-XSRF-TOKEN': '',
       'X-Request-ID': uuidv4(),
       'X-Request-Time': new Date().toISOString(),
       'DNT': navigator.doNotTrack === '1' ? '1' : '0',
@@ -134,29 +122,6 @@ class BaseHttpClient {
     };
 
     return headers;
-  }
-
-  private isCsrfTokenExpired(): boolean {
-    if (!this.csrfTokenExpiresAt) return true;
-    // Add a 5-minute buffer before actual expiration
-    const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
-    return new Date().getTime() + bufferTime >= this.csrfTokenExpiresAt.getTime();
-  }
-
-  public async refreshCsrfToken(): Promise<string> {
-    try {
-      const response = await axios.get<CsrfResponse>(`${API_BASE_URL}/auth/csrf-token`);
-      this.csrfToken = response.data.token;
-      this.csrfTokenExpiresAt = new Date(response.data.expiresAt);
-      return this.csrfToken;
-    } catch (error) {
-      console.error('Failed to fetch CSRF token:', error);
-      throw error;
-    }
-  }
-
-  public getCsrfToken(): string | null {
-    return this.csrfToken;
   }
 
   public getAxiosInstance(): AxiosInstance {
