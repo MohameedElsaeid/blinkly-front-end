@@ -2,22 +2,88 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Google Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8BX04XJEWE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-8BX04XJEWE', {
+        'cookie_flags': 'SameSite=None;Secure',
+        'anonymize_ip': false,
+        'send_page_view': true
+      });
+    </script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blinkly - Smart Link Management</title>
-    <meta name="description" content="Shorten, track, and convert with Blinkly - the smartest way to manage links, QR codes, and bio pages in one intuitive dashboard." />
-    <meta name="author" content="Blinkly" />
-
-    <meta property="og:title" content="Blinkly - Smart Link Management" />
-    <meta property="og:description" content="Shorten, track, and convert with Blinkly - the smartest way to manage links, QR codes, and bio pages in one intuitive dashboard." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@BlinklyApp" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    
+    <!-- CORS headers -->
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta http-equiv="Access-Control-Allow-Methods" content="GET, POST, PUT, DELETE, OPTIONS">
+    <meta http-equiv="Access-Control-Allow-Headers" content="*">
+    <meta http-equiv="Access-Control-Allow-Credentials" content="true">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';">
+    
+    <!-- Primary Meta Tags -->
+    <title>Blinkly - URL Shortener, Link Management & QR Code Generator</title>
+    <meta name="title" content="Blinkly - URL Shortener, Link Management & QR Code Generator">
+    <meta name="description" content="Transform long URLs into powerful, trackable short links. Create custom links, track analytics, and generate QR codes with Blinkly - the ultimate link management platform." />
+    <meta name="keywords" content="url shortener, link management, short links, custom links, branded links, link analytics, qr code generator, link tracking, click tracking">
+    <meta name="author" content="Blinkly Team">
+    <meta name="theme-color" content="#5D5FEF" />
+    
+    <!-- Canonical Link -->
+    <link rel="canonical" href="https://blinkly.app" />
+    
+    <!-- Sitemap Reference -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://blinkly.app/">
+    <meta property="og:title" content="Blinkly - URL Shortener, Link Management & QR Code Generator">
+    <meta property="og:description" content="Transform long URLs into powerful, trackable short links. Create custom links, track analytics, and generate QR codes with Blinkly - the ultimate link management platform.">
+    <meta property="og:image" content="/lovable-uploads/de393ef5-a1f3-4b87-b5aa-2d0886d80447.png">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Blinkly">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://blinkly.app/">
+    <meta property="twitter:title" content="Blinkly - URL Shortener, Link Management & QR Code Generator">
+    <meta property="twitter:description" content="Transform long URLs into powerful, trackable short links. Create custom links, track analytics, and generate QR codes with Blinkly.">
+    <meta property="twitter:image" content="/lovable-uploads/de393ef5-a1f3-4b87-b5aa-2d0886d80447.png">
+    <meta name="twitter:site" content="@blinklyapp">
+    <meta name="twitter:creator" content="@blinklyapp">
+    
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
+    
+    <!-- Favicons and App Icons -->
+    <link rel="icon" type="image/png" href="/lovable-uploads/de393ef5-a1f3-4b87-b5aa-2d0886d80447.png" />
+    <link rel="apple-touch-icon" href="/lovable-uploads/de393ef5-a1f3-4b87-b5aa-2d0886d80447.png" />
+    
+    <!-- DNS Prefetch and Preconnect -->
+    <link rel="preconnect" href="https://api.blinkly.app" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.blinkly.app" crossorigin />
+    <link rel="dns-prefetch" href="https://api.blinkly.app" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://images.blinkly.app" />
+    <link rel="preconnect" href="https://cdn.gpteng.co" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.gpteng.co" />
+    <link rel="preconnect" href="https://analytics.google.com" crossorigin />
+    <link rel="preconnect" href="https://stats.g.doubleclick.net" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+    <link rel="preconnect" href="https://www.google.com" crossorigin />
+    <link rel="preconnect" href="https://td.doubleclick.net" crossorigin />
+    <link rel="preconnect" href="https://connect.facebook.net" crossorigin />
+    <link rel="preconnect" href="https://www.facebook.com" crossorigin />
   </head>
-
   <body>
     <div id="root"></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
