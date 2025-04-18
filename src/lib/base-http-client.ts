@@ -1,12 +1,17 @@
-
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 export const API_BASE_URL = 'https://api.blinkly.app';
 
+interface CsrfResponse {
+  token: string;
+  expiresAt: string;
+}
+
 class BaseHttpClient {
   private axiosInstance: AxiosInstance;
   private csrfToken: string | null = null;
+  private csrfTokenExpiresAt: Date | null = null;
   private deviceId: string;
 
   constructor() {
@@ -23,19 +28,9 @@ class BaseHttpClient {
 
     this.axiosInstance.interceptors.request.use(
       async (config) => {
-        if (!this.csrfToken) {
-          try {
-            // For testing/demo purposes, using a mock token
-            // In production, uncomment the API call below
-            /*
-            const response = await axios.get(`${API_BASE_URL}/auth/csrf-token`);
-            this.csrfToken = response.data.token;
-            */
-            
-            this.csrfToken = 'mock-csrf-token-' + Math.random().toString(36).substring(2, 15);
-          } catch (error) {
-            console.error('Failed to fetch CSRF token:', error);
-          }
+        // Check if CSRF token is missing or expired
+        if (!this.csrfToken || this.isCsrfTokenExpired()) {
+          await this.refreshCsrfToken();
         }
 
         // Create new headers instance
@@ -141,34 +136,31 @@ class BaseHttpClient {
     return headers;
   }
 
-  // Public method to access the axios instance
-  public getAxiosInstance(): AxiosInstance {
-    return this.axiosInstance;
+  private isCsrfTokenExpired(): boolean {
+    if (!this.csrfTokenExpiresAt) return true;
+    // Add a 5-minute buffer before actual expiration
+    const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+    return new Date().getTime() + bufferTime >= this.csrfTokenExpiresAt.getTime();
   }
 
-  // Method to refresh CSRF token
-  public refreshCsrfToken(): Promise<string> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        // For testing/demo purposes, using a mock token
-        // In production, uncomment the API call below
-        /*
-        const response = await axios.get(`${API_BASE_URL}/auth/csrf-token`);
-        this.csrfToken = response.data.token;
-        */
-        
-        // Mock token for development
-        this.csrfToken = 'mock-csrf-token-' + Math.random().toString(36).substring(2, 15);
-        resolve(this.csrfToken);
-      } catch (error) {
-        reject(error);
-      }
-    });
+  public async refreshCsrfToken(): Promise<string> {
+    try {
+      const response = await axios.get<CsrfResponse>(`${API_BASE_URL}/auth/csrf-token`);
+      this.csrfToken = response.data.token;
+      this.csrfTokenExpiresAt = new Date(response.data.expiresAt);
+      return this.csrfToken;
+    } catch (error) {
+      console.error('Failed to fetch CSRF token:', error);
+      throw error;
+    }
   }
 
-  // Method to get current CSRF token
   public getCsrfToken(): string | null {
     return this.csrfToken;
+  }
+
+  public getAxiosInstance(): AxiosInstance {
+    return this.axiosInstance;
   }
 }
 
