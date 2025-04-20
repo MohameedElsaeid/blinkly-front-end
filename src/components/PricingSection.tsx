@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Check } from 'lucide-react';
@@ -10,10 +10,12 @@ import { useQuery } from '@tanstack/react-query';
 const PricingSection = () => {
   const [yearly, setYearly] = useState(false);
   
-  // Fetch pricing packages using React Query
+  // Fetch pricing packages using React Query with caching
   const { data: packagesData, isLoading, error } = useQuery({
     queryKey: ['packages'],
     queryFn: fetchPricingPackages,
+    staleTime: Infinity, // Data will never become stale automatically
+    cacheTime: 1000 * 60 * 60, // Cache the data for 1 hour
   });
   
   // Get the appropriate packages based on billing frequency
