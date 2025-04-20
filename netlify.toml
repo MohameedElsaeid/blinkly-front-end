@@ -10,3 +10,28 @@
   status = 200
   force = true
 
+# Handle all dynamic routes
+[[redirects]]
+  from = "/blog/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/dashboard/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+# Redirect direct hits to specific pages
+[[redirects]]
+  from = "/login"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/signup"
+  to = "/index.html"
+  status = 200
+  force = true

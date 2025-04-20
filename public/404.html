@@ -15,7 +15,8 @@
       var searchParams = window.location.search;
       var hash = window.location.hash;
       
-      window.location.href = '/' + 
+      // Preserve the full path when redirecting
+      window.location.href = '/' + path.split('/').slice(1).join('/') + 
         (searchParams ? searchParams : '') + 
         (hash ? hash : '');
     })();
