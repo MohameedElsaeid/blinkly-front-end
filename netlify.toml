@@ -1,8 +1,12 @@
+
 [build]
   publish = "dist"
   command = "npm run build"
 
+# This redirect rule ensures that all routes are handled by index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true
+
