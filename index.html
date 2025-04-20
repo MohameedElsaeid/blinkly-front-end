@@ -1,21 +1,40 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google Tag Manager -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8BX04XJEWE"></script>
+    <!-- Google tag (gtag.js) – GA4 + Consent Mode v2 -->
     <script>
+      /* 0 – create dataLayer / gtag */
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag(){ dataLayer.push(arguments); }
+
+      /* 1 – CONSENT MODE (force‑granted) */
+      gtag('consent', 'default', {
+        ad_storage:          'granted',
+        analytics_storage:   'granted',
+        ad_user_data:        'granted',      // v2 fields
+        ad_personalization:  'granted'       // v2 fields
+      });
+
+      /* 2 – load the GA tag async */
+      (function(i,d,s,u,id){
+         var js=d.createElement(s);js.async=1;js.src=u+id;
+         d.head.appendChild(js);
+      })(window,document,'script','https://www.googletagmanager.com/gtag/js?id=','G-8BX04XJEWE');
+
+      /* 3 – initialise GA4 */
       gtag('js', new Date());
+
+      /* 4 – configuration */
       gtag('config', 'G-8BX04XJEWE', {
-        'cookie_flags': 'SameSite=None;Secure',
-        'anonymize_ip': false,
-        'send_page_view': true
+        cookie_flags: 'Secure;SameSite=None',   // correct order
+        anonymize_ip: false,                    // full IP (set true if you need GDPR IP‑masking)
+        allow_google_signals: true,             // enable demographics / remarketing
+        allow_ad_personalization_signals: true, // needed for Ads audiences
+        transport_type: 'beacon',               // more reliable send
+        send_page_view: true                    // SPA? set false and trigger manually on route change
       });
     </script>
-    <!-- End Google Tag Manager -->
-
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
