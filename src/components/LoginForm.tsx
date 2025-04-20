@@ -53,7 +53,7 @@ const LoginForm = () => {
         email: response.user.email,
         firstName: response.user.firstName,
         lastName: response.user.lastName,
-        token: response.token // Updated to use token from response root
+        token: response.user.token // Updated to use token from user object
       });
 
       toast({

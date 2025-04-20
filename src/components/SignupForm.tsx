@@ -63,7 +63,7 @@ const SignupForm = () => {
         email: response.user.email,
         firstName: response.user.firstName,
         lastName: response.user.lastName,
-        token: response.token // Fixed: token is now at the root level of the response
+        token: response.user.token // Updated to use token from user object
       });
 
       toast({
