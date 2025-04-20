@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -65,13 +66,7 @@ const App = () => (
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             {/* Catch-all route */}
-            {/* Updated catch-all route */}
-            <Route
-                path="*"
-                element={
-                  <Navigate to="/" replace state={{ fromError: true }} />
-                }
-            />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
           <Sonner />
