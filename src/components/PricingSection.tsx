@@ -15,7 +15,7 @@ const PricingSection = () => {
     queryKey: ['packages'],
     queryFn: fetchPricingPackages,
     staleTime: Infinity, // Data will never become stale automatically
-    cacheTime: 1000 * 60 * 60, // Cache the data for 1 hour
+    gcTime: 1000 * 60 * 60, // Cache the data for 1 hour (formerly cacheTime)
   });
   
   // Get the appropriate packages based on billing frequency
