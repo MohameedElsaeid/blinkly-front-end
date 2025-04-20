@@ -41,6 +41,7 @@ const Navbar = () => {
               <a href="#use-cases" className="text-gray-800 hover:text-blinkly-blue px-3 py-2 text-sm font-medium transition-colors">Use Cases</a>
               <a href="#pricing" className="text-gray-800 hover:text-blinkly-blue px-3 py-2 text-sm font-medium transition-colors">Pricing</a>
               <a href="#testimonials" className="text-gray-800 hover:text-blinkly-blue px-3 py-2 text-sm font-medium transition-colors">Testimonials</a>
+              <Link to="/blog" className="text-gray-800 hover:text-blinkly-blue px-3 py-2 text-sm font-medium transition-colors">Blog</Link>
             </nav>
           </div>
           <div className="hidden md:flex items-center space-x-4">
@@ -94,6 +95,7 @@ const Navbar = () => {
             <a href="#use-cases" className="block px-3 py-2 text-gray-800 hover:text-blinkly-blue font-medium">Use Cases</a>
             <a href="#pricing" className="block px-3 py-2 text-gray-800 hover:text-blinkly-blue font-medium">Pricing</a>
             <a href="#testimonials" className="block px-3 py-2 text-gray-800 hover:text-blinkly-blue font-medium">Testimonials</a>
+            <Link to="/blog" className="block px-3 py-2 text-gray-800 hover:text-blinkly-blue font-medium">Blog</Link>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">
             <div className="flex items-center justify-between px-5">
