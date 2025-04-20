@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { BlogPost } from '@/types/blog';
 
 // Temporary mock data - replace with actual API call when backend is ready
 const mockPosts: BlogPost[] = [
