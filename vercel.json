@@ -13,24 +13,15 @@
       "destination": "/robots.txt"
     },
     {
+      "source": "/(.*.ico|.*.png|.*.webmanifest|.*.json|.*.txt)",
+      "destination": "/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
-    {
-      "source": "/sitemap.xml",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/xml"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=86400"
-        }
-      ]
-    },
     {
       "source": "/assets/(.*)",
       "headers": [
@@ -43,6 +34,5 @@
   ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": "vite",
-  "installCommand": "npm install"
+  "framework": "vite"
 }
