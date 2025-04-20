@@ -2,28 +2,18 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Widget } from '@/types/dashboard';
 import QuickCreateWidget from '../widgets/QuickCreateWidget';
 import TopLinksWidget from '../widgets/TopLinksWidget';
-import GlobalMapWidget from '../widgets/GlobalMapWidget';
-import ClickTrendsWidget from '../widgets/ClickTrendsWidget';
-import RecentActivityWidget from '../widgets/RecentActivityWidget';
 
 interface WidgetGridProps {
   widgets: Widget[];
 }
 
 const WidgetGrid: React.FC<WidgetGridProps> = ({ widgets }) => {
-  const { toast } = useToast();
-
-  const handleAddWidget = () => {
-    toast({
-      title: "Add Widget",
-      description: "This would open a widget selection modal",
-    });
-  };
+  // Removed useToast and handleAddWidget since "Add Widget" card is removed
 
   const renderWidgetContent = (widget: Widget) => {
     switch (widget.type) {
@@ -31,12 +21,6 @@ const WidgetGrid: React.FC<WidgetGridProps> = ({ widgets }) => {
         return <QuickCreateWidget widget={widget} />;
       case 'chart':
         return <TopLinksWidget widget={widget} />;
-      case 'map':
-        return <GlobalMapWidget widget={widget} />;
-      case 'trend':
-        return <ClickTrendsWidget widget={widget} />;
-      case 'feed':
-        return <RecentActivityWidget widget={widget} />;
       default:
         return <div>Widget content</div>;
     }
@@ -64,15 +48,6 @@ const WidgetGrid: React.FC<WidgetGridProps> = ({ widgets }) => {
           </CardContent>
         </Card>
       ))}
-      
-      <Card className="border-dashed bg-muted/50 flex flex-col items-center justify-center h-[350px]" onClick={handleAddWidget}>
-        <CardContent className="flex flex-col items-center justify-center h-full cursor-pointer">
-          <div className="w-12 h-12 rounded-full border-2 border-dashed border-muted-foreground flex items-center justify-center mb-4">
-            <Plus className="h-6 w-6 text-muted-foreground" />
-          </div>
-          <p className="text-muted-foreground font-medium">Add Widget</p>
-        </CardContent>
-      </Card>
     </div>
   );
 };

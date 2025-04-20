@@ -19,9 +19,6 @@ const Dashboard = () => {
           widgets={[
             { id: "quick-create", title: "Create New Link", type: "create", size: "large" },
             { id: "top-links", title: "Top 5 Links", type: "chart", size: "medium" },
-            { id: "global-map", title: "Global Click Map", type: "map", size: "medium" },
-            { id: "click-trends", title: "Clicks Over Time", type: "trend", size: "large" },
-            { id: "recent-activity", title: "Recent Activity", type: "feed", size: "medium" },
           ]}
         />
       </div>
