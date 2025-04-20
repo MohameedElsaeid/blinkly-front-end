@@ -33,6 +33,7 @@ import FilterPanel from '@/components/dashboard/FilterPanel';
 import LinkCard from '@/components/dashboard/LinkCard';
 import httpClient from '@/lib/http-client';
 import { useToast } from "@/hooks/use-toast";
+import { Widget, WidgetType, WidgetSize } from '@/types/dashboard';
 
 const Dashboard = () => {
   const { toast } = useToast();
@@ -41,7 +42,7 @@ const Dashboard = () => {
   const [filterPanelOpen, setFilterPanelOpen] = useState(false);
   
   // Demo widgets for the initial dashboard
-  const [widgets, setWidgets] = useState([
+  const [widgets, setWidgets] = useState<Widget[]>([
     { id: 'quick-create', title: 'Create New Link', type: 'create', size: 'large' },
     { id: 'top-links', title: 'Top 5 Links', type: 'chart', size: 'medium' },
     { id: 'global-map', title: 'Global Click Map', type: 'map', size: 'medium' },

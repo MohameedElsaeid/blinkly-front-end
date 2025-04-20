@@ -1,19 +1,9 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, ChevronDown, BarChart, Globe, Activity, QrCode } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-
-type WidgetSize = 'small' | 'medium' | 'large';
-type WidgetType = 'create' | 'chart' | 'map' | 'trend' | 'feed';
-
-interface Widget {
-  id: string;
-  title: string;
-  type: WidgetType;
-  size: WidgetSize;
-}
+import { Widget, WidgetType, WidgetSize } from '@/types/dashboard';
 
 interface WidgetGridProps {
   widgets: Widget[];
