@@ -1,8 +1,9 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -44,33 +45,26 @@ const App = () => (
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/signup-successful" element={<SignupSuccessful />} />
             <Route path="/login" element={<LoginForm />} />
-            
-            {/* Protected routes */}
-            <Route 
-              path="/dashboard" 
+
+            {/* Protected dashboard layout routes */}
+            <Route
+              path="/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/dashboard/create-link" 
+            <Route
+              path="/dashboard/create-link"
               element={
                 <ProtectedRoute>
                   <CreateLink />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/dashboard/*" 
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } 
-            />
-            
+            {/* Future dashboard pages can be added here following the same layout */}
+
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             {/* Catch-all route */}

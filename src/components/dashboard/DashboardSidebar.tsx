@@ -1,108 +1,79 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { 
-  Link as LinkIcon, 
-  BarChart2, 
-  QrCode, 
-  User, 
-  HelpCircle, 
+  Link as LinkIcon,
+  BarChart2,
+  QrCode,
+  User,
+  HelpCircle,
   Settings,
   LogOut,
-  Plus
-} from 'lucide-react';
+  Plus,
+} from "lucide-react";
 
-const DashboardSidebar = () => {
+const navItems = [
+  { to: "/dashboard", icon: <BarChart2 className="mr-3 h-5 w-5" />, label: "Dashboard", exact: true },
+  { to: "/dashboard/create-link", icon: <Plus className="mr-3 h-5 w-5" />, label: "Create New Link" },
+  { to: "/dashboard/links", icon: <LinkIcon className="mr-3 h-5 w-5" />, label: "Links" },
+  { to: "/dashboard/analytics", icon: <BarChart2 className="mr-3 h-5 w-5" />, label: "Analytics" },
+  { to: "/dashboard/qr-codes", icon: <QrCode className="mr-3 h-5 w-5" />, label: "QR Codes" },
+  { to: "/dashboard/account", icon: <User className="mr-3 h-5 w-5" />, label: "Account" },
+  { to: "/dashboard/help", icon: <HelpCircle className="mr-3 h-5 w-5" />, label: "Help" },
+];
+
+const DashboardSidebar: React.FC = () => {
+  const location = useLocation();
+
   return (
-    <div className="hidden md:flex flex-col w-64 bg-white border-r border-gray-200">
+    <aside className="hidden md:flex flex-col w-64 bg-white/80 border-r border-gray-200 min-h-screen shadow-md">
       {/* Logo */}
-      <div className="p-4 border-b">
+      <div className="p-6 border-b flex items-center">
         <Link to="/dashboard" className="flex items-center">
-          <img 
-            src="/lovable-uploads/42155296-07ef-4530-b05e-fc8ee23eeb8b.png" 
-            alt="Blinkly Logo" 
-            className="h-8 w-auto" 
+          <img
+            src="/lovable-uploads/42155296-07ef-4530-b05e-fc8ee23eeb8b.png"
+            alt="Blinkly Logo"
+            className="h-8 w-auto"
           />
-          <span className="ml-2 text-lg font-semibold text-gray-900">Blinkly</span>
+          <span className="ml-2 text-lg font-extrabold text-blinkly-blue tracking-tight">Blinkly</span>
         </Link>
       </div>
-      
+
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1">
-        <Link 
-          to="/dashboard" 
-          className="flex items-center px-3 py-2 text-sm font-medium rounded-md bg-blue-50 text-blinkly-blue"
-        >
-          <BarChart2 className="mr-3 h-5 w-5" />
-          Dashboard
-        </Link>
-        
-        <Link 
-          to="/dashboard/create-link" 
-          className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-blinkly-blue"
-        >
-          <Plus className="mr-3 h-5 w-5" />
-          Create New Link
-        </Link>
-        
-        <Link 
-          to="/dashboard/links" 
-          className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-blinkly-blue"
-        >
-          <LinkIcon className="mr-3 h-5 w-5" />
-          Links
-        </Link>
-        
-        <Link 
-          to="/dashboard/analytics" 
-          className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-blinkly-blue"
-        >
-          <BarChart2 className="mr-3 h-5 w-5" />
-          Analytics
-        </Link>
-        
-        <Link 
-          to="/dashboard/qr-codes" 
-          className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-blinkly-blue"
-        >
-          <QrCode className="mr-3 h-5 w-5" />
-          QR Codes
-        </Link>
-        
-        <Link 
-          to="/dashboard/account" 
-          className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-blinkly-blue"
-        >
-          <User className="mr-3 h-5 w-5" />
-          Account
-        </Link>
-        
-        <Link 
-          to="/dashboard/help" 
-          className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-blinkly-blue"
-        >
-          <HelpCircle className="mr-3 h-5 w-5" />
-          Help
-        </Link>
+        {navItems.map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+              location.pathname === item.to
+                ? "bg-blinkly-blue/10 text-blinkly-blue font-semibold"
+                : "text-gray-700 hover:bg-gray-100 hover:text-blinkly-blue"
+            }`}
+          >
+            {item.icon}
+            {item.label}
+          </Link>
+        ))}
       </nav>
-      
+
       {/* Footer */}
-      <div className="p-4 border-t">
-        <Link 
-          to="/dashboard/settings" 
-          className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-blinkly-blue"
+      <div className="p-4 border-t mt-auto">
+        <Link
+          to="/dashboard/settings"
+          className="flex items-center px-3 py-2 mb-1 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 hover:text-blinkly-blue transition-colors"
         >
           <Settings className="mr-3 h-5 w-5" />
           Settings
         </Link>
-        
-        <button 
-          className="flex w-full items-center px-3 py-2 mt-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-red-600"
+        <button
+          className="flex w-full items-center px-3 py-2 mt-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 hover:text-red-600 transition-colors"
         >
           <LogOut className="mr-3 h-5 w-5" />
           Log Out
         </button>
       </div>
-    </div>
+    </aside>
   );
 };
 
