@@ -1,10 +1,15 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, ChevronDown, BarChart, Globe, Activity, QrCode } from 'lucide-react';
+import { Plus, ChevronDown } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-import { Widget, WidgetType, WidgetSize } from '@/types/dashboard';
-import CreateLinkForm from './CreateLinkForm';
+import { Widget } from '@/types/dashboard';
+import QuickCreateWidget from '../widgets/QuickCreateWidget';
+import TopLinksWidget from '../widgets/TopLinksWidget';
+import GlobalMapWidget from '../widgets/GlobalMapWidget';
+import ClickTrendsWidget from '../widgets/ClickTrendsWidget';
+import RecentActivityWidget from '../widgets/RecentActivityWidget';
 
 interface WidgetGridProps {
   widgets: Widget[];
@@ -23,97 +28,15 @@ const WidgetGrid: React.FC<WidgetGridProps> = ({ widgets }) => {
   const renderWidgetContent = (widget: Widget) => {
     switch (widget.type) {
       case 'create':
-        return <CreateLinkForm />;
+        return <QuickCreateWidget widget={widget} />;
       case 'chart':
-        return (
-          <div className="h-full flex flex-col">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-sm font-medium">Top Performing Links</h3>
-              <Button variant="ghost" size="sm">
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="flex-1 flex flex-col space-y-3">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mr-3">
-                      <span className="text-xs font-medium">{i + 1}</span>
-                    </div>
-                    <span className="text-sm">product-launch-{i + 1}</span>
-                  </div>
-                  <span className="text-sm font-medium">{(3200 - i * 420).toLocaleString()}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
+        return <TopLinksWidget widget={widget} />;
       case 'map':
-        return (
-          <div className="h-full flex flex-col">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-sm font-medium">Global Traffic</h3>
-              <Button variant="ghost" size="sm">
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="relative w-full h-[180px] p-4 flex items-center justify-center bg-gray-50 rounded-md">
-                <Globe className="h-24 w-24 text-gray-200" />
-                <div className="absolute text-xs text-center">
-                  <p className="font-medium">World Map Visualization</p>
-                  <p className="text-muted-foreground">Click data across 45 countries</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <GlobalMapWidget widget={widget} />;
       case 'trend':
-        return (
-          <div className="h-full flex flex-col">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-sm font-medium">Click Trends</h3>
-              <div className="flex gap-1">
-                <Button variant="outline" size="sm" className="h-7 px-2 text-xs">Day</Button>
-                <Button variant="ghost" size="sm" className="h-7 px-2 text-xs">Week</Button>
-                <Button variant="ghost" size="sm" className="h-7 px-2 text-xs">Month</Button>
-              </div>
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="relative w-full h-[180px] flex items-center justify-center bg-gray-50 rounded-md">
-                <BarChart className="h-24 w-24 text-gray-200" />
-                <div className="absolute text-xs text-center">
-                  <p className="font-medium">Click Trends Visualization</p>
-                  <p className="text-muted-foreground">Daily trends for the last 30 days</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <ClickTrendsWidget widget={widget} />;
       case 'feed':
-        return (
-          <div className="h-full flex flex-col">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-sm font-medium">Recent Activity</h3>
-              <Button variant="ghost" size="sm">
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="flex-1 space-y-3">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="flex items-start">
-                  <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mr-3 mt-0.5">
-                    <Activity className="h-4 w-4 text-gray-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Product link {i+1} created</p>
-                    <p className="text-xs text-muted-foreground">{i+1} hour{i !== 0 ? 's' : ''} ago</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
+        return <RecentActivityWidget widget={widget} />;
       default:
         return <div>Widget content</div>;
     }
