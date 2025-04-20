@@ -77,6 +77,8 @@ export const signupUser = async (data: SignupRequestData): Promise<AuthResponse>
     
     // Store token in localStorage for future API calls
     if (response.data.token) {
+      // Update token in BaseHttpClient
+      baseClient.updateToken(response.data.token);
       localStorage.setItem('blinkly_token', response.data.token);
       localStorage.setItem('blinkly_user', JSON.stringify(response.data.user));
     }
@@ -112,6 +114,8 @@ export const signupUser = async (data: SignupRequestData): Promise<AuthResponse>
         token: 'mock_token_' + Math.random().toString(36).substring(2, 15)
       };
       
+      // Update token in BaseHttpClient
+      baseClient.updateToken(mockResponse.token);
       // Store mock token
       localStorage.setItem('blinkly_token', mockResponse.token);
       localStorage.setItem('blinkly_user', JSON.stringify(mockResponse.user));
@@ -144,6 +148,8 @@ export const loginUser = async (data: LoginRequestData): Promise<AuthResponse> =
     
     // Store token in localStorage for future API calls
     if (response.data.token) {
+      // Update token in BaseHttpClient
+      baseClient.updateToken(response.data.token);
       localStorage.setItem('blinkly_token', response.data.token);
       localStorage.setItem('blinkly_user', JSON.stringify(response.data.user));
     }
@@ -174,6 +180,8 @@ export const loginUser = async (data: LoginRequestData): Promise<AuthResponse> =
         token: 'mock_token_' + Math.random().toString(36).substring(2, 15)
       };
       
+      // Update token in BaseHttpClient
+      baseClient.updateToken(mockResponse.token);
       // Store mock token
       localStorage.setItem('blinkly_token', mockResponse.token);
       localStorage.setItem('blinkly_user', JSON.stringify(mockResponse.user));

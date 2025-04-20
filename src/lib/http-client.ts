@@ -8,6 +8,7 @@ const baseConfig: AxiosRequestConfig = {
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Added to ensure cookies are sent with requests
 };
 
 // Create a single instance of axios to be used throughout the app
@@ -41,6 +42,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // Handle unauthorized errors (401)
     if (error.response && error.response.status === 401) {
+      console.error('Unauthorized access. Redirecting to login page.');
       // Clear auth tokens
       localStorage.removeItem('blinkly_token');
       localStorage.removeItem('blinkly_user');

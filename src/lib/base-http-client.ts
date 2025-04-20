@@ -66,6 +66,10 @@ class BaseHttpClient {
     );
   }
 
+  public updateToken(token: string) {
+    localStorage.setItem('blinkly_token', token);
+  }
+
   private generateDeviceId(): string {
     const navigatorInfo = window.navigator;
     const screenInfo = window.screen;
