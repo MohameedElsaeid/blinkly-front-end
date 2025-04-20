@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { TrendingUp, TrendingDown, Link as LinkIcon, Globe, MousePointer, ArrowUp, ArrowDown } from 'lucide-react';
 import { Card } from "@/components/ui/card";
 import { useQuery } from '@tanstack/react-query';
@@ -7,7 +7,9 @@ import httpClient from '@/lib/http-client';
 import { Skeleton } from '@/components/ui/skeleton';
 import { animate } from 'framer-motion';
 
-const KpiStrip = () => {
+const MobileKpiCarousel = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  
   // Fetch data using React Query
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ['dashboardStats'],
@@ -55,15 +57,18 @@ const KpiStrip = () => {
   ];
 
   return (
-    <div className="bg-card/50 border-y px-4 py-3">
-      <div className="mx-auto grid grid-cols-4 gap-4">
+    <div className="sticky top-[60px] z-20 bg-background border-b pb-3 pt-3">
+      <div 
+        ref={scrollRef}
+        className="flex overflow-x-auto pb-1 px-4 gap-3 scrollbar-none snap-x snap-mandatory"
+      >
         {isLoading ? (
           // Skeleton loading state
           [...Array(4)].map((_, i) => (
-            <Card key={`skeleton-${i}`} className="border shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-1">
-              <div className="p-4">
+            <Card key={`skeleton-${i}`} className="border shadow-sm flex-shrink-0 w-[80%] snap-center">
+              <div className="p-3">
                 <Skeleton className="h-4 w-20 mb-2" />
-                <Skeleton className="h-8 w-28 mb-2" />
+                <Skeleton className="h-6 w-28 mb-2" />
                 <Skeleton className="h-4 w-16" />
               </div>
             </Card>
@@ -71,16 +76,26 @@ const KpiStrip = () => {
         ) : (
           // Actual KPI cards
           kpis.map((kpi) => (
-            <KpiCard key={kpi.id} kpi={kpi} />
+            <MobileKpiCard key={kpi.id} kpi={kpi} />
           ))
         )}
+      </div>
+      
+      {/* Indicator dots */}
+      <div className="flex justify-center gap-1.5 mt-2">
+        {kpis.map((kpi, index) => (
+          <div 
+            key={`dot-${kpi.id}`} 
+            className="h-1.5 w-1.5 rounded-full bg-primary opacity-50"
+          />
+        ))}
       </div>
     </div>
   );
 };
 
-// KPI Card component with animation
-const KpiCard = ({ kpi }) => {
+// Mobile KPI Card component with animation
+const MobileKpiCard = ({ kpi }) => {
   const [count, setCount] = useState(0);
   
   // Animate the counter on load
@@ -104,13 +119,13 @@ const KpiCard = ({ kpi }) => {
     count;
 
   return (
-    <Card className="border shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-1">
-      <div className="p-4">
+    <Card className="border shadow-sm flex-shrink-0 w-[80%] snap-center">
+      <div className="p-3">
         <div className="flex items-center gap-2 mb-1">
           {kpi.icon}
           <p className="text-sm text-muted-foreground">{kpi.label}</p>
         </div>
-        <p className="text-2xl font-bold mb-1">{displayValue}{kpi.id === 'avg-ctr' ? '%' : ''}</p>
+        <p className="text-xl font-bold mb-1">{displayValue}{kpi.id === 'avg-ctr' ? '%' : ''}</p>
         <div className={`text-sm flex items-center ${kpi.isPositive ? 'text-green-600' : 'text-red-600'}`}>
           {kpi.change}
           {kpi.isPositive ? (
@@ -124,4 +139,4 @@ const KpiCard = ({ kpi }) => {
   );
 };
 
-export default KpiStrip;
+export default MobileKpiCarousel;
