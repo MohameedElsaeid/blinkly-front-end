@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +22,7 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import CreateLink from "./pages/CreateLink";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +51,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/create-link" 
+              element={
+                <ProtectedRoute>
+                  <CreateLink />
                 </ProtectedRoute>
               } 
             />
