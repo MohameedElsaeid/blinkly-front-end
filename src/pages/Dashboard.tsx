@@ -1,28 +1,54 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { 
   BarChart, 
   Link as LinkIcon, 
   QrCode, 
   Activity, 
-  TrendingUp, 
-  Plus, 
-  ExternalLink,
-  Tag,
-  Palette,
-  Target,
-  User,
-  HelpCircle
+  Plus,
+  MapPin,
+  TrendingUp,
+  Globe,
+  Clock,
+  Command,
+  Search,
+  X,
+  Filter,
+  Settings,
+  LayoutGrid,
+  Table as TableIcon,
+  ChevronDown
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import KpiStrip from '@/components/dashboard/KpiStrip';
+import WidgetGrid from '@/components/dashboard/WidgetGrid';
+import FilterPanel from '@/components/dashboard/FilterPanel';
+import LinkCard from '@/components/dashboard/LinkCard';
 import httpClient from '@/lib/http-client';
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
+  const { toast } = useToast();
+  const [commandOpen, setCommandOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
+  
+  // Demo widgets for the initial dashboard
+  const [widgets, setWidgets] = useState([
+    { id: 'quick-create', title: 'Create New Link', type: 'create', size: 'large' },
+    { id: 'top-links', title: 'Top 5 Links', type: 'chart', size: 'medium' },
+    { id: 'global-map', title: 'Global Click Map', type: 'map', size: 'medium' },
+    { id: 'click-trends', title: 'Clicks Over Time', type: 'trend', size: 'large' },
+    { id: 'recent-activity', title: 'Recent Activity', type: 'feed', size: 'medium' },
+  ]);
+
   // Fetch data using React Query
   const { data: totalClicksData } = useQuery({
     queryKey: ['dashboardTotalClicks'],
@@ -34,18 +60,41 @@ const Dashboard = () => {
     queryFn: httpClient.getDashboardTopLinks,
   });
 
-  const { data: tipsData } = useQuery({
-    queryKey: ['dashboardTips'],
-    queryFn: httpClient.getDashboardTips,
-  });
+  // Command palette keyboard shortcut
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setCommandOpen((open) => !open);
+      }
+    };
 
-  const { data: tricksData } = useQuery({
-    queryKey: ['dashboardTricks'],
-    queryFn: httpClient.getDashboardTricks,
-  });
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, []);
+
+  const handleCreateLink = () => {
+    toast({
+      title: "Create Link",
+      description: "The link creation modal would open here",
+    });
+  };
+
+  const handleFilterToggle = () => {
+    setFilterPanelOpen(!filterPanelOpen);
+  };
+
+  // Demo data
+  const linkItems = topLinksData?.links || [
+    { id: '1', alias: 'product-launch', clicks: 3245, trend: 12, status: 'active' },
+    { id: '2', alias: 'summer-sale', clicks: 2789, trend: -3, status: 'active' },
+    { id: '3', alias: 'webinar-signup', clicks: 1982, trend: 8, status: 'active' },
+    { id: '4', alias: 'newsletter', clicks: 1650, trend: 5, status: 'paused' },
+    { id: '5', alias: 'blog-feature', clicks: 1240, trend: 2, status: 'active' },
+  ];
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Sidebar */}
       <DashboardSidebar />
       
@@ -54,215 +103,205 @@ const Dashboard = () => {
         {/* Header */}
         <DashboardHeader />
         
-        {/* Main panel */}
-        <main className="flex-1 overflow-y-auto p-6">
-          {/* Hero welcome section */}
-          <section className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Welcome to Your Blinkly Dashboard</h1>
-            <p className="text-gray-600 mt-2">Your command center for link management and growth.</p>
-          </section>
-          
-          {/* Analytics summary cards */}
-          <section className="mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Total Clicks */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Total Clicks</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-baseline">
-                    <span className="text-2xl font-bold">
-                      {totalClicksData?.totalClicks?.toLocaleString() ?? '...'}
-                    </span>
-                    <span className="ml-2 text-sm font-medium text-green-600 flex items-center">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      {totalClicksData?.trend ? `+${totalClicksData.trend}%` : '...'}
-                    </span>
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-0">
-                  <Button variant="ghost" size="sm" className="text-xs text-blinkly-blue">
-                    View details
-                  </Button>
-                </CardFooter>
-              </Card>
-              
-              {/* Top Performing Links */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Top Links</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {topLinksData?.links.slice(0, 2).map((link) => (
-                      <div key={link.id} className="flex justify-between items-center">
-                        <span className="text-sm truncate max-w-[120px]">
-                          {link.alias}
-                        </span>
-                        <span className="text-sm font-semibold">
-                          {link.clickCount}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-0">
-                  <Button variant="ghost" size="sm" className="text-xs text-blinkly-blue">
-                    View all
-                  </Button>
-                </CardFooter>
-              </Card>
-              
-              {/* Plan Usage */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Plan Usage</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Free Plan</span>
-                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                        25/100 links
-                      </span>
-                    </div>
-                    <Progress value={25} className="h-2" />
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-0">
-                  <Button variant="ghost" size="sm" className="text-xs text-blinkly-blue">
-                    Upgrade
-                  </Button>
-                </CardFooter>
-              </Card>
-              
-              {/* QR Codes Created */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">QR Codes</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-baseline">
-                    <span className="text-2xl font-bold">8</span>
-                    <span className="ml-2 text-sm text-gray-500">created</span>
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-0">
-                  <Button variant="ghost" size="sm" className="text-xs text-blinkly-blue">
-                    View all
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
-          </section>
-          
-          {/* Quick Actions Section */}
-          <section className="mb-8">
-            <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
-            <div className="flex flex-wrap gap-3">
-              <Button className="bg-blinkly-blue hover:bg-blinkly-violet">
-                <LinkIcon className="mr-2 h-4 w-4" />
-                Shorten a Link
-              </Button>
-              <Button variant="outline">
+        {/* KPI Strip */}
+        <KpiStrip />
+        
+        {/* Command Palette Dialog */}
+        <CommandDialog open={commandOpen} onOpenChange={setCommandOpen}>
+          <CommandInput placeholder="Type a command or search..." />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Actions">
+              <CommandItem onSelect={() => {
+                handleCreateLink();
+                setCommandOpen(false);
+              }}>
+                <Plus className="mr-2 h-4 w-4" />
+                <span>Create New Link</span>
+              </CommandItem>
+              <CommandItem onSelect={() => {
+                toast({ title: "Generate QR Code", description: "QR code generator would open here" });
+                setCommandOpen(false);
+              }}>
                 <QrCode className="mr-2 h-4 w-4" />
-                Create a QR Code
-              </Button>
-              <Button variant="outline">
-                <Activity className="mr-2 h-4 w-4" />
-                View Analytics
-              </Button>
-            </div>
-          </section>
+                <span>Generate QR Code</span>
+              </CommandItem>
+              <CommandItem onSelect={() => {
+                setFilterPanelOpen(true);
+                setCommandOpen(false);
+              }}>
+                <Filter className="mr-2 h-4 w-4" />
+                <span>Filter Links</span>
+              </CommandItem>
+            </CommandGroup>
+            <CommandGroup heading="Navigation">
+              <CommandItem onSelect={() => {
+                toast({ title: "Analytics", description: "Navigating to analytics page" });
+                setCommandOpen(false);
+              }}>
+                <BarChart className="mr-2 h-4 w-4" />
+                <span>Go to Analytics</span>
+              </CommandItem>
+              <CommandItem onSelect={() => {
+                toast({ title: "Settings", description: "Navigating to settings page" });
+                setCommandOpen(false);
+              }}>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Go to Settings</span>
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </CommandDialog>
+        
+        {/* Main panel with filter sidebar */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Filter Panel - conditionally render based on state */}
+          {filterPanelOpen && (
+            <FilterPanel onClose={() => setFilterPanelOpen(false)} />
+          )}
           
-          {/* Maximize Your Impact Section */}
-          <section className="mb-8">
-            <h2 className="text-lg font-semibold mb-4">Maximize Your Impact</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card>
-                <CardContent className="p-4 flex">
-                  <Activity className="h-6 w-6 mr-3 text-blinkly-blue" />
-                  <div>
-                    <h3 className="font-medium">Track Every Click</h3>
-                    <p className="text-sm text-gray-500">Real-time analytics for all your links</p>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4 flex">
-                  <BarChart className="h-6 w-6 mr-3 text-blinkly-blue" />
-                  <div>
-                    <h3 className="font-medium">Optimize Campaigns</h3>
-                    <p className="text-sm text-gray-500">Identify what works best</p>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4 flex">
-                  <User className="h-6 w-6 mr-3 text-blinkly-blue" />
-                  <div>
-                    <h3 className="font-medium">Grow Your Audience</h3>
-                    <p className="text-sm text-gray-500">Use QR and dynamic links</p>
-                  </div>
-                </CardContent>
-              </Card>
+          {/* Main dashboard content */}
+          <main className="flex-1 overflow-y-auto p-6">
+            {/* Action Bar */}
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h1 className="text-2xl font-bold">Dashboard</h1>
+                <p className="text-muted-foreground">Your link management command center</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={handleFilterToggle}>
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filters
+                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="sm" onClick={() => setViewMode('grid')}>
+                        <LayoutGrid className={`h-4 w-4 ${viewMode === 'grid' ? 'text-primary' : ''}`} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Grid View</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="sm" onClick={() => setViewMode('table')}>
+                        <TableIcon className={`h-4 w-4 ${viewMode === 'table' ? 'text-primary' : ''}`} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Table View</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <Button 
+                  size="sm" 
+                  className="bg-blinkly-blue hover:bg-blinkly-violet"
+                  onClick={handleCreateLink}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Link
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setCommandOpen(true)}
+                >
+                  <Command className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">Command</span>
+                  <kbd className="ml-2 hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+                    <span className="text-xs">⌘</span>K
+                  </kbd>
+                </Button>
+              </div>
             </div>
-          </section>
-          
-          {/* Tips & Tricks Section */}
-          <section className="mb-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Tips & Tricks</CardTitle>
-                <CardDescription>Make the most of Blinkly</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {tipsData?.tips.map((tip) => (
-                    <div key={tip.title} className="flex">
-                      <Tag className="h-5 w-5 mr-3 text-blinkly-blue" />
-                      <div>
-                        <p className="font-medium">{tip.title}</p>
-                        <p className="text-sm text-gray-600">{tip.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                  {tricksData?.tricks.map((trick, index) => (
-                    <div key={index} className="flex">
-                      <Target className="h-5 w-5 mr-3 text-blinkly-blue" />
-                      <p className="text-sm">{trick}</p>
-                    </div>
+            
+            {/* Widget Grid */}
+            <WidgetGrid widgets={widgets} />
+            
+            {/* Link Management Section */}
+            <section className="mt-8">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Your Links</h2>
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <input
+                      type="text"
+                      placeholder="Search links..."
+                      className="pl-8 h-9 w-[200px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors"
+                    />
+                  </div>
+                  <Button variant="outline" size="sm">
+                    <Filter className="h-4 w-4 mr-2" />
+                    <span>Sort</span>
+                    <ChevronDown className="h-4 w-4 ml-1" />
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Links Grid/Table View */}
+              {viewMode === 'grid' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {linkItems.map(link => (
+                    <LinkCard 
+                      key={link.id} 
+                      link={link} 
+                      onEdit={() => toast({ title: "Edit", description: `Editing ${link.alias}` })}
+                      onToggle={() => toast({ title: "Toggle Status", description: `Toggling ${link.alias}` })}
+                    />
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          </section>
-          
-          {/* Help & Support Section */}
-          <section>
-            <Card className="bg-gray-50">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <HelpCircle className="h-5 w-5 mr-2 text-blinkly-blue" />
-                    <h3 className="font-medium">Need help?</h3>
-                  </div>
-                  <div className="flex space-x-3">
-                    <Button variant="outline" size="sm">
-                      Help Center
-                    </Button>
-                    <Button size="sm">
-                      Contact Support
-                    </Button>
-                  </div>
+              ) : (
+                <div className="bg-card rounded-lg border shadow-sm">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="p-3 text-left font-medium">Link</th>
+                        <th className="p-3 text-left font-medium">Clicks</th>
+                        <th className="p-3 text-left font-medium">Trend</th>
+                        <th className="p-3 text-left font-medium">Status</th>
+                        <th className="p-3 text-left font-medium">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {linkItems.map(link => (
+                        <tr key={link.id} className="border-b hover:bg-muted/50">
+                          <td className="p-3 font-medium">{link.alias}</td>
+                          <td className="p-3">{link.clicks.toLocaleString()}</td>
+                          <td className="p-3">
+                            <span className={`flex items-center ${link.trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                              {link.trend > 0 ? '+' : ''}{link.trend}%
+                              {link.trend > 0 ? <TrendingUp className="h-4 w-4 ml-1" /> : <TrendingUp className="h-4 w-4 ml-1 rotate-180" />}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            <span className={`px-2 py-1 rounded-full text-xs ${link.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                              {link.status}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            <div className="flex gap-2">
+                              <Button variant="outline" size="sm" onClick={() => toast({ title: "Edit", description: `Editing ${link.alias}` })}>
+                                Edit
+                              </Button>
+                              <Button variant="outline" size="sm" onClick={() => toast({ title: "QR", description: `QR code for ${link.alias}` })}>
+                                <QrCode className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              </CardContent>
-            </Card>
-          </section>
-        </main>
+              )}
+            </section>
+          </main>
+        </div>
       </div>
     </div>
   );
