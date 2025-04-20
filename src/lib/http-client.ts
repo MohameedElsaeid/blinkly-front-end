@@ -1,58 +1,12 @@
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
+import BaseHttpClient, { API_BASE_URL } from './base-http-client';
 
-// Base configuration for API requests
-const baseConfig: AxiosRequestConfig = {
-  baseURL: 'https://api.blinkly.app',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: true, // Added to ensure cookies are sent with requests
-};
+// Get the singleton instance of BaseHttpClient
+const baseClient = BaseHttpClient.getInstance();
 
-// Create a single instance of axios to be used throughout the app
-const axiosInstance: AxiosInstance = axios.create(baseConfig);
-
-// Request interceptor for adding auth tokens, etc.
-axiosInstance.interceptors.request.use(
-  (config) => {
-    // Add auth token if available
-    const token = localStorage.getItem('blinkly_token');
-    if (token) {
-      // Create new headers object
-      if (!config.headers) {
-        config.headers = new AxiosHeaders();
-      }
-      // Set Authorization header
-      config.headers.set('Authorization', `Bearer ${token}`);
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Response interceptor for handling common responses
-axiosInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    // Handle unauthorized errors (401)
-    if (error.response && error.response.status === 401) {
-      console.error('Unauthorized access. Redirecting to login page.');
-      // Clear auth tokens
-      localStorage.removeItem('blinkly_token');
-      localStorage.removeItem('blinkly_user');
-      
-      // Redirect to login page
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
+// Use the axios instance from BaseHttpClient
+const axiosInstance = baseClient.getAxiosInstance();
 
 // Type definitions for our API responses
 export interface Package {
@@ -145,6 +99,12 @@ const httpClient = {
   getDashboardTricks: (): Promise<TricksResponse> => {
     return httpClient.get<TricksResponse>('/dashboard/tricks');
   },
+
+  // Method to update the auth token across all HTTP clients
+  updateToken: (token: string): void => {
+    baseClient.updateToken(token);
+    console.log('Token updated in httpClient via BaseHttpClient');
+  }
 };
 
 export default httpClient;

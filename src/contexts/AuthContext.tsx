@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import httpClient from '@/lib/http-client';
 
 // Define types for our auth context
 type User = {
@@ -38,6 +39,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const userData = JSON.parse(storedUser);
         setUser({ ...userData, token: storedToken });
+        
+        // Also update token in httpClient for API calls
+        httpClient.updateToken(storedToken);
       } catch (error) {
         console.error('Failed to parse stored user data:', error);
         localStorage.removeItem('blinkly_user');
@@ -57,6 +61,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('blinkly_user', JSON.stringify(userData));
     if (userData.token) {
       localStorage.setItem('blinkly_token', userData.token);
+      
+      // Also update token in httpClient for API calls
+      httpClient.updateToken(userData.token);
     }
   };
 

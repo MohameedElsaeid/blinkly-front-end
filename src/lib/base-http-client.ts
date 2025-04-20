@@ -11,6 +11,7 @@ interface CsrfResponse {
 class BaseHttpClient {
   private axiosInstance: AxiosInstance;
   private deviceId: string;
+  private static instance: BaseHttpClient;
 
   constructor() {
     this.deviceId = this.generateDeviceId();
@@ -53,6 +54,7 @@ class BaseHttpClient {
       async (error) => {
         // Handle 401 (unauthorized)
         if (error.response && error.response.status === 401) {
+          console.error('Unauthorized error in BaseHttpClient:', error.response.data);
           // Clear auth tokens
           localStorage.removeItem('blinkly_token');
           localStorage.removeItem('blinkly_user');
@@ -66,8 +68,17 @@ class BaseHttpClient {
     );
   }
 
+  // Singleton pattern to ensure we're using the same instance across the app
+  public static getInstance(): BaseHttpClient {
+    if (!BaseHttpClient.instance) {
+      BaseHttpClient.instance = new BaseHttpClient();
+    }
+    return BaseHttpClient.instance;
+  }
+
   public updateToken(token: string) {
     localStorage.setItem('blinkly_token', token);
+    console.log('Token updated in BaseHttpClient:', token);
   }
 
   private generateDeviceId(): string {
