@@ -5,8 +5,14 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, LabelList } 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 
+// Define referrer data type
+interface ReferrerData {
+  name: string;
+  value: number;
+}
+
 // Sample referrer data - would be replaced with API data
-const referrerData = [
+const referrerData: ReferrerData[] = [
   { name: 'google.com', value: 42 },
   { name: 'facebook.com', value: 27 },
   { name: 'twitter.com', value: 15 },
@@ -16,11 +22,11 @@ const referrerData = [
 
 const ReferrerDistribution = () => {
   // Simulate data loading with react-query
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<ReferrerData[]>({
     queryKey: ['referrerData'],
     queryFn: () => {
       // This would be an actual API call in production
-      return new Promise(resolve => {
+      return new Promise<ReferrerData[]>(resolve => {
         setTimeout(() => {
           resolve(referrerData);
         }, 700);
@@ -29,7 +35,10 @@ const ReferrerDistribution = () => {
   });
 
   // We need to sort the data for better visualization
-  const sortedData = [...(data || [])].sort((a, b) => b.value - a.value);
+  const sortedData = React.useMemo(() => {
+    if (!data) return [];
+    return [...data].sort((a, b) => b.value - a.value);
+  }, [data]);
 
   return (
     <Card className="shadow-sm hover:shadow-md transition-all">

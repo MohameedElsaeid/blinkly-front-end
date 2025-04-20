@@ -8,8 +8,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+// Define link item type
+interface LinkItem {
+  id: string;
+  alias: string;
+  clicks: number;
+  ctr: number;
+  topCountry: string;
+  status: 'active' | 'paused';
+}
+
 // Sample links data - would be replaced with API data
-const generateLinksData = () => {
+const generateLinksData = (): LinkItem[] => {
   const links = [
     { id: '1', alias: 'product-launch-2024', clicks: 10549, ctr: 12.3, topCountry: 'US', status: 'active' },
     { id: '2', alias: 'black-friday-special', clicks: 7832, ctr: 8.7, topCountry: 'UK', status: 'active' },
@@ -32,11 +42,11 @@ const TopLinksTable = () => {
   const [sortDirection, setSortDirection] = useState('desc');
   
   // Simulate data loading with react-query
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<LinkItem[]>({
     queryKey: ['topLinksData'],
     queryFn: () => {
       // This would be an actual API call in production
-      return new Promise(resolve => {
+      return new Promise<LinkItem[]>(resolve => {
         setTimeout(() => {
           resolve(generateLinksData());
         }, 750);
@@ -49,8 +59,8 @@ const TopLinksTable = () => {
     if (!data) return [];
     
     return [...data].sort((a, b) => {
-      const valueA = a[sortColumn];
-      const valueB = b[sortColumn];
+      const valueA = a[sortColumn as keyof LinkItem];
+      const valueB = b[sortColumn as keyof LinkItem];
       
       if (typeof valueA === 'string' && typeof valueB === 'string') {
         return sortDirection === 'asc' 
@@ -58,12 +68,14 @@ const TopLinksTable = () => {
           : valueB.localeCompare(valueA);
       }
       
-      return sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
+      return sortDirection === 'asc' 
+        ? (valueA as number) - (valueB as number) 
+        : (valueB as number) - (valueA as number);
     });
   }, [data, sortColumn, sortDirection]);
 
   // Handle sort change
-  const handleSort = (column) => {
+  const handleSort = (column: string) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -180,7 +192,7 @@ const TopLinksTable = () => {
             </div>
             
             {/* Mobile-only view all button */}
-            {isMobile && data?.length > 5 && (
+            {isMobile && data && data.length > 5 && (
               <div className="px-6 mt-4">
                 <Button variant="outline" size="sm" className="w-full">
                   <ExternalLink className="mr-2 h-4 w-4" />
@@ -195,8 +207,16 @@ const TopLinksTable = () => {
   );
 };
 
+interface SortableHeaderProps {
+  column: string;
+  label: string;
+  currentSort: string;
+  direction: string;
+  onSort: (column: string) => void;
+}
+
 // Sortable header component
-const SortableHeader = ({ column, label, currentSort, direction, onSort }) => (
+const SortableHeader: React.FC<SortableHeaderProps> = ({ column, label, currentSort, direction, onSort }) => (
   <button
     className="flex items-center gap-1 hover:text-foreground font-medium"
     onClick={() => onSort(column)}

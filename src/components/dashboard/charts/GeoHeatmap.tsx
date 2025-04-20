@@ -6,8 +6,15 @@ import { useQuery } from "@tanstack/react-query";
 import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+// Define country data type
+interface CountryData {
+  country: string;
+  code: string;
+  clicks: number;
+}
+
 // Sample country data - would be replaced with API data
-const countryData = [
+const countryData: CountryData[] = [
   { country: "United States", code: "US", clicks: 12475 },
   { country: "United Kingdom", code: "GB", clicks: 5842 },
   { country: "Germany", code: "DE", clicks: 4320 },
@@ -30,11 +37,11 @@ const GeoHeatmap = () => {
   const [expanded, setExpanded] = useState(false);
   
   // Simulate data loading with react-query
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<CountryData[]>({
     queryKey: ['geoData'],
     queryFn: () => {
       // This would be an actual API call in production
-      return new Promise(resolve => {
+      return new Promise<CountryData[]>(resolve => {
         setTimeout(() => {
           resolve(countryData);
         }, 800);
@@ -43,7 +50,11 @@ const GeoHeatmap = () => {
   });
 
   // Sort countries by click count
-  const sortedCountries = [...(data || [])].sort((a, b) => b.clicks - a.clicks);
+  const sortedCountries = React.useMemo(() => {
+    if (!data) return [];
+    return [...data].sort((a, b) => b.clicks - a.clicks);
+  }, [data]);
+  
   const maxClicks = sortedCountries[0]?.clicks || 1;
 
   return (

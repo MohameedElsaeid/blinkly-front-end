@@ -16,8 +16,15 @@ import httpClient from "@/lib/http-client";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import { useIsMobile } from "@/hooks/use-mobile";
 
+// Define time series data type
+interface TimeSeriesData {
+  date: string;
+  clicks: number;
+  uniqueVisitors: number;
+}
+
 // Sample data - would be replaced with API data
-const generateSampleData = () => {
+const generateSampleData = (): TimeSeriesData[] => {
   const data = [];
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - 30);
@@ -50,11 +57,11 @@ const TimeSeriesChart = () => {
   const [metric, setMetric] = useState("clicks");
   
   // Sample data fetch with loading state
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<TimeSeriesData[]>({
     queryKey: ['timeSeriesData', dateRange, metric],
     queryFn: () => {
       // This would be an actual API call in production
-      return new Promise(resolve => {
+      return new Promise<TimeSeriesData[]>(resolve => {
         setTimeout(() => {
           resolve(generateSampleData());
         }, 600);
@@ -66,6 +73,14 @@ const TimeSeriesChart = () => {
     clicks: "Clicks",
     uniqueVisitors: "Unique Visitors",
     conversionRate: "Conversion Rate",
+  };
+
+  // Function to format tick values based on data length and mobile state
+  const formatXAxisTick = (value: string, index: number): string => {
+    if (isMobile && data && data.length > 15) {
+      return index % 3 === 0 ? value : '';
+    }
+    return value;
   };
 
   return (
@@ -132,13 +147,12 @@ const TimeSeriesChart = () => {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis 
                   dataKey="date" 
-                  tick={{ fontSize: 12 }}
                   tickLine={false}
                   axisLine={false}
                   tickMargin={10}
                   padding={{ left: 20, right: 20 }}
                   tick={{ fontSize: 12 }}
-                  tickFormatter={(value) => isMobile && data.length > 15 ? (data.indexOf(value) % 3 === 0 ? value : '') : value}
+                  tickFormatter={formatXAxisTick}
                 />
                 <YAxis 
                   tick={{ fontSize: 12 }}
@@ -187,7 +201,12 @@ const TimeSeriesChart = () => {
 };
 
 // Date Range Picker Component
-const DateRangePicker = ({ dateRange, onChange }) => {
+interface DateRangePickerProps {
+  dateRange: DateRange | undefined;
+  onChange: (range: DateRange | undefined) => void;
+}
+
+const DateRangePicker: React.FC<DateRangePickerProps> = ({ dateRange, onChange }) => {
   return (
     <div className="grid gap-2">
       <Popover>

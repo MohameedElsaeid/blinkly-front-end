@@ -5,8 +5,15 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 
+// Define device data type
+interface DeviceData {
+  name: string;
+  value: number;
+  color: string;
+}
+
 // Sample device data - would be replaced with API data
-const deviceData = [
+const deviceData: DeviceData[] = [
   { name: 'Mobile', value: 63, color: '#0fa0ce' },
   { name: 'Desktop', value: 31, color: '#9b87f5' },
   { name: 'Tablet', value: 6, color: '#f1c40f' },
@@ -14,11 +21,11 @@ const deviceData = [
 
 const DeviceDistribution = () => {
   // Simulate data loading with react-query
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<DeviceData[]>({
     queryKey: ['deviceData'],
     queryFn: () => {
       // This would be an actual API call in production
-      return new Promise(resolve => {
+      return new Promise<DeviceData[]>(resolve => {
         setTimeout(() => {
           resolve(deviceData);
         }, 500);

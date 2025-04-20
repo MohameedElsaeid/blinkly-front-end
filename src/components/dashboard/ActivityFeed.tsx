@@ -8,8 +8,17 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+// Define activity item type
+interface ActivityItem {
+  id: string;
+  type: 'click_milestone' | 'link_created';
+  title: string;
+  timestamp: Date;
+  icon: React.ReactNode;
+}
+
 // Sample activity data - would be replaced with API data
-const generateActivityData = () => {
+const generateActivityData = (): ActivityItem[] => {
   const activities = [
     {
       id: '1',
@@ -70,11 +79,11 @@ const ActivityFeed = () => {
   const [expanded, setExpanded] = useState(false);
   
   // Simulate data loading with react-query
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<ActivityItem[]>({
     queryKey: ['activityData'],
     queryFn: () => {
       // This would be an actual API call in production
-      return new Promise(resolve => {
+      return new Promise<ActivityItem[]>(resolve => {
         setTimeout(() => {
           resolve(generateActivityData());
         }, 600);
@@ -83,7 +92,7 @@ const ActivityFeed = () => {
   });
 
   // Format the timestamp relative to now
-  const formatRelativeTime = (timestamp) => {
+  const formatRelativeTime = (timestamp: Date): string => {
     const now = new Date();
     const diffMs = now.getTime() - timestamp.getTime();
     const diffMins = Math.round(diffMs / (1000 * 60));
@@ -123,7 +132,7 @@ const ActivityFeed = () => {
           </div>
         ) : isMobile ? (
           <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="activities" border={false}>
+            <AccordionItem value="activities">
               <AccordionTrigger className="py-2 hover:no-underline">
                 <span className="text-sm font-medium">View Activities</span>
               </AccordionTrigger>
@@ -136,7 +145,7 @@ const ActivityFeed = () => {
                       formatTime={formatRelativeTime} 
                     />
                   ))}
-                  {data?.length > initialItems && (
+                  {data && data.length > initialItems && (
                     <Button 
                       variant="ghost" 
                       className="w-full text-sm h-8 mt-1"
@@ -158,7 +167,7 @@ const ActivityFeed = () => {
                 formatTime={formatRelativeTime} 
               />
             ))}
-            {data?.length > initialItems && (
+            {data && data.length > initialItems && (
               <Button 
                 variant="ghost" 
                 className="w-full text-sm h-8"
@@ -178,7 +187,12 @@ const ActivityFeed = () => {
   );
 };
 
-const ActivityItem = ({ activity, formatTime }) => (
+interface ActivityItemProps {
+  activity: ActivityItem;
+  formatTime: (timestamp: Date) => string;
+}
+
+const ActivityItem: React.FC<ActivityItemProps> = ({ activity, formatTime }) => (
   <div className="flex items-start gap-3">
     <div className="w-8 h-8 rounded-full bg-primary-foreground flex items-center justify-center mt-0.5">
       {activity.icon}
