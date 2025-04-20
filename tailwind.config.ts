@@ -137,7 +137,7 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'hero-pattern': 'url("/public/lovable-uploads/737e5a7a-ea9e-42fe-88fe-1802554c6e86.png")',
+				'hero-pattern': 'url("/public/lovable-uploads/737e5a7a-ea9e-42fe-88fe-1802554c6e86.jpeg")',
 				'blue-gradient': 'linear-gradient(90deg, #3D5AFE 0%, #5B2EFF 100%)',
 				'mint-gradient': 'linear-gradient(90deg, #00E5A0 0%, #64B5F6 100%)',
 				'orange-gradient': 'linear-gradient(90deg, #FF9800 0%, #FFCA28 100%)',

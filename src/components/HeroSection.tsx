@@ -91,7 +91,7 @@ const HeroSection = () => {
         <div className="relative max-w-5xl mx-auto w-full animate-fade-in">
           <div className="absolute inset-0 bg-gradient-radial from-blue-500/20 to-transparent blur-2xl"></div>
           <img 
-            src="/lovable-uploads/737e5a7a-ea9e-42fe-88fe-1802554c6e86.png" 
+            src="/lovable-uploads/737e5a7a-ea9e-42fe-88fe-1802554c6e86.jpeg"
             alt="Blinkly Dashboard" 
             className="relative z-10 w-full h-[30%] rounded-lg shadow-2xl border border-white/20"
           />
