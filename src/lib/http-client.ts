@@ -1,6 +1,5 @@
-
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
-import BaseHttpClient, { API_BASE_URL } from './base-http-client';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
+import BaseHttpClient from './base-http-client';
 
 // Get the singleton instance of BaseHttpClient
 const baseClient = BaseHttpClient.getInstance();
@@ -10,101 +9,100 @@ const axiosInstance = baseClient.getAxiosInstance();
 
 // Type definitions for our API responses
 export interface Package {
-  id: string;
-  name: string;
-  features: string[];
-  price: string | null;
-  billingFrequency: 'monthly' | 'yearly';
-  isMostPopular: boolean;
+    id: string;
+    name: string;
+    features: string[];
+    price: string | null;
+    billingFrequency: 'monthly' | 'yearly';
+    isMostPopular: boolean;
 }
 
 export interface PackagesResponse {
-  monthly: Package[];
-  yearly: Package[];
+    monthly: Package[];
+    yearly: Package[];
 }
 
 // New interface definitions for dashboard APIs
 export interface TotalClicksResponse {
-  totalClicks: number;
-  trend: number;
-  periodStart: string;
-  periodEnd: string;
+    totalClicks: number;
+    trend: number;
+    periodStart: string;
+    periodEnd: string;
 }
 
 export interface TopLink {
-  id: string;
-  alias: string;
-  originalUrl: string;
-  clickCount: number;
+    id: string;
+    alias: string;
+    originalUrl: string;
+    clickCount: number;
 }
 
 export interface TopLinksResponse {
-  links: TopLink[];
+    links: TopLink[];
 }
 
 export interface Tip {
-  title: string;
-  description: string;
+    title: string;
+    description: string;
 }
 
 export interface TipsResponse {
-  tips: Tip[];
+    tips: Tip[];
 }
 
 export interface TricksResponse {
-  tricks: string[];
+    tricks: string[];
 }
 
 // API client with typed methods
 const httpClient = {
-  // Generic GET method with type safety
-  get: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-    return axiosInstance.get<T, AxiosResponse<T>>(url, config)
-      .then(response => response.data);
-  },
+    // Generic GET method with type safety
+    get: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
+        return axiosInstance.get<T, AxiosResponse<T>>(url, config)
+            .then(response => response.data);
+    },
 
-  post: <T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
-    return axiosInstance.post<T, AxiosResponse<T>, D>(url, data, config)
-      .then(response => response.data);
-  },
+    post: <T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
+        return axiosInstance.post<T, AxiosResponse<T>, D>(url, data, config)
+            .then(response => response.data);
+    },
 
-  put: <T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
-    return axiosInstance.put<T, AxiosResponse<T>, D>(url, data, config)
-      .then(response => response.data);
-  },
+    put: <T, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
+        return axiosInstance.put<T, AxiosResponse<T>, D>(url, data, config)
+            .then(response => response.data);
+    },
 
-  delete: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-    return axiosInstance.delete<T, AxiosResponse<T>>(url, config)
-      .then(response => response.data);
-  },
+    delete: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
+        return axiosInstance.delete<T, AxiosResponse<T>>(url, config)
+            .then(response => response.data);
+    },
 
-  // Specific API methods
-  getPackages: (): Promise<PackagesResponse> => {
-    return httpClient.get<PackagesResponse>('/packages');
-  },
+    // Specific API methods
+    getPackages: (): Promise<PackagesResponse> => {
+        return httpClient.get<PackagesResponse>('/packages');
+    },
 
-  // Dashboard specific API methods
-  getDashboardTotalClicks: (): Promise<TotalClicksResponse> => {
-    return httpClient.get<TotalClicksResponse>('/dashboard/total-clicks');
-  },
+    // Dashboard specific API methods
+    getDashboardTotalClicks: (): Promise<TotalClicksResponse> => {
+        return httpClient.get<TotalClicksResponse>('/dashboard/total-clicks');
+    },
 
-  getDashboardTopLinks: (): Promise<TopLinksResponse> => {
-    return httpClient.get<TopLinksResponse>('/dashboard/top-links');
-  },
+    getDashboardTopLinks: (): Promise<TopLinksResponse> => {
+        return httpClient.get<TopLinksResponse>('/dashboard/top-links');
+    },
 
-  getDashboardTips: (): Promise<TipsResponse> => {
-    return httpClient.get<TipsResponse>('/dashboard/tips');
-  },
+    getDashboardTips: (): Promise<TipsResponse> => {
+        return httpClient.get<TipsResponse>('/dashboard/tips');
+    },
 
-  getDashboardTricks: (): Promise<TricksResponse> => {
-    return httpClient.get<TricksResponse>('/dashboard/tricks');
-  },
+    getDashboardTricks: (): Promise<TricksResponse> => {
+        return httpClient.get<TricksResponse>('/dashboard/tricks');
+    },
 
-  // Method to update the auth token across all HTTP clients
-  updateToken: (token: string): void => {
-    baseClient.updateToken(token);
-    console.log('Token updated in httpClient via BaseHttpClient');
-  }
+    // Method to update the auth token across all HTTP clients
+    updateToken: (token: string): void => {
+        baseClient.updateToken(token);
+    }
 };
 
 export default httpClient;

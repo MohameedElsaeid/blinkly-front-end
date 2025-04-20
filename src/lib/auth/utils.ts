@@ -12,7 +12,7 @@ export const updateAuthToken = (token: string) => {
   
   // Store in localStorage for persistence
   localStorage.setItem('blinkly_token', token);
-  console.log('Auth token updated and propagated to all HTTP clients');
+
 };
 
 // Function to fetch client IP address

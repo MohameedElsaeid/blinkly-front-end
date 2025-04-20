@@ -23,8 +23,7 @@ export const loginUser = async (data: LoginRequestData): Promise<AuthResponse> =
     
     // For development environment only
     if (process.env.NODE_ENV === 'development' && !error.response) {
-      console.log('Using mock login response for development');
-      
+
       // Simulate API validation
       if (!data.email.includes('@')) {
         throw new Error('Invalid email format');

@@ -78,7 +78,6 @@ class BaseHttpClient {
 
   public updateToken(token: string) {
     localStorage.setItem('blinkly_token', token);
-    console.log('Token updated in BaseHttpClient:', token);
   }
 
   private generateDeviceId(): string {
