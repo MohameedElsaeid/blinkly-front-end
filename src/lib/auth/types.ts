@@ -16,14 +16,17 @@ export interface LoginRequestData {
   password: string;
 }
 
+export interface AuthUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  token: string; // Token is now part of the user object
+}
+
 export interface AuthResponse {
   success: boolean;
   message: string;
-  user: {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-  };
-  token: string;
+  user: AuthUser;
 }
+

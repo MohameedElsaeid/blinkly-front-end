@@ -2,7 +2,7 @@
 import axios from 'axios';
 import BaseHttpClient from '../base-http-client';
 import httpClient from '../http-client';
-import { AuthResponse } from './types';
+import { AuthResponse, AuthUser } from './types';
 
 // Unified method to handle authentication token updates
 export const updateAuthToken = (token: string) => {
@@ -28,15 +28,19 @@ export const fetchIpAddress = async (): Promise<string> => {
 
 // Function to create mock response (for development)
 export const createMockAuthResponse = (email: string, firstName: string = 'John', lastName: string = 'Doe'): AuthResponse => {
+  const mockToken = 'mock_token_' + Math.random().toString(36).substring(2, 15);
+  const mockUser: AuthUser = {
+    id: 'user_' + Math.random().toString(36).substring(2, 10),
+    email,
+    firstName,
+    lastName,
+    token: mockToken
+  };
+
   return {
     success: true,
     message: "Operation completed successfully",
-    user: {
-      id: 'user_' + Math.random().toString(36).substring(2, 10),
-      email,
-      firstName,
-      lastName,
-    },
-    token: 'mock_token_' + Math.random().toString(36).substring(2, 15)
+    user: mockUser
   };
 };
+

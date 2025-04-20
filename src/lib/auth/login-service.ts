@@ -12,8 +12,8 @@ export const loginUser = async (data: LoginRequestData): Promise<AuthResponse> =
     const response = await authClient.post('/auth/login', data);
     
     // Store token and update clients
-    if (response.data.token) {
-      updateAuthToken(response.data.token);
+    if (response.data.user.token) {
+      updateAuthToken(response.data.user.token);
       localStorage.setItem('blinkly_user', JSON.stringify(response.data.user));
     }
     
@@ -34,7 +34,7 @@ export const loginUser = async (data: LoginRequestData): Promise<AuthResponse> =
       const mockResponse = createMockAuthResponse(data.email);
       
       // Update token in all clients
-      updateAuthToken(mockResponse.token);
+      updateAuthToken(mockResponse.user.token);
       localStorage.setItem('blinkly_user', JSON.stringify(mockResponse.user));
       
       return mockResponse;
@@ -48,3 +48,4 @@ export const loginUser = async (data: LoginRequestData): Promise<AuthResponse> =
     throw error;
   }
 };
+
