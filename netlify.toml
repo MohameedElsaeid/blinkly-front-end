@@ -1,9 +1,7 @@
-
 [build]
   publish = "dist"
   command = "npm run build"
 
-# This is the only redirect rule we need for an SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
