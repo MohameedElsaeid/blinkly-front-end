@@ -3,35 +3,8 @@
   publish = "dist"
   command = "npm run build"
 
-# This redirect rule ensures that all routes are handled by index.html
+# This is the only redirect rule we need for an SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  force = true
-
-# Handle all dynamic routes
-[[redirects]]
-  from = "/blog/*"
-  to = "/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/dashboard/*"
-  to = "/index.html"
-  status = 200
-  force = true
-
-# Redirect direct hits to specific pages
-[[redirects]]
-  from = "/login"
-  to = "/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/signup"
-  to = "/index.html"
-  status = 200
-  force = true

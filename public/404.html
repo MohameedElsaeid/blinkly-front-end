@@ -3,27 +3,31 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Redirecting...</title>
+  <title>Page Not Found</title>
   <script>
-    // Single Page Apps for GitHub Pages or other static hosts
-    // https://github.com/rafgraph/spa-github-pages
-    // This script takes the current URL and redirects to the proper URL for our SPA
-    
-    // Get the current path and redirect to the root with a path parameter
+    // Single Page Apps for static hosts
+    // This script checks to see if a redirect is present in the query parameters
+    // If so, it redirects the user to the proper path
+    // If not, it sends them to the index.html page
     (function() {
-      var path = window.location.pathname;
-      var searchParams = window.location.search;
-      var hash = window.location.hash;
+      // Don't run the redirect if we're already on index.html
+      if (window.location.pathname === '/index.html') return;
       
-      // Preserve the full path when redirecting
-      window.location.href = '/' + path.split('/').slice(1).join('/') + 
-        (searchParams ? searchParams : '') + 
-        (hash ? hash : '');
+      // Redirect to the root with the current path as a route for the SPA to handle
+      window.location.replace('/' + 
+        (window.location.pathname.startsWith('/') ? 
+          window.location.pathname.substring(1) : window.location.pathname) +
+        window.location.search +
+        window.location.hash
+      );
     })();
   </script>
-  <meta http-equiv="refresh" content="0;URL='/'">
+  <meta http-equiv="refresh" content="0;URL='/'" />
 </head>
 <body>
-  Redirecting to homepage...
+  <div style="text-align: center; padding: 40px;">
+    <h1>Page Not Found</h1>
+    <p>Redirecting to homepage...</p>
+  </div>
 </body>
 </html>
