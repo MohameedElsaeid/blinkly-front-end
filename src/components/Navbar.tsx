@@ -1,12 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Facebook, Instagram, Linkedin, Twitter, Menu, X } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Twitter, Menu, X, LayoutDashboard } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,12 +58,23 @@ const Navbar = () => {
                 <Twitter size={18} />
               </a>
             </div>
-            <Button variant="ghost" className="text-gray-800 hover:text-blinkly-blue" asChild>
-              <Link to="/login">Login</Link>
-            </Button>
-            <Button className="bg-blinkly-blue hover:bg-blinkly-violet text-white" asChild>
-              <Link to="/signup">Sign Up</Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button className="bg-blinkly-blue hover:bg-blinkly-violet text-white" asChild>
+                <Link to="/dashboard">
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  Dashboard
+                </Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" className="text-gray-800 hover:text-blinkly-blue" asChild>
+                  <Link to="/login">Login</Link>
+                </Button>
+                <Button className="bg-blinkly-blue hover:bg-blinkly-violet text-white" asChild>
+                  <Link to="/signup">Sign Up</Link>
+                </Button>
+              </>
+            )}
           </div>
           <div className="md:hidden flex items-center">
             <button
@@ -75,7 +87,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
@@ -101,12 +112,23 @@ const Navbar = () => {
                 </a>
               </div>
               <div className="flex space-x-2">
-                <Button variant="ghost" size="sm" className="text-gray-800" asChild>
-                  <Link to="/login">Login</Link>
-                </Button>
-                <Button size="sm" className="bg-blinkly-blue hover:bg-blinkly-violet text-white" asChild>
-                  <Link to="/signup">Sign Up</Link>
-                </Button>
+                {isAuthenticated ? (
+                  <Button size="sm" className="bg-blinkly-blue hover:bg-blinkly-violet text-white" asChild>
+                    <Link to="/dashboard">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" className="text-gray-800" asChild>
+                      <Link to="/login">Login</Link>
+                    </Button>
+                    <Button size="sm" className="bg-blinkly-blue hover:bg-blinkly-violet text-white" asChild>
+                      <Link to="/signup">Sign Up</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>
