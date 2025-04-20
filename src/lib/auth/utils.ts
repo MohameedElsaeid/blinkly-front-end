@@ -2,6 +2,7 @@
 import axios from 'axios';
 import BaseHttpClient from '../base-http-client';
 import httpClient from '../http-client';
+import { AuthResponse } from './types';
 
 // Unified method to handle authentication token updates
 export const updateAuthToken = (token: string) => {
