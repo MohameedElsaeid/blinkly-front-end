@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, ChevronDown, BarChart, Globe, Activity, QrCode } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Widget, WidgetType, WidgetSize } from '@/types/dashboard';
+import CreateLinkForm from './CreateLinkForm';
 
 interface WidgetGridProps {
   widgets: Widget[];
@@ -22,24 +23,7 @@ const WidgetGrid: React.FC<WidgetGridProps> = ({ widgets }) => {
   const renderWidgetContent = (widget: Widget) => {
     switch (widget.type) {
       case 'create':
-        return (
-          <div className="flex flex-col items-center justify-center h-full">
-            <div className="mb-6 w-16 h-16 flex items-center justify-center rounded-full bg-blinkly-blue/10">
-              <Plus className="h-8 w-8 text-blinkly-blue" />
-            </div>
-            <h3 className="text-xl font-medium mb-4">Create a New Link</h3>
-            <div className="flex gap-3">
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Short Link
-              </Button>
-              <Button variant="outline">
-                <QrCode className="h-4 w-4 mr-2" />
-                QR Code
-              </Button>
-            </div>
-          </div>
-        );
+        return <CreateLinkForm />;
       case 'chart':
         return (
           <div className="h-full flex flex-col">
@@ -158,7 +142,6 @@ const WidgetGrid: React.FC<WidgetGridProps> = ({ widgets }) => {
         </Card>
       ))}
       
-      {/* Add Widget Card */}
       <Card className="border-dashed bg-muted/50 flex flex-col items-center justify-center h-[350px]" onClick={handleAddWidget}>
         <CardContent className="flex flex-col items-center justify-center h-full cursor-pointer">
           <div className="w-12 h-12 rounded-full border-2 border-dashed border-muted-foreground flex items-center justify-center mb-4">
