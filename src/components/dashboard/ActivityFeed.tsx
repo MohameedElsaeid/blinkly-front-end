@@ -19,7 +19,7 @@ interface ActivityItem {
 
 // Sample activity data - would be replaced with API data
 const generateActivityData = (): ActivityItem[] => {
-  const activities = [
+  const activities: ActivityItem[] = [
     {
       id: '1',
       type: 'click_milestone',

@@ -20,7 +20,7 @@ interface LinkItem {
 
 // Sample links data - would be replaced with API data
 const generateLinksData = (): LinkItem[] => {
-  const links = [
+  const links: LinkItem[] = [
     { id: '1', alias: 'product-launch-2024', clicks: 10549, ctr: 12.3, topCountry: 'US', status: 'active' },
     { id: '2', alias: 'black-friday-special', clicks: 7832, ctr: 8.7, topCountry: 'UK', status: 'active' },
     { id: '3', alias: 'holiday-promo', clicks: 5421, ctr: 7.9, topCountry: 'DE', status: 'active' },
