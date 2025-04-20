@@ -1,8 +1,48 @@
 [build]
-  publish = "dist"
-  command = "npm run build"
+publish = "dist"
+command = "npm run build"
 
+# API proxy rules
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/api/*"
+to = "https://api.blinkly.app/:splat"
+status = 200
+force = true
+headers = { X-From = "Netlify" }
+
+# CORS preflight requests
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+force = true
+conditions = { method = "OPTIONS" }
+
+# Make sure sitemap.xml is served directly
+[[redirects]]
+from = "/sitemap.xml"
+to = "/sitemap.xml"
+status = 200
+
+# Important: The wildcard redirect should be LAST to catch all routes
+# This ensures SPA routing works for direct navigation
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+
+[[headers]]
+for = "/sitemap.xml"
+[headers.values]
+Content-Type = "application/xml"
+Cache-Control = "public, max-age=86400"
+
+# Add CORS headers for all requests
+[[headers]]
+for = "/*"
+[headers.values]
+Access-Control-Allow-Origin = "*"
+Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+Access-Control-Allow-Headers = "*"
+Access-Control-Allow-Credentials = "true"
+Access-Control-Max-Age = "86400"

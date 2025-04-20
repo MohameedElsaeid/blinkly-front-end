@@ -1,33 +1,37 @@
+
+# Blinkly robots.txt
+# https://blinkly.app
+
 User-agent: *
 Allow: /
-Disallow: /private/
-Disallow: /admin/
-Disallow: /api/
-Disallow: /account/
 
-# Crawl-delay for aggressive bots
-Crawl-delay: 2
+# Main content pages
+Allow: /about
+Allow: /blog
+Allow: /blog/*
+Allow: /contact
+Allow: /pricing
+Allow: /help
+Allow: /terms
+Allow: /privacy
+Allow: /features
+
+# Disallow admin and user areas
+Disallow: /dashboard/
+Disallow: /dashboard/*
+Disallow: /settings/
+Disallow: /login
+Disallow: /signup
+Disallow: /reset-password
+Disallow: /api/
+
+# Disallow development and utility paths
+Disallow: /dev/
+Disallow: /test/
+Disallow: /*.json$
+Disallow: /*.js$
+Disallow: /*.css$
 
 # Sitemap location
 Sitemap: https://blinkly.app/sitemap.xml
 
-# Special rules for specific bots
-User-agent: Googlebot
-Allow: /images/
-Allow: /js/
-Allow: /css/
-
-User-agent: Googlebot-Image
-Allow: /images/
-Disallow: /private-images/
-
-User-agent: Bingbot
-Crawl-delay: 3
-
-User-agent: Twitterbot
-Allow: /posts/
-Disallow: /drafts/
-
-User-agent: facebookexternalhit
-Allow: /share/
-Disallow: /private-share/
