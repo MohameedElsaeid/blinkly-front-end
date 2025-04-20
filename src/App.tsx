@@ -62,10 +62,16 @@ const App = () => (
               } 
             />
             
-            {/* Catch-all route */}
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="*" element={<NotFound />} />
+            {/* Catch-all route */}
+            {/* Updated catch-all route */}
+            <Route
+                path="*"
+                element={
+                  <Navigate to="/" replace state={{ fromError: true }} />
+                }
+            />
           </Routes>
           <Toaster />
           <Sonner />
