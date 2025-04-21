@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
-import { TrendingUp, TrendingDown, Link as LinkIcon, Globe, MousePointer, ArrowUp, ArrowDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, Link as LinkIcon, Globe, MousePointer } from 'lucide-react';
 import { Card } from "@/components/ui/card";
 import { useQuery } from '@tanstack/react-query';
 import httpClient from '@/lib/http-client';
@@ -8,57 +7,51 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { animate } from 'framer-motion';
 
 const KpiStrip = () => {
-  // Fetch data using React Query
-  const { data: dashboardData, isLoading } = useQuery({
-    queryKey: ['dashboardStats'],
-    queryFn: httpClient.getDashboardTotalClicks,
+  // Fetch analytics data using React Query
+  const { data: analyticsData, isLoading } = useQuery({
+    queryKey: ['dashboardAnalytics'],
+    queryFn: httpClient.getDashboardAnalytics,
   });
 
-  // Demo KPI data - would be replaced with actual API data
-  const kpis = [
+  const kpis = analyticsData ? [
     {
       id: 'clicks-today',
       icon: <TrendingUp className="h-5 w-5 text-blinkly-blue" />,
       label: 'Clicks Today',
-      value: dashboardData?.totalClicks || 3482,
-      previousValue: 3312,
-      change: '+5.1%',
-      isPositive: true
+      value: analyticsData.clicks_today.count,
+      change: `${analyticsData.clicks_today.change_percentage}%`,
+      isPositive: analyticsData.clicks_today.change_percentage >= 0
     },
     {
       id: 'links-created',
       icon: <LinkIcon className="h-5 w-5 text-blinkly-blue" />,
       label: 'Links Created (24h)',
-      value: 218,
-      previousValue: 195,
-      change: '+11.8%',
-      isPositive: true
+      value: analyticsData.links_24h.count,
+      change: `${analyticsData.links_24h.change_percentage}%`,
+      isPositive: analyticsData.links_24h.change_percentage >= 0
     },
     {
       id: 'unique-countries',
       icon: <Globe className="h-5 w-5 text-blinkly-blue" />,
       label: 'Unique Countries (24h)',
-      value: 45,
-      previousValue: 45,
-      change: '0%',
-      isPositive: true
+      value: analyticsData.unique_countries_24h.count,
+      change: `${analyticsData.unique_countries_24h.change_percentage}%`,
+      isPositive: analyticsData.unique_countries_24h.change_percentage >= 0
     },
     {
       id: 'avg-ctr',
       icon: <MousePointer className="h-5 w-5 text-blinkly-blue" />,
       label: 'Avg. CTR (7d)',
-      value: 12.7,
-      previousValue: 13.8,
-      change: '-8.0%',
-      isPositive: false
+      value: analyticsData.avg_ctr_7d.percentage,
+      change: 'N/A',
+      isPositive: true
     },
-  ];
+  ] : [];
 
   return (
     <div className="bg-card/50 border-y px-4 py-3">
       <div className="mx-auto grid grid-cols-4 gap-4">
         {isLoading ? (
-          // Skeleton loading state
           [...Array(4)].map((_, i) => (
             <Card key={`skeleton-${i}`} className="border shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-1">
               <div className="p-4">
@@ -69,7 +62,6 @@ const KpiStrip = () => {
             </Card>
           ))
         ) : (
-          // Actual KPI cards
           kpis.map((kpi) => (
             <KpiCard key={kpi.id} kpi={kpi} />
           ))
@@ -79,11 +71,9 @@ const KpiStrip = () => {
   );
 };
 
-// KPI Card component with animation
 const KpiCard = ({ kpi }) => {
   const [count, setCount] = useState(0);
   
-  // Animate the counter on load
   useEffect(() => {
     const controls = animate(0, kpi.value, {
       duration: 1.5,

@@ -9,6 +9,24 @@ const baseClient = BaseHttpClient.getInstance();
 const axiosInstance = baseClient.getAxiosInstance();
 
 // Type definitions for our API responses
+export interface AnalyticsResponse {
+    clicks_today: {
+        count: number;
+        change_percentage: number;
+    };
+    links_24h: {
+        count: number;
+        change_percentage: number;
+    };
+    unique_countries_24h: {
+        count: number;
+        change_percentage: number;
+    };
+    avg_ctr_7d: {
+        percentage: number;
+    };
+}
+
 export interface Package {
     id: string;
     name: string;
@@ -98,6 +116,10 @@ const httpClient = {
 
     getDashboardTricks: (): Promise<TricksResponse> => {
         return httpClient.get<TricksResponse>('/dashboard/tricks');
+    },
+
+    getDashboardAnalytics: (): Promise<AnalyticsResponse> => {
+        return httpClient.get<AnalyticsResponse>('/dashboard/analytics');
     },
 
     // Method to update the auth token across all HTTP clients
