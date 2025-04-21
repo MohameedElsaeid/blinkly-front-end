@@ -6,11 +6,11 @@ import TimeSeriesChart from "@/components/dashboard/charts/TimeSeriesChart";
 import GeoHeatmap from "@/components/dashboard/charts/GeoHeatmap";
 import DeviceDistribution from "@/components/dashboard/charts/DeviceDistribution";
 import ReferrerDistribution from "@/components/dashboard/charts/ReferrerDistribution";
-import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import TopLinksTable from "@/components/dashboard/TopLinksTable";
 import MobileKpiCarousel from "@/components/dashboard/MobileKpiCarousel";
 import FilterButton from "@/components/dashboard/FilterButton";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -31,25 +31,57 @@ const Dashboard = () => {
           </div>
         </div>
         
-        {/* Main content - Desktop: 2 columns, Mobile: 1 column */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-          {/* Left Column (66% on desktop) */}
-          <div className="lg:col-span-2 space-y-6">
-            <TimeSeriesChart />
-            <GeoHeatmap />
-          </div>
-          
-          {/* Right Column (34% on desktop) */}
-          <div className="space-y-6">
-            <DeviceDistribution />
-            <ReferrerDistribution />
-            <ActivityFeed />
-          </div>
-        </div>
-        
-        {/* Footer Section (full-width) */}
-        <div className="mt-6">
-          <TopLinksTable />
+        {/* Main content grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
+          {/* Time Series Chart */}
+          <Card className="lg:col-span-8 shadow-sm">
+            <CardHeader className="pb-0">
+              <CardTitle className="text-lg font-medium">Click Performance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TimeSeriesChart />
+            </CardContent>
+          </Card>
+
+          {/* Device Distribution */}
+          <Card className="lg:col-span-4 shadow-sm">
+            <CardHeader className="pb-0">
+              <CardTitle className="text-lg font-medium">Device Analytics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <DeviceDistribution />
+            </CardContent>
+          </Card>
+
+          {/* Geographic Distribution */}
+          <Card className="lg:col-span-6 shadow-sm">
+            <CardHeader className="pb-0">
+              <CardTitle className="text-lg font-medium">Geographic Distribution</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <GeoHeatmap />
+            </CardContent>
+          </Card>
+
+          {/* Referrer Distribution */}
+          <Card className="lg:col-span-6 shadow-sm">
+            <CardHeader className="pb-0">
+              <CardTitle className="text-lg font-medium">Top Referrers</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ReferrerDistribution />
+            </CardContent>
+          </Card>
+
+          {/* Top Links Table - Full Width */}
+          <Card className="lg:col-span-12 shadow-sm">
+            <CardHeader className="pb-0">
+              <CardTitle className="text-lg font-medium">Top Performing Links</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TopLinksTable />
+            </CardContent>
+          </Card>
         </div>
       </div>
       
