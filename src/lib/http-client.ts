@@ -1,7 +1,7 @@
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import BaseHttpClient from './base-http-client';
 import { Link, LinksResponse, LinkDetails, TopLinksResponse as LinkTopLinksResponse } from '@/types/link';
-import { DeviceDistributionResponse } from '@/types/analytics';
+import { DeviceDistributionResponse, GeoDistributionResponse } from '@/types/analytics';
 
 // Get the singleton instance of BaseHttpClient
 const baseClient = BaseHttpClient.getInstance();
@@ -145,6 +145,15 @@ const httpClient = {
     getDeviceDistribution: (): Promise<DeviceDistributionResponse> => {
         return httpClient.get<DeviceDistributionResponse>('/dashboard/device-distribution');
     },
+
+    getGeoDistribution: (): Promise<GeoDistributionResponse> => {
+        return httpClient.get<GeoDistributionResponse>('/dashboard/geographic-distribution');
+    },
+
+    // Add the getDeviceDistribution method
+    // getDeviceDistribution: (): Promise<DeviceDistributionResponse> => {
+    //     return httpClient.get<DeviceDistributionResponse>('/dashboard/device-distribution');
+    // },
 };
 
 export default httpClient;
