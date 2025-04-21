@@ -154,6 +154,16 @@ const httpClient = {
     // getDeviceDistribution: (): Promise<DeviceDistributionResponse> => {
     //     return httpClient.get<DeviceDistributionResponse>('/dashboard/device-distribution');
     // },
+
+    getTopReferrers: (params?: {
+        start_date?: string;
+        end_date?: string;
+        limit?: number;
+        page?: number;
+        sort_by?: 'revenue' | 'visits' | 'conversion_rate';
+    }): Promise<ReferrerResponse> => {
+        return httpClient.get<ReferrerResponse>('/dashboard/top-referrers', { params });
+    },
 };
 
 export default httpClient;
