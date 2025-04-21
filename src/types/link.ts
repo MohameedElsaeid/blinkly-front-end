@@ -36,3 +36,51 @@ export interface LinksResponse {
   links: Link[];
   pagination: PaginationInfo;
 }
+
+export interface UserDevice {
+  id: string;
+  userId: string | null;
+  deviceId: string;
+  xDeviceMemory: number;
+  xPlatform: string;
+  xScreenWidth: number;
+  xScreenHeight: number;
+  xColorDepth: number;
+  xTimeZone: string;
+}
+
+export interface ClickEvent {
+  id: string;
+  timestamp: string;
+  userId: string | null;
+  userDeviceId: string;
+  userDevice: UserDevice;
+  linkId: string;
+  host: string;
+  requestTime: string;
+  referer: string;
+  userAgent: string;
+  geoCountry: string | null;
+  geoCity: string | null;
+}
+
+export interface Analytics {
+  totalClicks: number;
+  uniqueDevices: number;
+  clicksByCountry: Record<string, number>;
+  clicksByCity: Record<string, number>;
+  clicksByBrowser: Record<string, number>;
+  clicksByDevice: Record<string, number>;
+  clicksByOS: Record<string, number>;
+  clicksByDate: Record<string, number>;
+  recentClicks: ClickEvent[];
+}
+
+export interface LinkDetails extends Link {
+  metaTitle: string;
+  metaDescription: string;
+  metaImage: string;
+  description: string;
+  clickEvents: ClickEvent[];
+  analytics: Analytics;
+}

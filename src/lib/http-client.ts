@@ -1,4 +1,3 @@
-
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import BaseHttpClient from './base-http-client';
 import { Link, LinksResponse } from '@/types/link';
@@ -56,6 +55,8 @@ export interface TricksResponse {
     tricks: string[];
 }
 
+import { LinkDetails } from '@/types/link';
+
 // API client with typed methods
 const httpClient = {
     // Generic GET method with type safety
@@ -109,6 +110,10 @@ const httpClient = {
     // Links specific API methods
     getLinks: (page: number = 1, limit: number = 10): Promise<LinksResponse> => {
         return httpClient.get<LinksResponse>(`/api/links?page=${page}&limit=${limit}`);
+    },
+
+    getLinkById: (id: string): Promise<LinkDetails> => {
+        return httpClient.get<LinkDetails>(`/api/links/${id}`);
     },
 
     getLinkById: (id: string): Promise<Link> => {
