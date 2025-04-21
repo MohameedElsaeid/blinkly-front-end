@@ -14,11 +14,14 @@ import {
 } from "@/components/ui/tooltip";
 import httpClient from '@/lib/http-client';
 import { TopLink } from '@/types/link';
+import { useNavigate } from 'react-router-dom';
 
 const TopLinksTable = () => {
   const isMobile = useIsMobile();
   const [sortColumn, setSortColumn] = useState('clickCount');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  
+  const navigate = useNavigate();
   
   const { data, isLoading } = useQuery({
     queryKey: ['topLinks'],
@@ -64,7 +67,12 @@ const TopLinksTable = () => {
       <CardHeader className="px-6 py-4 flex flex-col sm:flex-row justify-between sm:items-center">
         <CardTitle className="text-lg sm:text-xl mb-3 sm:mb-0">Top Performing Links</CardTitle>
         {!isMobile && (
-          <Button variant="outline" size="sm" className="w-full sm:w-auto">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full sm:w-auto"
+            onClick={() => navigate('/dashboard/create-link')}
+          >
             <ExternalLink className="mr-2 h-4 w-4" />
             View All Links
           </Button>
@@ -149,7 +157,12 @@ const TopLinksTable = () => {
             
             {isMobile && displayData.length > 5 && (
               <div className="px-6 mt-4">
-                <Button variant="outline" size="sm" className="w-full">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full"
+                  onClick={() => navigate('/dashboard/create-link')}
+                >
                   <ExternalLink className="mr-2 h-4 w-4" />
                   View All Links
                 </Button>
