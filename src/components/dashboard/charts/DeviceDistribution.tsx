@@ -1,11 +1,14 @@
 
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
+import { Smartphone, Laptop, Chrome, Apple } from "lucide-react";
 import httpClient from '@/lib/http-client';
 import { DeviceDistributionResponse } from '@/types/analytics';
+import PieChartDisplay from './PieChartDisplay';
+import { formatDate } from '@/utils/date-utils';
 
 const COLORS = ['#0fa0ce', '#9b87f5', '#f1c40f', '#e74c3c', '#2ecc71'];
 
@@ -23,74 +26,128 @@ const DeviceDistribution = () => {
     }));
   };
 
-  const deviceData = data?.devices.distribution 
-    ? getPieChartData(data.devices.distribution)
-    : [];
+  const renderStats = () => (
+    <div className="grid grid-cols-3 gap-4 mb-6">
+      <StatCard
+        icon={<Smartphone className="h-4 w-4" />}
+        label="Unique Devices"
+        value={data?.unique_devices || 0}
+      />
+      <StatCard
+        icon={<Chrome className="h-4 w-4" />}
+        label="Unique Browsers"
+        value={data?.unique_browsers || 0}
+      />
+      <StatCard
+        icon={<Apple className="h-4 w-4" />}
+        label="Unique OS"
+        value={data?.unique_operating_systems || 0}
+      />
+    </div>
+  );
+
+  const renderDateRange = () => (
+    <div className="text-sm text-muted-foreground mb-6">
+      {data?.period_start && data?.period_end && (
+        <p>
+          {formatDate(data.period_start)} - {formatDate(data.period_end)}
+        </p>
+      )}
+    </div>
+  );
 
   return (
     <Card className="shadow-sm hover:shadow-md transition-all">
       <CardHeader className="px-6 py-4">
-        <CardTitle className="text-lg">Device Distribution</CardTitle>
+        <CardTitle className="text-lg">Distribution Analytics</CardTitle>
       </CardHeader>
       
-      <CardContent className="px-6 pb-4 pt-0 h-[240px]">
+      <CardContent className="px-6 pb-4 pt-0">
         {isLoading ? (
-          <div className="h-full flex items-center justify-center">
-            <div className="w-full space-y-4">
-              <Skeleton className="h-[160px] w-[160px] rounded-full mx-auto" />
-              <div className="flex justify-center gap-4">
-                <Skeleton className="h-4 w-16" />
-                <Skeleton className="h-4 w-16" />
-                <Skeleton className="h-4 w-16" />
-              </div>
-            </div>
-          </div>
-        ) : deviceData.length > 0 ? (
-          <div className="h-full flex flex-col items-center justify-center">
-            <ResponsiveContainer width="100%" height={160}>
-              <PieChart>
-                <Pie
-                  data={deviceData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={45}
-                  outerRadius={70}
-                  paddingAngle={2}
-                  dataKey="value"
-                  animationDuration={1000}
-                  animationBegin={200}
-                >
-                  {deviceData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value, name) => [`${value} clicks`, name]}
-                  contentStyle={{ borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-            
-            <div className="flex flex-wrap gap-4 mt-2 justify-center">
-              {deviceData.map((entry) => (
-                <div key={entry.name} className="flex items-center gap-2">
-                  <div 
-                    className="w-3 h-3 rounded-full" 
-                    style={{ backgroundColor: entry.color }}
-                  />
-                  <span className="text-sm">{entry.name}</span>
-                </div>
+          <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-4">
+              {[...Array(3)].map((_, i) => (
+                <Skeleton key={i} className="h-20" />
               ))}
             </div>
+            <Skeleton className="h-[200px]" />
           </div>
         ) : (
-          <div className="h-full flex items-center justify-center text-muted-foreground">
-            No device data available
-          </div>
+          <>
+            {renderStats()}
+            {renderDateRange()}
+            <Tabs defaultValue="devices" className="space-y-4">
+              <TabsList className="grid grid-cols-3 gap-4">
+                <TabsTrigger value="devices">Devices</TabsTrigger>
+                <TabsTrigger value="browsers">Browsers</TabsTrigger>
+                <TabsTrigger value="os">Operating Systems</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="devices" className="space-y-4">
+                <div className="bg-card rounded-lg p-4">
+                  <h3 className="font-medium mb-4">Device Distribution</h3>
+                  <PieChartDisplay 
+                    data={getPieChartData(data?.devices.distribution)} 
+                    title="Device"
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="browsers" className="space-y-4">
+                <div className="bg-card rounded-lg p-4">
+                  <h3 className="font-medium mb-4">Browser Distribution</h3>
+                  <PieChartDisplay 
+                    data={getPieChartData(data?.browsers.distribution)} 
+                    title="Browser"
+                  />
+                </div>
+                <div className="bg-card rounded-lg p-4">
+                  <h3 className="font-medium mb-4">Browser Versions</h3>
+                  <PieChartDisplay 
+                    data={getPieChartData(data?.browser_versions.distribution)} 
+                    title="Browser Version"
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="os" className="space-y-4">
+                <div className="bg-card rounded-lg p-4">
+                  <h3 className="font-medium mb-4">OS Distribution</h3>
+                  <PieChartDisplay 
+                    data={getPieChartData(data?.operating_systems.distribution)} 
+                    title="Operating System"
+                  />
+                </div>
+                <div className="bg-card rounded-lg p-4">
+                  <h3 className="font-medium mb-4">OS Versions</h3>
+                  <PieChartDisplay 
+                    data={getPieChartData(data?.os_versions.distribution)} 
+                    title="OS Version"
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
+          </>
         )}
       </CardContent>
     </Card>
   );
 };
+
+interface StatCardProps {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+}
+
+const StatCard = ({ icon, label, value }: StatCardProps) => (
+  <div className="bg-card rounded-lg p-4 flex flex-col items-center justify-center">
+    <div className="flex items-center gap-2 text-muted-foreground mb-2">
+      {icon}
+      <span className="text-sm font-medium">{label}</span>
+    </div>
+    <span className="text-2xl font-bold">{value.toLocaleString()}</span>
+  </div>
+);
 
 export default DeviceDistribution;
