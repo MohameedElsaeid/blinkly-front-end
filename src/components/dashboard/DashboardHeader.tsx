@@ -35,8 +35,11 @@ const DashboardHeader = () => {
           />
         </div>
 
+        {/* Push items to the right */}
+        <div className="flex-1" />
+
         {/* Right side items */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 ml-auto">
           {/* Plan badge */}
           <span className="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blinkly-blue/10 text-blinkly-blue">
             Free Plan
