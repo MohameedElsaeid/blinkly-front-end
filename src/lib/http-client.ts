@@ -1,7 +1,7 @@
-
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import BaseHttpClient from './base-http-client';
 import { Link, LinksResponse, LinkDetails, TopLinksResponse as LinkTopLinksResponse } from '@/types/link';
+import { DeviceDistributionResponse } from '@/types/analytics';
 
 // Get the singleton instance of BaseHttpClient
 const baseClient = BaseHttpClient.getInstance();
@@ -140,6 +140,10 @@ const httpClient = {
     // Add the getTopLinks method
     getTopLinks: (): Promise<LinkTopLinksResponse> => {
         return httpClient.get<LinkTopLinksResponse>('/dashboard/top-links');
+    },
+
+    getDeviceDistribution: (): Promise<DeviceDistributionResponse> => {
+        return httpClient.get<DeviceDistributionResponse>('/dashboard/device-distribution');
     },
 };
 
