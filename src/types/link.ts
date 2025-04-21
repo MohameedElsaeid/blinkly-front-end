@@ -84,3 +84,14 @@ export interface LinkDetails extends Link {
   clickEvents: ClickEvent[];
   analytics: Analytics;
 }
+
+export interface TopLink {
+  id: string;
+  alias: string;
+  originalUrl: string;
+  clickCount: number;
+}
+
+export interface TopLinksResponse {
+  links: TopLink[];
+}
