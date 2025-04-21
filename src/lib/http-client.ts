@@ -1,6 +1,7 @@
+
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import BaseHttpClient from './base-http-client';
-import { Link, LinksResponse } from '@/types/link';
+import { Link, LinksResponse, LinkDetails } from '@/types/link';
 
 // Get the singleton instance of BaseHttpClient
 const baseClient = BaseHttpClient.getInstance();
@@ -54,8 +55,6 @@ export interface TipsResponse {
 export interface TricksResponse {
     tricks: string[];
 }
-
-import { LinkDetails } from '@/types/link';
 
 // API client with typed methods
 const httpClient = {
@@ -114,10 +113,6 @@ const httpClient = {
 
     getLinkById: (id: string): Promise<LinkDetails> => {
         return httpClient.get<LinkDetails>(`/api/links/${id}`);
-    },
-
-    getLinkById: (id: string): Promise<Link> => {
-        return httpClient.get<Link>(`/api/links/${id}`);
     },
 };
 

@@ -86,7 +86,7 @@ const LinkDetails = () => {
               <div>
                 <label className="text-sm font-medium">Status</label>
                 <div className="mt-1">
-                  <Badge variant={link.isActive ? "success" : "secondary"}>
+                  <Badge variant={link.isActive ? "default" : "secondary"}>
                     {link.isActive ? "Active" : "Inactive"}
                   </Badge>
                 </div>

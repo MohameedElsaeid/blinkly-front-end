@@ -9,8 +9,8 @@ interface LinkAnalyticsProps {
 }
 
 const LinkAnalytics: React.FC<LinkAnalyticsProps> = ({ analytics }) => {
-  const clicksByDateData = Object.entries(analytics.clicksByCountry).map(([date, count]) => ({
-    date,
+  const clicksByCountryData = Object.entries(analytics.clicksByCountry).map(([country, count]) => ({
+    country,
     clicks: count,
   }));
 
@@ -41,8 +41,8 @@ const LinkAnalytics: React.FC<LinkAnalyticsProps> = ({ analytics }) => {
         <CardContent>
           <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={clicksByDateData}>
-                <XAxis dataKey="date" />
+              <BarChart data={clicksByCountryData}>
+                <XAxis dataKey="country" />
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="clicks" fill="#2563eb" />
