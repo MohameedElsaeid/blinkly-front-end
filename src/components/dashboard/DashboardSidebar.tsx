@@ -16,10 +16,10 @@ const navItems = [
   { to: "/dashboard", icon: <BarChart2 className="mr-3 h-5 w-5" />, label: "Dashboard", exact: true },
   { to: "/dashboard/create-link", icon: <Plus className="mr-3 h-5 w-5" />, label: "Create New Link" },
   { to: "/dashboard/links", icon: <LinkIcon className="mr-3 h-5 w-5" />, label: "Links" },
-  { to: "/dashboard/analytics", icon: <BarChart2 className="mr-3 h-5 w-5" />, label: "Analytics" },
-  { to: "/dashboard/qr-codes", icon: <QrCode className="mr-3 h-5 w-5" />, label: "QR Codes" },
-  { to: "/dashboard/account", icon: <User className="mr-3 h-5 w-5" />, label: "Account" },
-  { to: "/dashboard/help", icon: <HelpCircle className="mr-3 h-5 w-5" />, label: "Help" },
+  { to: "/dashboard/analytics", icon: <BarChart2 className="mr-3 h-5 w-5" />, label: "Analytics", disabled: true },
+  { to: "/dashboard/qr-codes", icon: <QrCode className="mr-3 h-5 w-5" />, label: "QR Codes", disabled: true },
+  { to: "/dashboard/account", icon: <User className="mr-3 h-5 w-5" />, label: "Account", disabled: true },
+  { to: "/dashboard/help", icon: <HelpCircle className="mr-3 h-5 w-5" />, label: "Help", disabled: true },
 ];
 
 const DashboardSidebar: React.FC = () => {
@@ -44,12 +44,15 @@ const DashboardSidebar: React.FC = () => {
         {navItems.map((item) => (
           <Link
             key={item.to}
-            to={item.to}
+            to={item.disabled ? "#" : item.to}
             className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-              location.pathname === item.to
+              item.disabled 
+                ? "opacity-50 cursor-not-allowed pointer-events-none text-gray-400"
+                : location.pathname === item.to
                 ? "bg-blinkly-blue/10 text-blinkly-blue font-semibold"
                 : "text-gray-700 hover:bg-gray-100 hover:text-blinkly-blue"
             }`}
+            onClick={item.disabled ? (e) => e.preventDefault() : undefined}
           >
             {item.icon}
             {item.label}
@@ -60,8 +63,8 @@ const DashboardSidebar: React.FC = () => {
       {/* Footer */}
       <div className="p-4 border-t mt-auto">
         <Link
-          to="/dashboard/settings"
-          className="flex items-center px-3 py-2 mb-1 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 hover:text-blinkly-blue transition-colors"
+          to="#"
+          className="flex items-center px-3 py-2 mb-1 text-sm font-medium rounded-lg opacity-50 cursor-not-allowed pointer-events-none text-gray-400"
         >
           <Settings className="mr-3 h-5 w-5" />
           Settings
