@@ -1,4 +1,3 @@
-
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import BaseHttpClient from './base-http-client';
 import { Link, LinksResponse, LinkDetails } from '@/types/link';
@@ -113,6 +112,11 @@ const httpClient = {
 
     getLinkById: (id: string): Promise<LinkDetails> => {
         return httpClient.get<LinkDetails>(`/api/links/${id}`);
+    },
+
+    // Add the getTopLinks method
+    getTopLinks: (): Promise<TopLinksResponse> => {
+        return httpClient.get<TopLinksResponse>('/dashboard/top-links');
     },
 };
 
