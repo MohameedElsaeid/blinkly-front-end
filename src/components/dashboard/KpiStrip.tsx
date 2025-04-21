@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState } from 'react';
-import { TrendingUp, TrendingDown, Link as LinkIcon, Globe, MousePointer } from 'lucide-react';
+import { TrendingUp, TrendingDown, Link as LinkIcon, Globe, MousePointer, ArrowUp, ArrowDown } from 'lucide-react';
 import { Card } from "@/components/ui/card";
 import { useQuery } from '@tanstack/react-query';
 import httpClient from '@/lib/http-client';
