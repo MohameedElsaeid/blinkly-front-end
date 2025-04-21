@@ -95,8 +95,8 @@ const LinksTable: React.FC<LinksTableProps> = ({
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  onClick={() => onPageChange(pagination.page - 1)}
-                  disabled={pagination.page === 1}
+                  onClick={() => pagination.page > 1 && onPageChange(pagination.page - 1)}
+                  className={pagination.page === 1 ? "pointer-events-none opacity-50" : ""}
                 />
               </PaginationItem>
               
@@ -113,8 +113,8 @@ const LinksTable: React.FC<LinksTableProps> = ({
 
               <PaginationItem>
                 <PaginationNext
-                  onClick={() => onPageChange(pagination.page + 1)}
-                  disabled={pagination.page === pagination.totalPages}
+                  onClick={() => pagination.page < pagination.totalPages && onPageChange(pagination.page + 1)}
+                  className={pagination.page === pagination.totalPages ? "pointer-events-none opacity-50" : ""}
                 />
               </PaginationItem>
             </PaginationContent>

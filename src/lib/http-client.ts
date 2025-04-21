@@ -1,5 +1,7 @@
+
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import BaseHttpClient from './base-http-client';
+import { Link, LinksResponse } from '@/types/link';
 
 // Get the singleton instance of BaseHttpClient
 const baseClient = BaseHttpClient.getInstance();
