@@ -1,3 +1,4 @@
+
 export interface DistributionData {
   distribution: Record<string, number>;
   percentages: Record<string, number>;

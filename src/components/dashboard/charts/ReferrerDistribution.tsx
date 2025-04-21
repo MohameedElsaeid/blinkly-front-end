@@ -33,6 +33,23 @@ const ReferrerDistribution = () => {
     }
   };
 
+  // Function to handle previous page navigation
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
+  // Function to handle next page navigation
+  const handleNextPage = () => {
+    if (data && page < data.meta.total_pages) {
+      setPage(page + 1);
+    }
+  };
+
+  const isPreviousDisabled = page === 1;
+  const isNextDisabled = !data || page >= data.meta.total_pages;
+
   return (
     <Card className="shadow-sm hover:shadow-md transition-all">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -58,7 +75,7 @@ const ReferrerDistribution = () => {
               <Skeleton key={i} className="h-12 w-full" />
             ))}
           </div>
-        ) : data?.data.length === 0 ? (
+        ) : !data || data.data.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <p>No referrer data available</p>
           </div>
@@ -76,10 +93,10 @@ const ReferrerDistribution = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data?.data.map((referrer: ReferrerData) => (
+                  {data.data.map((referrer: ReferrerData) => (
                     <TableRow key={referrer.source}>
                       <TableCell className="max-w-[200px] truncate" title={referrer.source}>
-                        {new URL(referrer.source).hostname}
+                        {referrer.source.startsWith('http') ? new URL(referrer.source).hostname : referrer.source}
                       </TableCell>
                       <TableCell className="text-right">{formatValue(referrer.total_visits, 'number')}</TableCell>
                       <TableCell className="text-right">{formatValue(referrer.conversion_rate, 'percentage')}</TableCell>
@@ -102,8 +119,8 @@ const ReferrerDistribution = () => {
                   <PaginationContent>
                     <PaginationItem>
                       <PaginationPrevious 
-                        onClick={() => setPage(p => Math.max(1, p - 1))}
-                        disabled={page === 1}
+                        onClick={handlePreviousPage}
+                        className={isPreviousDisabled ? "pointer-events-none opacity-50" : ""}
                       />
                     </PaginationItem>
                     
@@ -120,8 +137,8 @@ const ReferrerDistribution = () => {
                     
                     <PaginationItem>
                       <PaginationNext
-                        onClick={() => setPage(p => Math.min(data.meta.total_pages, p + 1))}
-                        disabled={page === data.meta.total_pages}
+                        onClick={handleNextPage}
+                        className={isNextDisabled ? "pointer-events-none opacity-50" : ""}
                       />
                     </PaginationItem>
                   </PaginationContent>
