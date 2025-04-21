@@ -6,24 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RedirectPage from "./pages/RedirectPage";
-
-// Import pages
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import SignupForm from "./components/SignupForm";
-import SignupSuccessful from "./components/SignupSuccessful";
-import LoginForm from "./components/LoginForm";
-import Dashboard from "./pages/Dashboard";
-import Features from "./pages/Features";
-import Pricing from "./pages/Pricing";
-import HelpCenter from "./pages/HelpCenter";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Terms from "./pages/Terms";
-import Privacy from "./pages/Privacy";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import CreateLink from "./pages/CreateLink";
+import Links from "./pages/Links";
 
 const queryClient = new QueryClient();
 
@@ -33,7 +16,6 @@ const App = () => (
       <AuthProvider>
         <TooltipProvider>
           <Routes>
-            {/* Public routes */}
             <Route path="/" element={<Index />} />
             <Route path="/features" element={<Features />} />
             <Route path="/pricing" element={<Pricing />} />
@@ -46,12 +28,19 @@ const App = () => (
             <Route path="/signup-successful" element={<SignupSuccessful />} />
             <Route path="/login" element={<LoginForm />} />
 
-            {/* Protected dashboard routes */}
             <Route
               path="/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/links"
+              element={
+                <ProtectedRoute>
+                  <Links />
                 </ProtectedRoute>
               }
             />
@@ -64,14 +53,11 @@ const App = () => (
               }
             />
 
-            {/* Blog routes */}
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
 
-            {/* Short-link redirect route - must be before catch-all */}
             <Route path="/:id" element={<RedirectPage />} />
             
-            {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />

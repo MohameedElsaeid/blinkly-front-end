@@ -102,7 +102,16 @@ const httpClient = {
     // Method to update the auth token across all HTTP clients
     updateToken: (token: string): void => {
         baseClient.updateToken(token);
-    }
+    },
+
+    // Links specific API methods
+    getLinks: (page: number = 1, limit: number = 10): Promise<LinksResponse> => {
+        return httpClient.get<LinksResponse>(`/api/links?page=${page}&limit=${limit}`);
+    },
+
+    getLinkById: (id: string): Promise<Link> => {
+        return httpClient.get<Link>(`/api/links/${id}`);
+    },
 };
 
 export default httpClient;
