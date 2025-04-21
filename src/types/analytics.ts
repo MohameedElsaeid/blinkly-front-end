@@ -1,4 +1,3 @@
-
 export interface DistributionData {
   distribution: Record<string, number>;
   percentages: Record<string, number>;
@@ -57,6 +56,22 @@ export interface ReferrerResponse {
     limit: number;
     total_pages: number;
   };
+  period: {
+    start: string;
+    end: string;
+  };
+}
+
+export interface DailyMetric {
+  date: string;
+  clicks: number;
+  unique_visitors: number;
+}
+
+export interface ClickPerformanceResponse {
+  total_clicks: number;
+  unique_visitors: number;
+  daily_metrics: DailyMetric[];
   period: {
     start: string;
     end: string;

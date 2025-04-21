@@ -1,87 +1,53 @@
-
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, ChevronDown } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { format } from "date-fns";
+import { format, sub } from "date-fns";
 import { DateRange } from "react-day-picker";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { ChartContainer } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import httpClient from "@/lib/http-client";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import { useIsMobile } from "@/hooks/use-mobile";
-
-// Define time series data type
-interface TimeSeriesData {
-  date: string;
-  clicks: number;
-  uniqueVisitors: number;
-}
-
-// Sample data - would be replaced with API data
-const generateSampleData = (): TimeSeriesData[] => {
-  const data = [];
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - 30);
-
-  for (let i = 0; i < 30; i++) {
-    const currentDate = new Date(startDate);
-    currentDate.setDate(startDate.getDate() + i);
-    
-    // Generate some random data with an upward trend
-    const base = 800 + i * 30;
-    const randomFactor = Math.random() * 400 - 200;
-    const clicks = Math.max(100, Math.round(base + randomFactor));
-    
-    data.push({
-      date: format(currentDate, 'MMM dd'),
-      clicks: clicks,
-      uniqueVisitors: Math.round(clicks * 0.7),
-    });
-  }
-  
-  return data;
-};
+import { ClickPerformanceResponse } from "@/types/analytics";
 
 const TimeSeriesChart = () => {
   const isMobile = useIsMobile();
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    from: sub(new Date(), { days: 30 }),
     to: new Date(),
   });
-  const [metric, setMetric] = useState("clicks");
+  const [metric, setMetric] = useState<'clicks' | 'visitors'>('clicks');
   
-  // Sample data fetch with loading state
-  const { data, isLoading } = useQuery<TimeSeriesData[]>({
-    queryKey: ['timeSeriesData', dateRange, metric],
+  const { data, isLoading } = useQuery({
+    queryKey: ['clickPerformance', dateRange, metric],
     queryFn: () => {
-      // This would be an actual API call in production
-      return new Promise<TimeSeriesData[]>(resolve => {
-        setTimeout(() => {
-          resolve(generateSampleData());
-        }, 600);
+      return httpClient.getClickPerformance({
+        start_date: dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
+        end_date: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+        metric,
       });
     },
   });
 
   const displayMetrics = {
     clicks: "Clicks",
-    uniqueVisitors: "Unique Visitors",
-    conversionRate: "Conversion Rate",
+    visitors: "Unique Visitors",
   };
 
-  // Function to format tick values based on data length and mobile state
-  const formatXAxisTick = (value: string, index: number): string => {
-    if (isMobile && data && data.length > 15) {
-      return index % 3 === 0 ? value : '';
-    }
-    return value;
+  const formatXAxisTick = (value: string) => {
+    return format(new Date(value), 'MMM dd');
   };
+
+  const chartData = data?.daily_metrics.map(item => ({
+    date: item.date,
+    clicks: item.clicks,
+    unique_visitors: item.unique_visitors,
+  }));
 
   return (
     <Card className="shadow-sm hover:shadow-md transition-all">
@@ -92,7 +58,7 @@ const TimeSeriesChart = () => {
           <DateRangePicker dateRange={dateRange} onChange={setDateRange} />
           
           <div className="w-full sm:w-auto">
-            <Select value={metric} onValueChange={setMetric}>
+            <Select value={metric} onValueChange={(value: 'clicks' | 'visitors') => setMetric(value)}>
               <SelectTrigger className="w-full sm:w-[180px] h-9">
                 <SelectValue placeholder="Select metric" />
               </SelectTrigger>
@@ -127,7 +93,7 @@ const TimeSeriesChart = () => {
                 label: "Clicks",
                 color: "#0fa0ce",
               },
-              uniqueVisitors: {
+              unique_visitors: {
                 label: "Unique Visitors",
                 color: "#9b87f5",
               },
@@ -136,7 +102,7 @@ const TimeSeriesChart = () => {
           >
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={data}
+                data={chartData}
                 margin={{
                   top: 20,
                   right: 10,
@@ -166,7 +132,7 @@ const TimeSeriesChart = () => {
                     if (active && payload && payload.length) {
                       return (
                         <div className="bg-background p-2 border rounded shadow-lg">
-                          <p className="text-sm font-medium">{label}</p>
+                          <p className="text-sm font-medium">{formatXAxisTick(label)}</p>
                           {payload.map((entry) => (
                             <p 
                               key={entry.dataKey} 
