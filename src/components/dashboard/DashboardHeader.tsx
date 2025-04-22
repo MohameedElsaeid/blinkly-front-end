@@ -1,7 +1,8 @@
 
 import React, { useState } from "react";
-import { Bell, Menu, X, User, Settings, LogOut } from "lucide-react";
+import { Bell, Menu, X, User, Settings, LogOut, PanelLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +26,11 @@ const DashboardHeader = () => {
         >
           {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
+
+        {/* Sidebar toggle button - desktop only */}
+        <div className="hidden md:block">
+          <SidebarTrigger />
+        </div>
 
         {/* Logo - mobile only */}
         <div className="md:hidden">
@@ -78,6 +84,7 @@ const DashboardHeader = () => {
           </DropdownMenu>
         </div>
       </div>
+      
       {/* Mobile navigation */}
       {mobileMenuOpen && (
         <nav className="md:hidden bg-white pt-2 pb-4 space-y-1 px-4 shadow animate-fade-in">
