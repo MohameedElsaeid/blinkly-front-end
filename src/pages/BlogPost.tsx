@@ -4,7 +4,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Skeleton } from "@/components/ui/skeleton";
-import { BlogPost } from '@/types/blog';
+import type { BlogPost } from '@/types/blog';  // Change to type-only import
 import { ArrowLeft, Calendar, Clock, User, Tag } from 'lucide-react';
 import ShareButton from "@/components/ShareButton";
 
