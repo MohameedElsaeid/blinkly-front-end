@@ -1,79 +1,79 @@
 export interface DistributionData {
-  distribution: Record<string, number>;
-  percentages: Record<string, number>;
+    distribution: Record<string, number>;
+    percentages: Record<string, number>;
 }
 
 export interface DeviceDistributionResponse {
-  total_clicks: number;
-  period_start: string;
-  period_end: string;
-  devices: DistributionData;
-  browsers: DistributionData;
-  operating_systems: DistributionData;
-  browser_versions: DistributionData;
-  os_versions: DistributionData;
-  unique_devices: number;
-  unique_browsers: number;
-  unique_operating_systems: number;
+    total_clicks: number;
+    period_start: string;
+    period_end: string;
+    devices: DistributionData;
+    browsers: DistributionData;
+    operating_systems: DistributionData;
+    browser_versions: DistributionData;
+    os_versions: DistributionData;
+    unique_devices: number;
+    unique_browsers: number;
+    unique_operating_systems: number;
 }
 
 export interface GeoDistributionResponse {
-  total_clicks: number;
-  period_start: string;
-  period_end: string;
-  countries: {
-    distribution: Record<string, number>;
-    percentages: Record<string, number>;
-  };
-  cities: {
-    distribution: Record<string, number>;
-    percentages: Record<string, number>;
-  };
-  locations: Array<{
-    latitude: number;
-    longitude: number;
-    count: number;
-  }>;
-  unique_countries: number;
-  unique_cities: number;
+    total_clicks: number;
+    period_start: string;
+    period_end: string;
+    countries: {
+        distribution: Record<string, number>;
+        percentages: Record<string, number>;
+    };
+    cities: {
+        distribution: Record<string, number>;
+        percentages: Record<string, number>;
+    };
+    locations: Array<{
+        latitude: number;
+        longitude: number;
+        count: number;
+    }>;
+    unique_countries: number;
+    unique_cities: number;
 }
 
 export interface ReferrerData {
-  source: string;
-  total_visits: number;
-  bounce_rate: number;
-  avg_session_duration: number;
-  conversion_rate: number;
-  total_revenue: number;
-  change_percentage: number;
+    source: string;
+    total_visits: number;
+    bounce_rate: number;
+    avg_session_duration: number;
+    conversion_rate: number;
+    total_revenue: number;
+    change_percentage: number;
 }
 
 export interface ReferrerResponse {
-  data: ReferrerData[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-  };
-  period: {
-    start: string;
-    end: string;
-  };
+    data: ReferrerData[];
+    meta: {
+        total: number;
+        page: number;
+        limit: number;
+        total_pages: number;
+    };
+    period: {
+        start: string;
+        end: string;
+    };
 }
 
 export interface DailyMetric {
-  date: string;
-  clicks: number;
-  unique_visitors: number;
+    date: string;
+    clicks: number;
+    unique_visitors: number;
 }
 
 export interface ClickPerformanceResponse {
-  total_clicks: number;
-  unique_visitors: number;
-  daily_metrics: DailyMetric[];
-  period: {
-    start: string;
-    end: string;
-  };
+    total_clicks: number;
+    unique_visitors: number;
+    daily_metrics: DailyMetric[];
+    period: {
+        start: string;
+        end: string;
+    };
 }

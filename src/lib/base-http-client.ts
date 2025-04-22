@@ -9,9 +9,9 @@ interface CsrfResponse {
 }
 
 class BaseHttpClient {
+    private static instance: BaseHttpClient;
     private axiosInstance: AxiosInstance;
     private deviceId: string;
-    private static instance: BaseHttpClient;
 
     constructor() {
         this.deviceId = this.generateDeviceId();
@@ -80,6 +80,10 @@ class BaseHttpClient {
         localStorage.setItem('blinkly_token', token);
     }
 
+    public getAxiosInstance(): AxiosInstance {
+        return this.axiosInstance;
+    }
+
     private generateDeviceId(): string {
         const navigatorInfo = window.navigator;
         const screenInfo = window.screen;
@@ -133,10 +137,6 @@ class BaseHttpClient {
             'X-Device-Memory': ((navigator as any).deviceMemory || 'unknown').toString(),
             'X-Custom-Header': localStorage.getItem('custom_header') || 'not-set',
         };
-    }
-
-    public getAxiosInstance(): AxiosInstance {
-        return this.axiosInstance;
     }
 }
 

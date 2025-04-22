@@ -1,8 +1,12 @@
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import BaseHttpClient from './base-http-client';
-import { Link, LinksResponse, LinkDetails, TopLinksResponse as LinkTopLinksResponse } from '@/types/link';
-import { DeviceDistributionResponse, GeoDistributionResponse, ReferrerResponse } from '@/types/analytics';
-import { ClickPerformanceResponse } from '@/types/analytics';
+import {LinkDetails, LinksResponse, TopLinksResponse as LinkTopLinksResponse} from '@/types/link';
+import {
+    ClickPerformanceResponse,
+    DeviceDistributionResponse,
+    GeoDistributionResponse,
+    ReferrerResponse
+} from '@/types/analytics';
 
 // Get the singleton instance of BaseHttpClient
 const baseClient = BaseHttpClient.getInstance();
@@ -76,9 +80,9 @@ export interface TricksResponse {
 }
 
 interface GetClickPerformanceParams {
-  start_date?: string;
-  end_date?: string;
-  metric?: 'clicks' | 'visitors';
+    start_date?: string;
+    end_date?: string;
+    metric?: 'clicks' | 'visitors';
 }
 
 // API client with typed methods
@@ -169,11 +173,11 @@ const httpClient = {
         page?: number;
         sort_by?: 'revenue' | 'visits' | 'conversion_rate';
     }): Promise<ReferrerResponse> => {
-        return httpClient.get<ReferrerResponse>('/dashboard/top-referrers', { params });
+        return httpClient.get<ReferrerResponse>('/dashboard/top-referrers', {params});
     },
 
     getClickPerformance: (params?: GetClickPerformanceParams): Promise<ClickPerformanceResponse> => {
-        return httpClient.get<ClickPerformanceResponse>('/dashboard/click-performance', { params });
+        return httpClient.get<ClickPerformanceResponse>('/dashboard/click-performance', {params});
     },
 
     // Add dynamic links API endpoints
