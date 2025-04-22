@@ -1,13 +1,15 @@
+
 import React from 'react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
-import {Plus, X} from 'lucide-react';
+import {Plus, X, Apple, Android} from 'lucide-react';
 import {
     FormField,
     FormItem,
     FormLabel,
     FormControl,
     FormMessage,
+    FormDescription
 } from '@/components/ui/form';
 
 interface Props {
@@ -39,7 +41,10 @@ const PlatformRulesSection: React.FC<Props> = ({
                                 <FormItem>
                                     <FormLabel>Platform</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="android, ios, desktop" {...field} />
+                                        <Input 
+                                            placeholder="e.g., android, ios, desktop" 
+                                            {...field} 
+                                        />
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>
@@ -52,10 +57,22 @@ const PlatformRulesSection: React.FC<Props> = ({
                             name={`rules.${index}.url`}
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>URL</FormLabel>
+                                    <FormLabel>Platform-Specific URL</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="https://platform-specific-url.com" {...field} />
+                                        <Input 
+                                            placeholder="Platform-specific URL" 
+                                            {...field} 
+                                        />
                                     </FormControl>
+                                    <FormDescription className="text-xs flex items-center">
+                                        <span className="mr-2">
+                                            {field.value?.toLowerCase()?.includes('ios') && <Apple className="h-4 w-4 inline-block mr-1"/>}
+                                            {field.value?.toLowerCase()?.includes('android') && <Android className="h-4 w-4 inline-block mr-1"/>}
+                                        </span>
+                                        {field.value?.toLowerCase()?.includes('ios') && "Example: https://apps.apple.com/app/id1234567890"}
+                                        {field.value?.toLowerCase()?.includes('android') && "Example: https://play.google.com/store/apps/details?id=com.example.myapp"}
+                                        {!field.value && "Hint: Use app store or play store URL for mobile platforms"}
+                                    </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
