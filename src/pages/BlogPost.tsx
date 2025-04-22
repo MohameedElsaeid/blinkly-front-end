@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { BlogPost } from '@/types/blog';  // Change to type-only import
 import { ArrowLeft, Calendar, Clock, User, Tag } from 'lucide-react';
 import ShareButton from "@/components/ShareButton";
+import { Helmet } from "react-helmet";
 
 // Temporary mock data - replace with actual API call when backend is ready
 const mockPosts: BlogPost[] = [
@@ -132,7 +133,7 @@ const mockPosts: BlogPost[] = [
     }
 ];
 
-const BlogPost: React.FC = () => {
+const BlogPostPage: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
     const [post, setPost] = useState<BlogPost | null>(null);
@@ -206,8 +207,42 @@ const BlogPost: React.FC = () => {
     // Build the full URL for sharing
     const shareUrl = `${window.location.origin}/blog/${post.slug}`;
 
+    // Function to properly format markdown content to HTML
+    const formatContent = (content: string) => {
+        return content
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br />')
+            .replace(/## (.*?)\n/g, '</p><h2 class="text-2xl font-semibold mt-8 mb-4">$1</h2><p>')
+            .replace(/### (.*?)\n/g, '</p><h3 class="text-xl font-semibold mt-6 mb-3">$1</h3><p>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/```([\s\S]*?)```/g, '</p><pre class="bg-gray-100 p-4 rounded-md overflow-x-auto my-4"><code>$1</code></pre><p>')
+            .replace(/- (.*?)(?=\n|$)/g, '</p><ul class="list-disc pl-6 my-4"><li>$1</li></ul><p>')
+            .replace(/<\/ul><p><\/p><ul class="list-disc pl-6 my-4">/g, '</ul><ul class="list-disc pl-6 my-4">')
+            .replace(/^(.+)$/m, '<p>$1</p>');
+    };
+
     return (
         <>
+            <Helmet>
+                <title>{post?.title} | Blinkly Blog</title>
+                <meta name="description" content={post?.excerpt} />
+                
+                {/* OpenGraph tags for social sharing */}
+                <meta property="og:title" content={post?.title} />
+                <meta property="og:description" content={post?.excerpt} />
+                <meta property="og:url" content={shareUrl} />
+                <meta property="og:type" content="article" />
+                {post?.image && <meta property="og:image" content={post.image} />}
+                <meta property="og:site_name" content="Blinkly" />
+                
+                {/* Twitter Card tags */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={post?.title} />
+                <meta name="twitter:description" content={post?.excerpt} />
+                {post?.image && <meta name="twitter:image" content={post.image} />}
+            </Helmet>
+            
             <Navbar />
             <div className="container max-w-4xl mx-auto px-4 py-12">
                 <button 
@@ -219,10 +254,10 @@ const BlogPost: React.FC = () => {
                 </button>
                 
                 <article className="prose prose-slate lg:prose-lg max-w-none">
-                    <h1 className="text-4xl font-bold mb-6">{post.title}</h1>
+                    <h1 className="text-4xl font-bold mb-6">{post?.title}</h1>
                     
                     <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8">
-                        {post.author && (
+                        {post?.author && (
                             <div className="flex items-center">
                                 <User className="mr-1 h-4 w-4" />
                                 <span>{post.author}</span>
@@ -231,17 +266,17 @@ const BlogPost: React.FC = () => {
                         
                         <div className="flex items-center">
                             <Calendar className="mr-1 h-4 w-4" />
-                            <span>{post.publishedAt}</span>
+                            <span>{post?.publishedAt}</span>
                         </div>
                         
-                        {post.readTime && (
+                        {post?.readTime && (
                             <div className="flex items-center">
                                 <Clock className="mr-1 h-4 w-4" />
                                 <span>{post.readTime}</span>
                             </div>
                         )}
                         
-                        {post.category && (
+                        {post?.category && (
                             <div className="flex items-center">
                                 <Tag className="mr-1 h-4 w-4" />
                                 <span>{post.category}</span>
@@ -249,15 +284,15 @@ const BlogPost: React.FC = () => {
                         )}
                         
                         <ShareButton
-                            title={post.title}
-                            excerpt={post.excerpt}
-                            image={post.image}
+                            title={post?.title || ''}
+                            excerpt={post?.excerpt || ''}
+                            image={post?.image}
                             url={shareUrl}
                             className="ml-auto"
                         />
                     </div>
                     
-                    {post.image && (
+                    {post?.image && (
                         <img 
                             src={post.image} 
                             alt={post.title} 
@@ -265,19 +300,14 @@ const BlogPost: React.FC = () => {
                         />
                     )}
                     
-                    <div className="markdown-content" 
-                        dangerouslySetInnerHTML={{ 
-                            __html: post.content
-                                .replace(/\n\n/g, '</p><p>')
-                                .replace(/\n/g, '<br />')
-                                .replace(/## (.*?)\n/g, '</p><h2>$1</h2><p>')
-                                .replace(/### (.*?)\n/g, '</p><h3>$1</h3><p>')
-                                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                                .replace(/```([\s\S]*?)```/g, '</p><pre><code>$1</code></pre><p>')
-                                .replace(/- (.*?)\n/g, '</p><ul><li>$1</li></ul><p>')
-                        }}
-                    />
+                    {post?.content && (
+                        <div 
+                            className="markdown-content"
+                            dangerouslySetInnerHTML={{ 
+                                __html: `<p>${formatContent(post.content)}</p>`
+                            }}
+                        />
+                    )}
                 </article>
             </div>
             <Footer />
@@ -285,4 +315,4 @@ const BlogPost: React.FC = () => {
     );
 };
 
-export default BlogPost;
+export default BlogPostPage;
