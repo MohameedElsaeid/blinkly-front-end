@@ -9,7 +9,6 @@ import { Helmet } from "react-helmet";
 import BlogPostMeta from "@/components/blog/BlogPostMeta";
 import BlogPostContent from "@/components/blog/BlogPostContent";
 
-// Temporary mock data - replace with actual API call when backend is ready
 const mockPosts: BlogPost[] = [
     {
         "id": "1",

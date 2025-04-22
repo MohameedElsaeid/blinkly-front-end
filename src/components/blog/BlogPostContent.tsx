@@ -23,7 +23,7 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({ post }) => (
             <div
                 className="markdown-content"
                 dangerouslySetInnerHTML={{
-                    __html: `<p>${formatContent(post.content)}</p>`
+                    __html: formatContent(post.content)
                 }}
             />
         )}
