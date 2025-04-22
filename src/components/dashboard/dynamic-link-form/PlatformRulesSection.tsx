@@ -2,7 +2,7 @@
 import React from 'react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
-import {Plus, X, Apple, Android} from 'lucide-react';
+import {Plus, X, Apple, Smartphone} from 'lucide-react';
 import {
     FormField,
     FormItem,
@@ -67,7 +67,7 @@ const PlatformRulesSection: React.FC<Props> = ({
                                     <FormDescription className="text-xs flex items-center">
                                         <span className="mr-2">
                                             {field.value?.toLowerCase()?.includes('ios') && <Apple className="h-4 w-4 inline-block mr-1"/>}
-                                            {field.value?.toLowerCase()?.includes('android') && <Android className="h-4 w-4 inline-block mr-1"/>}
+                                            {field.value?.toLowerCase()?.includes('android') && <Smartphone className="h-4 w-4 inline-block mr-1"/>}
                                         </span>
                                         {field.value?.toLowerCase()?.includes('ios') && "Example: https://apps.apple.com/app/id1234567890"}
                                         {field.value?.toLowerCase()?.includes('android') && "Example: https://play.google.com/store/apps/details?id=com.example.myapp"}
@@ -104,4 +104,3 @@ const PlatformRulesSection: React.FC<Props> = ({
     </>
 );
 export default PlatformRulesSection;
-
