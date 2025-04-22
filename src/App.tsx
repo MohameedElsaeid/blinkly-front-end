@@ -26,6 +26,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import LinkDetails from "./pages/LinkDetails";
+import Account from "./pages/Account";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,14 @@ const App = () => (
                             element={
                                 <ProtectedRoute>
                                     <LinkDetails/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/dashboard/account"
+                            element={
+                                <ProtectedRoute>
+                                    <Account/>
                                 </ProtectedRoute>
                             }
                         />

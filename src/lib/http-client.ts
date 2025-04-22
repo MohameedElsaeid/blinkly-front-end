@@ -7,6 +7,7 @@ import {
     GeoDistributionResponse,
     ReferrerResponse
 } from '@/types/analytics';
+import {UserProfile, UpdateUserProfileRequest} from '@/types/user';
 
 // Get the singleton instance of BaseHttpClient
 const baseClient = BaseHttpClient.getInstance();
@@ -47,7 +48,6 @@ export interface PackagesResponse {
     yearly: Package[];
 }
 
-// New interface definitions for dashboard APIs
 export interface TotalClicksResponse {
     totalClicks: number;
     trend: number;
@@ -199,6 +199,15 @@ const httpClient = {
 
     deleteDynamicLink: (id: string) => {
         return httpClient.delete(`/api/dynamic-links/${id}`);
+    },
+
+    // User Profile API methods
+    getUserProfile: (): Promise<UserProfile> => {
+        return httpClient.get<UserProfile>('/users/profile');
+    },
+
+    updateUserProfile: (data: UpdateUserProfileRequest): Promise<UserProfile> => {
+        return httpClient.put<UserProfile>('/users/profile', data);
     },
 };
 

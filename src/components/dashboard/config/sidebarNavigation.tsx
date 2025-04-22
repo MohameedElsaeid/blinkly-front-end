@@ -1,3 +1,4 @@
+
 import {BarChart2, LinkIcon, QrCode, User, HelpCircle} from "lucide-react";
 import React from "react";
 
@@ -41,8 +42,7 @@ export const navigationItems: NavItem[] = [
     {
         to: "/dashboard/account",
         icon: <User className="mr-3 h-5 w-5"/>,
-        label: "Account",
-        disabled: true
+        label: "Account"
     },
     {
         to: "/dashboard/help",
