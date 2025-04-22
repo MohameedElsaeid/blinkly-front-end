@@ -1,3 +1,4 @@
+
 export interface BlogPost {
     id: string;
     title: string;
@@ -6,4 +7,7 @@ export interface BlogPost {
     slug: string;
     publishedAt: string;
     image?: string;
+    author?: string;
+    category?: string;
+    readTime?: string;
 }
