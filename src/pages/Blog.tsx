@@ -137,7 +137,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Discover how properly structured short links can contribute to your website's SEO efforts.",
         "slug": "enhancing-seo-with-shortened-urls",
         "publishedAt": "2025-04-12",
-        "image": "https://blinkly.app/lovable-uploads/blog/enhancing-seo-with-shortened-urls-min.png",
+        "image": "https://blinkly.app/lovable-uploads/blog/enhancing-seo.png",
         "author": "James Wilson",
         "category": "SEO",
         "readTime": "6 min read"
