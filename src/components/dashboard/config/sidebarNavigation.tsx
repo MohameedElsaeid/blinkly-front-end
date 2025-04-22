@@ -23,6 +23,11 @@ export const navigationItems: NavItem[] = [
     label: "Links" 
   },
   { 
+    to: "/dashboard/dynamic-links", 
+    icon: <LinkIcon className="mr-3 h-5 w-5" />, 
+    label: "Dynamic Links" 
+  },
+  { 
     to: "/dashboard/analytics", 
     icon: <BarChart2 className="mr-3 h-5 w-5" />, 
     label: "Analytics", 

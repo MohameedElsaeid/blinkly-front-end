@@ -175,6 +175,27 @@ const httpClient = {
     getClickPerformance: (params?: GetClickPerformanceParams): Promise<ClickPerformanceResponse> => {
         return httpClient.get<ClickPerformanceResponse>('/dashboard/click-performance', { params });
     },
+
+    // Add dynamic links API endpoints
+    createDynamicLink: (data: any) => {
+        return httpClient.post('/api/dynamic-links', data);
+    },
+
+    getDynamicLinks: (page: number = 1, limit: number = 10) => {
+        return httpClient.get(`/api/dynamic-links?page=${page}&limit=${limit}`);
+    },
+
+    getDynamicLinkById: (id: string) => {
+        return httpClient.get(`/api/dynamic-links/${id}`);
+    },
+
+    updateDynamicLink: (id: string, data: any) => {
+        return httpClient.put(`/api/dynamic-links/${id}`, data);
+    },
+
+    deleteDynamicLink: (id: string) => {
+        return httpClient.delete(`/api/dynamic-links/${id}`);
+    },
 };
 
 export default httpClient;
