@@ -1,13 +1,13 @@
-
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Skeleton } from "@/components/ui/skeleton";
-import type { BlogPost } from '@/types/blog';  // Change to type-only import
-import { ArrowLeft, Calendar, Clock, User, Tag } from 'lucide-react';
-import ShareButton from "@/components/ShareButton";
+import type { BlogPost } from '@/types/blog';
+import { ArrowLeft } from 'lucide-react';
 import { Helmet } from "react-helmet";
+import BlogPostMeta from "@/components/blog/BlogPostMeta";
+import BlogPostContent from "@/components/blog/BlogPostContent";
 
 // Temporary mock data - replace with actual API call when backend is ready
 const mockPosts: BlogPost[] = [
@@ -143,11 +143,11 @@ const BlogPostPage: React.FC = () => {
         // Simulating API request delay
         const timer = setTimeout(() => {
             const foundPost = mockPosts.find(p => p.slug === slug);
-            
+
             if (foundPost) {
                 setPost(foundPost);
             }
-            
+
             setIsLoading(false);
         }, 800);
 
@@ -191,7 +191,7 @@ const BlogPostPage: React.FC = () => {
                 <div className="container mx-auto px-4 py-24 text-center">
                     <h1 className="text-3xl font-bold mb-6">Blog Post Not Found</h1>
                     <p className="mb-8">The blog post you're looking for doesn't exist or has been removed.</p>
-                    <button 
+                    <button
                         onClick={handleBack}
                         className="flex items-center text-primary hover:text-primary/80 font-medium mx-auto"
                     >
@@ -207,27 +207,12 @@ const BlogPostPage: React.FC = () => {
     // Build the full URL for sharing
     const shareUrl = `${window.location.origin}/blog/${post.slug}`;
 
-    // Function to properly format markdown content to HTML
-    const formatContent = (content: string) => {
-        return content
-            .replace(/\n\n/g, '</p><p>')
-            .replace(/\n/g, '<br />')
-            .replace(/## (.*?)\n/g, '</p><h2 class="text-2xl font-semibold mt-8 mb-4">$1</h2><p>')
-            .replace(/### (.*?)\n/g, '</p><h3 class="text-xl font-semibold mt-6 mb-3">$1</h3><p>')
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.*?)\*/g, '<em>$1</em>')
-            .replace(/```([\s\S]*?)```/g, '</p><pre class="bg-gray-100 p-4 rounded-md overflow-x-auto my-4"><code>$1</code></pre><p>')
-            .replace(/- (.*?)(?=\n|$)/g, '</p><ul class="list-disc pl-6 my-4"><li>$1</li></ul><p>')
-            .replace(/<\/ul><p><\/p><ul class="list-disc pl-6 my-4">/g, '</ul><ul class="list-disc pl-6 my-4">')
-            .replace(/^(.+)$/m, '<p>$1</p>');
-    };
-
     return (
         <>
             <Helmet>
                 <title>{post?.title} | Blinkly Blog</title>
                 <meta name="description" content={post?.excerpt} />
-                
+
                 {/* OpenGraph tags for social sharing */}
                 <meta property="og:title" content={post?.title} />
                 <meta property="og:description" content={post?.excerpt} />
@@ -235,80 +220,27 @@ const BlogPostPage: React.FC = () => {
                 <meta property="og:type" content="article" />
                 {post?.image && <meta property="og:image" content={post.image} />}
                 <meta property="og:site_name" content="Blinkly" />
-                
+
                 {/* Twitter Card tags */}
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content={post?.title} />
                 <meta name="twitter:description" content={post?.excerpt} />
                 {post?.image && <meta name="twitter:image" content={post.image} />}
             </Helmet>
-            
+
             <Navbar />
             <div className="container max-w-4xl mx-auto px-4 py-12">
-                <button 
+                <button
                     onClick={handleBack}
                     className="flex items-center text-primary hover:text-primary/80 font-medium mb-8"
                 >
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to Blog
                 </button>
-                
-                <article className="prose prose-slate lg:prose-lg max-w-none">
-                    <h1 className="text-4xl font-bold mb-6">{post?.title}</h1>
-                    
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8">
-                        {post?.author && (
-                            <div className="flex items-center">
-                                <User className="mr-1 h-4 w-4" />
-                                <span>{post.author}</span>
-                            </div>
-                        )}
-                        
-                        <div className="flex items-center">
-                            <Calendar className="mr-1 h-4 w-4" />
-                            <span>{post?.publishedAt}</span>
-                        </div>
-                        
-                        {post?.readTime && (
-                            <div className="flex items-center">
-                                <Clock className="mr-1 h-4 w-4" />
-                                <span>{post.readTime}</span>
-                            </div>
-                        )}
-                        
-                        {post?.category && (
-                            <div className="flex items-center">
-                                <Tag className="mr-1 h-4 w-4" />
-                                <span>{post.category}</span>
-                            </div>
-                        )}
-                        
-                        <ShareButton
-                            title={post?.title || ''}
-                            excerpt={post?.excerpt || ''}
-                            image={post?.image}
-                            url={shareUrl}
-                            className="ml-auto"
-                        />
-                    </div>
-                    
-                    {post?.image && (
-                        <img 
-                            src={post.image} 
-                            alt={post.title} 
-                            className="w-full h-auto rounded-lg mb-8 object-cover"
-                        />
-                    )}
-                    
-                    {post?.content && (
-                        <div 
-                            className="markdown-content"
-                            dangerouslySetInnerHTML={{ 
-                                __html: `<p>${formatContent(post.content)}</p>`
-                            }}
-                        />
-                    )}
-                </article>
+
+                <BlogPostMeta post={post} shareUrl={shareUrl} />
+
+                <BlogPostContent post={post} />
             </div>
             <Footer />
         </>
