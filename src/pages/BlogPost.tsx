@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -120,4 +121,168 @@ const mockPosts: BlogPost[] = [
     {
         "id": "10",
         "title": "The Role of Short Links in Influencer Marketing",
-        "content": "Providing influencers with branded short links allows for consistent messaging and easy tracking of campaign success. Understand how to implement this strategy to maximize your influencer partnerships.\n\n## Why Use Short Links in Influencer Marketing?\n\nIn the world of influencer marketing, where authenticity and trackability are key, short links offer several advantages:\n\n- **Consistent Messaging**: Short links ensure that influencers share the correct URLs.\n- **Trackable Campaigns**: Short link platforms provide valuable analytics to track campaign performance.\n- **Branded Links**: Branded short links reinforce your brand identity and increase user trust.\n- **Easy to Share**: Short links are easy for influencers to share across various platforms.\n\n## Key Benefits of Using Short Links in Influencer Marketing\n\n### 1. Consistent Messaging\n\nShort links ensure that influencers share the correct URLs, preventing errors and confusion.\n\n### 2. Trackable Campaigns\n\nShort link platforms provide detailed analytics to track click-through rates, geographic data, and referral sources.\
+        "content": "Providing influencers with branded short links allows for consistent messaging and easy tracking of campaign success. Understand how to implement this strategy to maximize your influencer partnerships.\n\n## Why Use Short Links in Influencer Marketing?\n\nIn the world of influencer marketing, where authenticity and trackability are key, short links offer several advantages:\n\n- **Consistent Messaging**: Short links ensure that influencers share the correct URLs.\n- **Trackable Campaigns**: Short link platforms provide valuable analytics to track campaign performance.\n- **Branded Links**: Branded short links reinforce your brand identity and increase user trust.\n- **Easy to Share**: Short links are easy for influencers to share across various platforms.\n\n## Key Benefits of Using Short Links in Influencer Marketing\n\n### 1. Consistent Messaging\n\nShort links ensure that influencers share the correct URLs, preventing errors and confusion.\n\n### 2. Trackable Campaigns\n\nShort link platforms provide detailed analytics to track click-through rates, geographic data, and referral sources.\n\n### 3. Branded Experience\n\nBranded short links maintain consistent branding throughout the user journey from influencer content to your website.\n\n### 4. Simplified Attribution\n\nAssign unique links to each influencer to accurately track which partnerships drive the most engagement.\n\n## Implementing Short Links in Your Influencer Strategy\n\n### 1. Create Unique Links for Each Influencer\n\nGenerate individual links for each influencer to track their specific performance.\n\n### 2. Develop Clear Instructions\n\nProvide influencers with guidelines on how and where to place your links.\n\n### 3. Monitor Performance\n\nRegularly review analytics to identify top-performing influencers and content types.\n\n### 4. Optimize Based on Data\n\nAdjust your influencer partnerships and content strategy based on link performance.\n\n## Best Practices for Influencer Link Management\n\n- **Keep Links Simple**: Shorter, cleaner links are more likely to be shared.\n- **Use Custom Aliases**: Create memorable, branded links that reflect the campaign.\n- **Track Multiple Metrics**: Look beyond clicks to consider conversions and engagement.\n- **Provide Value**: Ensure the destination page delivers on the influencer's promise.\n- **Test Different Placements**: Experiment with link placement in different content formats.\n\n## Conclusion\n\nShort links are a powerful tool in influencer marketing, providing both practical benefits for sharing and valuable data for campaign optimization. By implementing a strategic approach to link management with your influencers, you can enhance campaign performance, improve attribution, and maximize your return on investment.",
+        "excerpt": "Elevate your influencer partnerships with strategic link management that improves tracking and consistency.",
+        "slug": "the-role-of-short-links-in-influencer-marketing",
+        "publishedAt": "2025-04-13",
+        "image": "https://blinkly.app/lovable-uploads/blog/the-role-of-short-links-in-influencer-marketing-min.png",
+        "author": "Isabella Johnson",
+        "category": "Influencer Marketing",
+        "readTime": "6 min read"
+    }
+];
+
+const BlogPost: React.FC = () => {
+    const { slug } = useParams<{ slug: string }>();
+    const navigate = useNavigate();
+    const [post, setPost] = useState<BlogPost | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        // Simulating API request delay
+        const timer = setTimeout(() => {
+            const foundPost = mockPosts.find(p => p.slug === slug);
+            
+            if (foundPost) {
+                setPost(foundPost);
+            }
+            
+            setIsLoading(false);
+        }, 800);
+
+        return () => clearTimeout(timer);
+    }, [slug]);
+
+    const handleBack = () => {
+        navigate('/blog');
+    };
+
+    if (isLoading) {
+        return (
+            <>
+                <Navbar />
+                <div className="container max-w-4xl mx-auto px-4 py-12">
+                    <div className="mb-8">
+                        <Skeleton className="h-8 w-3/4 mb-4" />
+                        <div className="flex space-x-4 mb-6">
+                            <Skeleton className="h-5 w-24" />
+                            <Skeleton className="h-5 w-24" />
+                            <Skeleton className="h-5 w-24" />
+                        </div>
+                        <Skeleton className="h-64 w-full mb-8" />
+                        <div className="space-y-4">
+                            <Skeleton className="h-6 w-full" />
+                            <Skeleton className="h-6 w-full" />
+                            <Skeleton className="h-6 w-5/6" />
+                            <Skeleton className="h-6 w-4/5" />
+                        </div>
+                    </div>
+                </div>
+                <Footer />
+            </>
+        );
+    }
+
+    if (!post) {
+        return (
+            <>
+                <Navbar />
+                <div className="container mx-auto px-4 py-24 text-center">
+                    <h1 className="text-3xl font-bold mb-6">Blog Post Not Found</h1>
+                    <p className="mb-8">The blog post you're looking for doesn't exist or has been removed.</p>
+                    <button 
+                        onClick={handleBack}
+                        className="flex items-center text-primary hover:text-primary/80 font-medium mx-auto"
+                    >
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Back to Blog
+                    </button>
+                </div>
+                <Footer />
+            </>
+        );
+    }
+
+    // Build the full URL for sharing
+    const shareUrl = `${window.location.origin}/blog/${post.slug}`;
+
+    return (
+        <>
+            <Navbar />
+            <div className="container max-w-4xl mx-auto px-4 py-12">
+                <button 
+                    onClick={handleBack}
+                    className="flex items-center text-primary hover:text-primary/80 font-medium mb-8"
+                >
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to Blog
+                </button>
+                
+                <article className="prose prose-slate lg:prose-lg max-w-none">
+                    <h1 className="text-4xl font-bold mb-6">{post.title}</h1>
+                    
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8">
+                        {post.author && (
+                            <div className="flex items-center">
+                                <User className="mr-1 h-4 w-4" />
+                                <span>{post.author}</span>
+                            </div>
+                        )}
+                        
+                        <div className="flex items-center">
+                            <Calendar className="mr-1 h-4 w-4" />
+                            <span>{post.publishedAt}</span>
+                        </div>
+                        
+                        {post.readTime && (
+                            <div className="flex items-center">
+                                <Clock className="mr-1 h-4 w-4" />
+                                <span>{post.readTime}</span>
+                            </div>
+                        )}
+                        
+                        {post.category && (
+                            <div className="flex items-center">
+                                <Tag className="mr-1 h-4 w-4" />
+                                <span>{post.category}</span>
+                            </div>
+                        )}
+                        
+                        <ShareButton
+                            title={post.title}
+                            excerpt={post.excerpt}
+                            image={post.image}
+                            url={shareUrl}
+                            className="ml-auto"
+                        />
+                    </div>
+                    
+                    {post.image && (
+                        <img 
+                            src={post.image} 
+                            alt={post.title} 
+                            className="w-full h-auto rounded-lg mb-8 object-cover"
+                        />
+                    )}
+                    
+                    <div className="markdown-content" 
+                        dangerouslySetInnerHTML={{ 
+                            __html: post.content
+                                .replace(/\n\n/g, '</p><p>')
+                                .replace(/\n/g, '<br />')
+                                .replace(/## (.*?)\n/g, '</p><h2>$1</h2><p>')
+                                .replace(/### (.*?)\n/g, '</p><h3>$1</h3><p>')
+                                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                                .replace(/```([\s\S]*?)```/g, '</p><pre><code>$1</code></pre><p>')
+                                .replace(/- (.*?)\n/g, '</p><ul><li>$1</li></ul><p>')
+                        }}
+                    />
+                </article>
+            </div>
+            <Footer />
+        </>
+    );
+};
+
+export default BlogPost;
