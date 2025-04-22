@@ -1,3 +1,4 @@
+
 import React from "react";
 import {Settings, LogOut} from "lucide-react";
 import {navigationItems} from "./config/sidebarNavigation";
@@ -9,8 +10,17 @@ import {
     SidebarFooter,
     SidebarHeader,
 } from "@/components/ui/sidebar";
+import {useAuth} from "@/contexts/AuthContext";
+import {toast} from "sonner";
 
 const DashboardSidebar: React.FC = () => {
+    const {logout} = useAuth();
+
+    const handleLogout = () => {
+        logout();
+        toast.success("Logged out successfully");
+    };
+
     return (
         <Sidebar>
             <SidebarHeader>
@@ -34,6 +44,7 @@ const DashboardSidebar: React.FC = () => {
                 </button>
                 <button
                     className="flex w-full items-center px-3 py-2 mt-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 hover:text-red-600 transition-colors"
+                    onClick={handleLogout}
                 >
                     <LogOut className="mr-3 h-5 w-5"/>
                     Log Out
