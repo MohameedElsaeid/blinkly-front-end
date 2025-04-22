@@ -9,7 +9,7 @@ import {
   Eye, 
   Save,
   X,
-  Calendar,
+  CalendarIcon,
   Tag
 } from 'lucide-react';
 
@@ -22,7 +22,6 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
 
 import {
   Form,
