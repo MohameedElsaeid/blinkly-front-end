@@ -99,7 +99,7 @@ const PreviewPanel: React.FC<Props> = ({
                   ([key, value]) =>
                     value ? (
                       <div key={key} className="text-sm">
-                        <span className="font-medium">{key}:</span> {value}
+                        <span className="font-medium">{key}:</span> {String(value)}
                       </div>
                     ) : null
                 )}
@@ -118,7 +118,7 @@ const PreviewPanel: React.FC<Props> = ({
                     src={watchedValues.metaImage}
                     alt="Preview"
                     className="w-full h-full object-cover"
-                    onError={e => {
+                    onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/600x400?text=Preview+Image";
                     }}
                   />
@@ -144,4 +144,3 @@ const PreviewPanel: React.FC<Props> = ({
 );
 
 export default PreviewPanel;
-
