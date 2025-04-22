@@ -14,7 +14,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Discover how URL shortening can streamline your marketing efforts and enhance user engagement.",
         "slug": "getting-started-with-url-shortening",
         "publishedAt": "2025-04-22",
-        "image": "https://source.unsplash.com/random/800x600?sig=1&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/getting-started-with-url-shortening-min.png"
     },
     {
         "id": "2",
@@ -23,7 +23,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Master the art of managing your links to maintain a cohesive and effective digital presence.",
         "slug": "best-practices-for-link-management",
         "publishedAt": "2025-04-21",
-        "image": "https://source.unsplash.com/random/800x600?sig=2&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/best-practices-for-link-management-min.png"
     },
     {
         "id": "3",
@@ -32,7 +32,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Elevate your brand's credibility and recognition with customized short links.",
         "slug": "why-you-need-branded-short-links",
         "publishedAt": "2025-04-20",
-        "image": "https://source.unsplash.com/random/800x600?sig=3&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/why-you-need-branded-short-links-min.png"
     },
     {
         "id": "4",
@@ -41,7 +41,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Gain insights into user behavior by analyzing click data from your shortened URLs.",
         "slug": "understanding-click-analytics-for-short-links",
         "publishedAt": "2025-04-19",
-        "image": "https://source.unsplash.com/random/800x600?sig=4&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/understanding-click-analytics-for-short-links-min.png"
     },
     {
         "id": "5",
@@ -50,7 +50,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Control your content's accessibility and user experience through link expiration and redirection techniques.",
         "slug": "link-expiration-and-redirection-types-explained",
         "publishedAt": "2025-04-18",
-        "image": "https://source.unsplash.com/random/800x600?sig=5&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/link-expiration-and-redirection-types-explained-min.png"
     },
     {
         "id": "6",
@@ -59,7 +59,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Track the effectiveness of your marketing campaigns by appending UTM parameters to your URLs.",
         "slug": "boost-campaign-success-with-utm-parameters",
         "publishedAt": "2025-04-17",
-        "image": "https://source.unsplash.com/random/800x600?sig=6&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/boost-campaign-success-with-utm-parameters-min.png"
     },
     {
         "id": "7",
@@ -68,7 +68,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Enhance link memorability and user trust by creating custom aliases for your shortened URLs.",
         "slug": "the-importance-of-custom-aliases-in-link-shortening",
         "publishedAt": "2025-04-16",
-        "image": "https://source.unsplash.com/random/800x600?sig=7&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/the-importance-of-custom-aliases-in-link-shortening-min.png"
     },
     {
         "id": "8",
@@ -77,7 +77,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Optimize your social media presence by utilizing short links that encourage clicks and shares.",
         "slug": "how-short-links-improve-social-media-engagement",
         "publishedAt": "2025-04-15",
-        "image": "https://source.unsplash.com/random/800x600?sig=8&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/how-short-links-improve-social-media-engagement-min.png"
     },
     {
         "id": "9",
@@ -86,7 +86,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Enhance your email campaigns by incorporating short links that are trackable and aesthetically pleasing.",
         "slug": "integrating-short-links-into-email-marketing",
         "publishedAt": "2025-04-14",
-        "image": "https://source.unsplash.com/random/800x600?sig=9&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/integrating-short-links-into-email-marketing-min.png"
     },
     {
         "id": "10",
@@ -95,7 +95,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Empower influencers to promote your brand effectively using customized short links.",
         "slug": "the-role-of-short-links-in-influencer-marketing",
         "publishedAt": "2025-04-13",
-        "image": "https://source.unsplash.com/random/800x600?sig=10&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/the-role-of-short-links-in-influencer-marketing-min.png"
     },
     {
         "id": "11",
@@ -104,7 +104,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Discover how properly structured short links can contribute to your website's SEO efforts.",
         "slug": "enhancing-seo-with-shortened-urls",
         "publishedAt": "2025-04-12",
-        "image": "https://source.unsplash.com/random/800x600?sig=11&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/enhancing-seo-with-shortened-urls-min.png"
     },
     {
         "id": "12",
@@ -113,7 +113,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Drive attendance and engagement for your events by sharing concise, memorable URLs.",
         "slug": "utilizing-short-links-for-event-promotion",
         "publishedAt": "2025-04-11",
-        "image": "https://source.unsplash.com/random/800x600?sig=12&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/utilizing-short-links-for-event-promotion-min.png"
     },
     {
         "id": "13",
@@ -122,7 +122,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Track and compare the effectiveness of your links across different marketing platforms.",
         "slug": "monitoring-link-performance-across-channels",
         "publishedAt": "2025-04-10",
-        "image": "https://source.unsplash.com/random/800x600?sig=13&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/monitoring-link-performance-across-channels-min.png"
     },
     {
         "id": "14",
@@ -131,7 +131,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Protect your audience and brand reputation by ensuring your short links are secure.",
         "slug": "the-security-advantages-of-shortened-urls",
         "publishedAt": "2025-04-09",
-        "image": "https://source.unsplash.com/random/800x600?sig=14&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/the-security-advantages-of-shortened-urls-min.png"
     },
     {
         "id": "15",
@@ -140,7 +140,7 @@ const mockPosts: BlogPost[] = [
         "excerpt": "Stay ahead of the curve by understanding emerging trends in link shortening technology.",
         "slug": "future-trends-in-url-shortening-and-link-management",
         "publishedAt": "2025-04-08",
-        "image": "https://source.unsplash.com/random/800x600?sig=15&topic=technology"
+        "image": "https://blinkly.app/lovable-uploads/blog/future-trends-in-url-shortening-and-link-management-min.png"
     }
 ];
 
