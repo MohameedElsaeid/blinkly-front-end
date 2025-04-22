@@ -119,4 +119,217 @@ const mockPosts: BlogPost[] = [
     {
         "id": "10",
         "title": "The Role of Short Links in Influencer Marketing",
-        "content": "Providing influencers with branded short links allows for consistent messaging and easy tracking of campaign success. Understand how to implement this strategy to maximize your influencer partnerships.\n\n## Why Use Short Links in Influencer Marketing?\n\nIn the world of influencer marketing, where authenticity and trackability are key, short links offer several advantages:\n\n- **Consistent Messaging**: Short links ensure that influencers share the correct URLs.\n- **Trackable Campaigns**: Short link platforms provide valuable analytics to track campaign performance.\n- **Branded Links**: Branded short links reinforce your brand identity and increase user trust.\n- **Easy to Share**: Short links are easy for influencers to share across various platforms.\n\n## Key Benefits of Using Short Links in Influencer Marketing\n\n### 1. Consistent Messaging\n\nShort links ensure that influencers share the correct URLs, preventing errors and confusion.\n\n### 2. Trackable Campaigns\n\nShort link platforms provide detailed analytics to track click-through rates, geographic data, and referral sources.\n\n### 3. Increased Brand Recognition\n\
+        "content": "Providing influencers with branded short links allows for consistent messaging and easy tracking of campaign success. Understand how to implement this strategy to maximize your influencer partnerships.\n\n## Why Use Short Links in Influencer Marketing?\n\nIn the world of influencer marketing, where authenticity and trackability are key, short links offer several advantages:\n\n- **Consistent Messaging**: Short links ensure that influencers share the correct URLs.\n- **Trackable Campaigns**: Short link platforms provide valuable analytics to track campaign performance.\n- **Branded Links**: Branded short links reinforce your brand identity and increase user trust.\n- **Easy to Share**: Short links are easy for influencers to share across various platforms.\n\n## Key Benefits of Using Short Links in Influencer Marketing\n\n### 1. Consistent Messaging\n\nShort links ensure that influencers share the correct URLs, preventing errors and confusion.\n\n### 2. Trackable Campaigns\n\nShort link platforms provide detailed analytics to track click-through rates, geographic data, and referral sources.\n\n### 3. Increased Brand Recognition\n\nBranded short links reinforce your brand identity and increase user trust with each share.\n\n### 4. Improved Performance Tracking\n\nBy assigning unique short links to each influencer, you can track which partnerships drive the most engagement.\n\n## Best Practices for Using Short Links with Influencers\n\n### 1. Create Custom Links for Each Influencer\n\nAssign unique branded short links to each influencer to track individual performance metrics.\n\n### 2. Include Campaign Identifiers\n\nIncorporate campaign identifiers in your links to differentiate between various marketing initiatives.\n\n### 3. Provide Clear Instructions\n\nEnsure influencers understand where and how to use your short links for maximum impact.\n\n### 4. Track and Analyze Performance\n\nRegularly review analytics to identify top-performing influencers and content formats.\n\n### 5. Optimize Future Campaigns\n\nUse insights from link performance to refine your influencer marketing strategy.\n\n## Tools for Managing Influencer Short Links\n\n### 1. Blinkly\n\nOffers dedicated influencer tracking features with customizable performance dashboards.\n\n### 2. Bitly\n\nProvides basic influencer campaign management with detailed analytics.\n\n### 3. GRIN\n\nCombines influencer management with link tracking capabilities for comprehensive campaign oversight.\n\n## Conclusion\n\nImplementing a short link strategy in your influencer marketing campaigns provides clearer attribution, better tracking, and enhanced brand recognition. By following these best practices, you'll maximize the effectiveness of your influencer partnerships while gaining valuable insights into audience behavior and campaign performance.",
+        "excerpt": "Empower influencers to promote your brand effectively using customized short links.",
+        "slug": "the-role-of-short-links-in-influencer-marketing",
+        "publishedAt": "2025-04-13",
+        "image": "https://blinkly.app/lovable-uploads/blog/the-role-of-short-links-in-influencer-marketing-min.png",
+        "author": "Natalie Chen",
+        "category": "Influencer Marketing",
+        "readTime": "7 min read"
+    }
+];
+
+const BlogPostPage = () => {
+    const { slug } = useParams<{ slug: string }>();
+    const navigate = useNavigate();
+    const [post, setPost] = useState<BlogPost | null>(null);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        // Simulate API call with timeout
+        const timer = setTimeout(() => {
+            const foundPost = mockPosts.find(p => p.slug === slug);
+            setPost(foundPost || null);
+            setLoading(false);
+        }, 800);
+        
+        return () => clearTimeout(timer);
+    }, [slug]);
+    
+    // Navigate back to blog list
+    const handleBack = () => {
+        navigate('/blog');
+    };
+    
+    // If post not found after loading
+    if (!loading && !post) {
+        return (
+            <div className="min-h-screen flex flex-col bg-gray-50">
+                <Navbar />
+                <main className="flex-grow container mx-auto px-4 py-12">
+                    <div className="text-center py-12">
+                        <h1 className="text-3xl font-bold text-gray-800 mb-4">Blog Post Not Found</h1>
+                        <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist or has been moved.</p>
+                        <button 
+                            onClick={handleBack}
+                            className="inline-flex items-center px-4 py-2 bg-blinkly-blue text-white rounded-md hover:bg-blue-600 transition-colors"
+                        >
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            Back to Blog
+                        </button>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
+    
+    return (
+        <div className="min-h-screen flex flex-col bg-gray-50">
+            <Navbar />
+            <main className="flex-grow">
+                {/* Hero Image Section */}
+                {loading ? (
+                    <Skeleton className="w-full h-64 md:h-80" />
+                ) : (
+                    <div className="relative w-full h-64 md:h-80 bg-gradient-to-r from-blinkly-blue to-blinkly-violet">
+                        {post?.image && (
+                            <img
+                                src={post.image}
+                                alt={post?.title}
+                                className="absolute inset-0 w-full h-full object-cover opacity-30"
+                            />
+                        )}
+                        <div className="absolute inset-0 bg-black bg-opacity-30" />
+                    </div>
+                )}
+                
+                {/* Content Container */}
+                <div className="container mx-auto px-4 -mt-16 relative z-10">
+                    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                        {/* Back Button */}
+                        <div className="p-4 border-b border-gray-100">
+                            <button 
+                                onClick={handleBack}
+                                className="inline-flex items-center text-sm text-gray-600 hover:text-blinkly-blue transition-colors"
+                            >
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Back to Blog
+                            </button>
+                        </div>
+                        
+                        {/* Article Content */}
+                        <article className="p-6 md:p-8">
+                            {loading ? (
+                                <>
+                                    <Skeleton className="h-12 w-3/4 mb-4" />
+                                    <div className="flex flex-wrap gap-3 mb-8">
+                                        <Skeleton className="h-6 w-24" />
+                                        <Skeleton className="h-6 w-32" />
+                                        <Skeleton className="h-6 w-28" />
+                                    </div>
+                                    <Skeleton className="h-4 w-full mb-3" />
+                                    <Skeleton className="h-4 w-5/6 mb-3" />
+                                    <Skeleton className="h-4 w-full mb-3" />
+                                    <Skeleton className="h-4 w-4/6 mb-8" />
+                                </>
+                            ) : (
+                                <>
+                                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                                        {post?.title}
+                                    </h1>
+                                    
+                                    {/* Post Metadata */}
+                                    <div className="flex flex-wrap gap-4 mb-8 text-sm text-gray-600">
+                                        {post?.publishedAt && (
+                                            <div className="flex items-center">
+                                                <Calendar size={16} className="mr-2 text-gray-400" />
+                                                {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    year: 'numeric'
+                                                })}
+                                            </div>
+                                        )}
+                                        
+                                        {post?.author && (
+                                            <div className="flex items-center">
+                                                <User size={16} className="mr-2 text-gray-400" />
+                                                {post.author}
+                                            </div>
+                                        )}
+                                        
+                                        {post?.readTime && (
+                                            <div className="flex items-center">
+                                                <Clock size={16} className="mr-2 text-gray-400" />
+                                                {post.readTime}
+                                            </div>
+                                        )}
+                                        
+                                        {post?.category && (
+                                            <div className="flex items-center">
+                                                <Tag size={16} className="mr-2 text-gray-400" />
+                                                <span className="bg-blinkly-blue bg-opacity-10 text-blinkly-blue px-2 py-0.5 rounded-full">
+                                                    {post.category}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    {/* Post Content */}
+                                    <div className="prose prose-lg max-w-none">
+                                        {post?.content.split('\n\n').map((paragraph, idx) => {
+                                            // Handle headers (##)
+                                            if (paragraph.startsWith('## ')) {
+                                                return (
+                                                    <h2 key={idx} className="text-2xl font-bold text-gray-800 mt-8 mb-4">
+                                                        {paragraph.replace('## ', '')}
+                                                    </h2>
+                                                );
+                                            }
+                                            // Handle subheaders (###)
+                                            else if (paragraph.startsWith('### ')) {
+                                                return (
+                                                    <h3 key={idx} className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+                                                        {paragraph.replace('### ', '')}
+                                                    </h3>
+                                                );
+                                            }
+                                            // Handle code blocks
+                                            else if (paragraph.startsWith('```') && paragraph.endsWith('```')) {
+                                                const code = paragraph.substring(3, paragraph.length - 3);
+                                                return (
+                                                    <pre key={idx} className="bg-gray-100 p-4 rounded-md overflow-x-auto my-4">
+                                                        <code>{code}</code>
+                                                    </pre>
+                                                );
+                                            }
+                                            // Handle bullet points
+                                            else if (paragraph.startsWith('- ')) {
+                                                // Replace markdown bold with HTML strong
+                                                const formattedText = paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                                                return (
+                                                    <ul key={idx} className="list-disc list-inside my-4 ml-2">
+                                                        <li dangerouslySetInnerHTML={{ __html: formattedText.substring(2) }} />
+                                                    </ul>
+                                                );
+                                            }
+                                            // Regular paragraphs
+                                            else {
+                                                // Replace markdown bold with HTML strong
+                                                const formattedText = paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                                                return (
+                                                    <p 
+                                                        key={idx} 
+                                                        className="mb-4 text-gray-700 leading-relaxed"
+                                                        dangerouslySetInnerHTML={{ __html: formattedText }}
+                                                    />
+                                                );
+                                            }
+                                        })}
+                                    </div>
+                                </>
+                            )}
+                        </article>
+                    </div>
+                </div>
+                
+                {/* Related Posts Section (could be implemented later) */}
+            </main>
+            <Footer />
+        </div>
+    );
+};
+
+export default BlogPostPage;
