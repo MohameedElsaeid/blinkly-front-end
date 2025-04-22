@@ -1,131 +1,159 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <!-- Google tag (gtag.js) – GA4 + Consent Mode v2 -->
     <script>
-      /* 0 – create dataLayer / gtag */
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){ dataLayer.push(arguments); }
+        /* 0 – create dataLayer / gtag */
+        window.dataLayer = window.dataLayer || [];
 
-      /* 1 – CONSENT MODE (force‑granted) */
-      gtag('consent', 'default', {
-        ad_storage:          'granted',
-        analytics_storage:   'granted',
-        ad_user_data:        'granted',      // v2 fields
-        ad_personalization:  'granted'       // v2 fields
-      });
+        function gtag() {
+            dataLayer.push(arguments);
+        }
 
-      /* 2 – load the GA tag async */
-      (function(i,d,s,u,id){
-         var js=d.createElement(s);js.async=1;js.src=u+id;
-         d.head.appendChild(js);
-      })(window,document,'script','https://www.googletagmanager.com/gtag/js?id=','G-8BX04XJEWE');
+        /* 1 – CONSENT MODE (force‑granted) */
+        gtag('consent', 'default', {
+            ad_storage: 'granted',
+            analytics_storage: 'granted',
+            ad_user_data: 'granted',      // v2 fields
+            ad_personalization: 'granted'       // v2 fields
+        });
 
-      /* 3 – initialise GA4 */
-      gtag('js', new Date());
+        /* 2 – load the GA tag async */
+        (function (i, d, s, u, id) {
+            var js = d.createElement(s);
+            js.async = 1;
+            js.src = u + id;
+            d.head.appendChild(js);
+        })(window, document, 'script', 'https://www.googletagmanager.com/gtag/js?id=', 'G-8BX04XJEWE');
 
-      /* 4 – configuration */
-      gtag('config', 'G-8BX04XJEWE', {
-        cookie_flags: 'Secure;SameSite=None',   // correct order
-        anonymize_ip: false,                    // full IP (set true if you need GDPR IP‑masking)
-        allow_google_signals: true,             // enable demographics / remarketing
-        allow_ad_personalization_signals: true, // needed for Ads audiences
-        transport_type: 'beacon',               // more reliable send
-        send_page_view: true                    // SPA? set false and trigger manually on route change
-      });
+        /* 3 – initialise GA4 */
+        gtag('js', new Date());
+
+        /* 4 – configuration */
+        gtag('config', 'G-8BX04XJEWE', {
+            cookie_flags: 'Secure;SameSite=None',   // correct order
+            anonymize_ip: false,                    // full IP (set true if you need GDPR IP‑masking)
+            allow_google_signals: true,             // enable demographics / remarketing
+            allow_ad_personalization_signals: true, // needed for Ads audiences
+            transport_type: 'beacon',               // more reliable send
+            send_page_view: true                    // SPA? set false and trigger manually on route change
+        });
     </script>
-    
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="robots" content="index, follow">
 
     <!-- Primary Meta Tags -->
     <title>Blinkly - URL Shortener, Link Management & QR Code Generator</title>
     <meta name="title" content="Blinkly - URL Shortener, Link Management & QR Code Generator">
-    <meta name="description" content="Transform long URLs into powerful, trackable short links. Create custom links, track analytics, and generate QR codes with Blinkly - the ultimate link management platform." />
-    <meta name="keywords" content="url shortener, link management, short links, custom links, branded links, link analytics, qr code generator, link tracking, click tracking">
+    <meta name="description"
+          content="Transform long URLs into powerful, trackable short links. Create custom links, track analytics, and generate QR codes with Blinkly - the ultimate link management platform."/>
+    <meta name="keywords"
+          content="url shortener, link management, short links, custom links, branded links, link analytics, qr code generator, link tracking, click tracking">
     <meta name="author" content="Blinkly Team">
-    <meta name="theme-color" content="#5D5FEF" />
-    
+    <meta name="theme-color" content="#5D5FEF"/>
+
     <!-- Canonical Link -->
-    <link rel="canonical" href="https://blinkly.app" />
-    
+    <link rel="canonical" href="https://blinkly.app"/>
+
     <!-- Sitemap Reference -->
-    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-    
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml"/>
+    <meta name="image" content="https://blinkly.app/lovable-uploads/42155296-07ef-4530-b05e-fc8ee23eeb8b.png">
+
+
+    <!-- Video Preview -->
+    <meta property="og:video" content="https://blinkly.app/lovable-uploads/preview.mp4">
+    <meta property="og:video:type" content="video/mp4">
+
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://blinkly.app/">
     <meta property="og:title" content="Blinkly - URL Shortener, Link Management & QR Code Generator">
-    <meta property="og:description" content="Transform long URLs into powerful, trackable short links. Create custom links, track analytics, and generate QR codes with Blinkly - the ultimate link management platform.">
-    <meta property="og:image" content="/lovable-uploads/de393ef5-a1f3-4b87-b5aa-2d0886d80447.png">
+    <meta property="og:description"
+          content="Transform long URLs into powerful, trackable short links. Create custom links, track analytics, and generate QR codes with Blinkly - the ultimate link management platform.">
+    <meta property="og:image" content="https://blinkly.app/lovable-uploads/340d3bab-1fcc-460c-9090-9ccd664c8efd.png">
     <meta property="og:locale" content="en_US">
     <meta property="og:site_name" content="Blinkly">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://blinkly.app/">
     <meta property="twitter:title" content="Blinkly - URL Shortener, Link Management & QR Code Generator">
-    <meta property="twitter:description" content="Transform long URLs into powerful, trackable short links. Create custom links, track analytics, and generate QR codes with Blinkly.">
-    <meta property="twitter:image" content="/lovable-uploads/de393ef5-a1f3-4b87-b5aa-2d0886d80447.png">
+    <meta property="twitter:description"
+          content="Transform long URLs into powerful, trackable short links. Create custom links, track analytics, and generate QR codes with Blinkly.">
+    <meta property="twitter:image"
+          content="https://blinkly.app/lovable-uploads/340d3bab-1fcc-460c-9090-9ccd664c8efd.png">
     <meta name="twitter:site" content="@blinklyapp">
     <meta name="twitter:creator" content="@blinklyapp">
-    
+
     <!-- Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
-    
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
+
     <!-- Favicons and App Icons -->
-    <link rel="icon" type="image/png" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/favicon.ico" />
-    
+    <link rel="icon" type="image/png" href="/favicon.ico"/>
+    <link rel="apple-touch-icon" href="/favicon.ico"/>
+
     <!-- DNS Prefetch and Preconnect -->
-    <link rel="preconnect" href="https://api.blinkly.app" crossorigin />
+    <link rel="preconnect" href="https://api.blinkly.app" crossorigin/>
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://images.blinkly.app" crossorigin />
-    <link rel="dns-prefetch" href="https://api.blinkly.app" />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    <link rel="dns-prefetch" href="https://images.blinkly.app" />
-    <link rel="preconnect" href="https://cdn.gpteng.co" crossorigin />
-    <link rel="dns-prefetch" href="https://cdn.gpteng.co" />
-    <link rel="preconnect" href="https://analytics.google.com" crossorigin />
-    <link rel="preconnect" href="https://stats.g.doubleclick.net" crossorigin />
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
-    <link rel="preconnect" href="https://www.google.com" crossorigin />
-    <link rel="preconnect" href="https://td.doubleclick.net" crossorigin />
-    <link rel="preconnect" href="https://connect.facebook.net" crossorigin />
-    <link rel="preconnect" href="https://www.facebook.com" crossorigin />
-    
+    <link rel="preconnect" href="https://images.blinkly.app" crossorigin/>
+    <link rel="dns-prefetch" href="https://api.blinkly.app"/>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com"/>
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com"/>
+    <link rel="dns-prefetch" href="https://images.blinkly.app"/>
+    <link rel="preconnect" href="https://cdn.gpteng.co" crossorigin/>
+    <link rel="dns-prefetch" href="https://cdn.gpteng.co"/>
+    <link rel="preconnect" href="https://analytics.google.com" crossorigin/>
+    <link rel="preconnect" href="https://stats.g.doubleclick.net" crossorigin/>
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin/>
+    <link rel="preconnect" href="https://www.google.com" crossorigin/>
+    <link rel="preconnect" href="https://td.doubleclick.net" crossorigin/>
+    <link rel="preconnect" href="https://connect.facebook.net" crossorigin/>
+    <link rel="preconnect" href="https://www.facebook.com" crossorigin/>
+
     <!-- Facebook Pixel Code -->
     <script>
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '1061335055861528');
-      fbq('track', 'PageView');
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1061335055861528');
+        fbq('track', 'PageView');
     </script>
     <!-- End Facebook Pixel Code -->
-  </head>
-  <body>
-    <div id="root"></div>
-    
-    <!-- Facebook Pixel Noscript -->
-    <noscript>
-      <img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=1061335055861528&ev=PageView&noscript=1"
-      />
-    </noscript>
-    <!-- End Facebook Pixel Noscript -->
+</head>
+<body>
+<div id="root"></div>
 
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!-- Facebook Pixel Noscript -->
+<noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=1061335055861528&ev=PageView&noscript=1"
+    />
+</noscript>
+<!-- End Facebook Pixel Noscript -->
+
+<!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+<script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+<script type="module" src="/src/main.tsx"></script>
+</body>
 </html>
 
