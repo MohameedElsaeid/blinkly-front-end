@@ -1,3 +1,4 @@
+
 import {Toaster} from "@/components/ui/toaster";
 import {Toaster as Sonner} from "@/components/ui/sonner";
 import {TooltipProvider} from "@/components/ui/tooltip";
@@ -20,6 +21,7 @@ import SignupSuccessful from "./components/SignupSuccessful";
 import LoginForm from "./components/LoginForm";
 import Dashboard from "./pages/Dashboard";
 import CreateLink from "./pages/CreateLink";
+import CreateDynamicLink from "./pages/CreateDynamicLink";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
@@ -58,6 +60,14 @@ const App = () => (
                             element={
                                 <ProtectedRoute>
                                     <Links/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/dashboard/dynamic-links"
+                            element={
+                                <ProtectedRoute>
+                                    <CreateDynamicLink/>
                                 </ProtectedRoute>
                             }
                         />
