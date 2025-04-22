@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -5,7 +6,7 @@ import Footer from '@/components/Footer';
 import { Skeleton } from "@/components/ui/skeleton";
 import type { BlogPost } from '@/types/blog';
 import { ArrowLeft } from 'lucide-react';
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import BlogPostMeta from "@/components/blog/BlogPostMeta";
 import BlogPostContent from "@/components/blog/BlogPostContent";
 
