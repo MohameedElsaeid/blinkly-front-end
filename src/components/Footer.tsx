@@ -51,7 +51,7 @@ const Footer = () => {
                         <p className="text-gray-300 mb-2">Email: support@blinkly.app</p>
                         <div className="flex space-x-4 mt-4">
                             <a
-                                href="https://www.facebook.com/blinklyapp/"
+                                href="https://www.facebook.com/blinklyaapp/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-gray-300 hover:text-white transition-colors"
