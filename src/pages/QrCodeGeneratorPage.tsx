@@ -18,7 +18,7 @@ export default function QrCodeGeneratorPage() {
   const { data: linksData, isLoading: linksLoading } = useQuery<LinksResponse>({
     queryKey: ["qr-links"],
     queryFn: async () => {
-      const res = await httpClient.get("/api/links?page=1&limit=20");
+      const res = await httpClient.get<{ links: any[] }>("/api/links?page=1&limit=20");
       // Format to match QrLink[]
       return {
         links: (res?.links ?? []).map((l: any) => ({

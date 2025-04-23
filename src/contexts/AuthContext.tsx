@@ -1,5 +1,6 @@
+
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, Navigate} from 'react-router-dom';
 import httpClient from '@/lib/http-client';
 
 // Define types for our auth context
