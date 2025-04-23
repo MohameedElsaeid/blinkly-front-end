@@ -5,7 +5,7 @@ import React from "react";
 // Handles color, background, size and logo overlay via fallback if the API doesn't support all.
 
 type QrPreviewProps = {
-  targetUrl: string;
+  targetUrl?: string; // Make targetUrl optional
   size?: number;
   color?: string;
   backgroundColor?: string;
@@ -13,7 +13,7 @@ type QrPreviewProps = {
 };
 
 export const QrPreview: React.FC<QrPreviewProps> = ({
-  targetUrl,
+  targetUrl = "", // Provide empty string as default
   size = 300,
   color = "#000000",
   backgroundColor = "#FFFFFF",
