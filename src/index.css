@@ -4,6 +4,25 @@
 @tailwind components;
 @tailwind utilities;
 
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+    margin-top: 1.5rem;
+    font-weight: bold;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin-left: 1.5rem;
+    list-style-type: disc;
+    padding-left: 1rem;
+}
+
+.markdown-content p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
 @layer base {
     :root {
         --background: 0 0% 100%;
