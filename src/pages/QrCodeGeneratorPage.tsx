@@ -8,10 +8,12 @@ import { toast } from "@/hooks/use-toast";
 import QrFormSections, { QrFormValues, QrLink } from "@/components/qr/QrFormSections";
 import QrPreviewPanel from "@/components/qr/QrPreviewPanel";
 import { useCreateQrCode, QrCodeApiPayload } from "@/hooks/useCreateQrCode";
+import { useQuery } from "@tanstack/react-query";
+import httpClient from "@/lib/http-client";
 
 const formSchema = z.object({
   targetUrl: z.string().url("Enter a valid URL"),
-  linkId: z.string().optional(),
+  linkId: z.string().uuid().optional(),
   size: z.number().min(100, "Min: 100").max(2000, "Max: 2000").optional(),
   color: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i, "Use valid hex").optional(),
   backgroundColor: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i, "Use valid hex").optional(),
@@ -24,21 +26,25 @@ const DEFAULTS = {
   backgroundColor: "#FFFFFF",
 };
 
-const useUserLinks = (): QrLink[] => {
-  const [links, setLinks] = useState<QrLink[]>([]);
-  useEffect(() => {
-    setTimeout(() => {
-      setLinks([
-        { id: "abc123", alias: "my-link", originalUrl: "https://google.com" },
-        { id: "def456", alias: "company-site", originalUrl: "https://blinkly.app" }
-      ]);
-    }, 400);
-  }, []);
-  return links;
-};
-
 export default function QrCodeGeneratorPage() {
-  const links = useUserLinks();
+  // Fetch actual user links (paginated, fetch first page with size 20)
+  const { data: linksData, isLoading: linksLoading } = useQuery({
+    queryKey: ["qr-links"],
+    queryFn: async () => {
+      const res = await httpClient.get("/api/links?page=1&limit=20");
+      // Format to match QrLink[]
+      return (
+        res?.links?.map((l: any) => ({
+          id: l.id,
+          alias: l.alias,
+          originalUrl: l.originalUrl,
+        })) ?? []
+      );
+    },
+  });
+
+  const links: QrLink[] = linksData ?? [];
+
   const [qrData, setQrData] = useState<QrFormValues>({
     targetUrl: "",
     linkId: "",
@@ -49,10 +55,7 @@ export default function QrCodeGeneratorPage() {
   });
   const [isQrReady, setIsQrReady] = useState(false);
 
-  // The image URL returned by the API after successful creation.
   const [apiQrImageUrl, setApiQrImageUrl] = useState<string>("");
-
-  // To maintain latest payload for downloading (when not re-posting)
   const lastPayloadRef = useRef<QrCodeApiPayload | null>(null);
 
   const { control, register, watch, setValue, formState: { errors } } = useForm<QrFormValues>({
@@ -74,7 +77,12 @@ export default function QrCodeGeneratorPage() {
     setIsQrReady(!!newQrData.targetUrl);
   }, [watched]);
 
+  // When "None" is selected or empty is passed, clear the linkId state
   const handleLinkChange = (linkId: string) => {
+    if (!linkId) {
+      setValue("linkId", undefined);
+      return;
+    }
     setValue("linkId", linkId);
     if (linkId && links.length) {
       const picked = links.find((l) => l.id === linkId);
@@ -97,7 +105,7 @@ export default function QrCodeGeneratorPage() {
       backgroundColor: qrData.backgroundColor || DEFAULTS.backgroundColor,
       logoUrl: qrData.logoUrl || undefined,
     };
-    lastPayloadRef.current = payload; // Save for potential re-download
+    lastPayloadRef.current = payload;
 
     createQrCodeMutation.mutate(payload, {
       onSuccess: (response) => {
@@ -117,10 +125,8 @@ export default function QrCodeGeneratorPage() {
     });
   };
 
-  // Download button gets the most recent API-returned QR image url if available
   const getQrImageUrl = () => {
     if (apiQrImageUrl) return apiQrImageUrl;
-    // fallback: live preview mode (should rarely be used if API returns the image url)
     const { targetUrl, size, color, backgroundColor } = qrData;
     if (!targetUrl) return "";
     return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(
@@ -153,6 +159,7 @@ export default function QrCodeGeneratorPage() {
                 handleSubmit={handleSubmit}
                 handleLinkChange={handleLinkChange}
                 getQrImageUrl={getQrImageUrl}
+                linksLoading={linksLoading}
               />
               <QrPreviewPanel
                 targetUrl={qrData.targetUrl}

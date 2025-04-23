@@ -28,6 +28,7 @@ interface QrFormSectionsProps {
   handleSubmit: (e: React.FormEvent) => void;
   handleLinkChange: (linkId: string) => void;
   getQrImageUrl: () => string;
+  linksLoading?: boolean;
 }
 
 const DEFAULTS = {
@@ -47,6 +48,7 @@ export const QrFormSections: React.FC<QrFormSectionsProps> = ({
   handleSubmit,
   handleLinkChange,
   getQrImageUrl,
+  linksLoading,
 }) => (
   <form className="space-y-5" onSubmit={handleSubmit} autoComplete="off">
     {/* LinkId dropdown */}
@@ -56,12 +58,18 @@ export const QrFormSections: React.FC<QrFormSectionsProps> = ({
         control={control}
         name="linkId"
         render={({ field }) => (
-          <Select value={field.value} onValueChange={handleLinkChange}>
+          <Select
+            value={field.value || ""}
+            onValueChange={handleLinkChange}
+            disabled={linksLoading}
+          >
             <SelectTrigger>
-              <SelectValue placeholder="Choose a link" />
+              <SelectValue placeholder={linksLoading ? "Loading..." : "Choose a link"} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">None</SelectItem>
+              <SelectItem value="">
+                None
+              </SelectItem>
               {links.map(link => (
                 <SelectItem key={link.id} value={link.id}>
                   {link.alias} ({link.originalUrl})
