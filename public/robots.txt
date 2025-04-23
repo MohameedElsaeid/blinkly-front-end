@@ -20,8 +20,6 @@ Allow: /features
 Disallow: /dashboard/
 Disallow: /dashboard/*
 Disallow: /settings/
-Disallow: /login
-Disallow: /signup
 Disallow: /reset-password
 Disallow: /api/
 

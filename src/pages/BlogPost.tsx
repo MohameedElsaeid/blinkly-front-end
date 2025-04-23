@@ -1,12 +1,11 @@
-
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Skeleton } from "@/components/ui/skeleton";
-import type { BlogPost } from '@/types/blog';
-import { ArrowLeft } from 'lucide-react';
-import { Helmet } from "react-helmet-async";
+import {Skeleton} from "@/components/ui/skeleton";
+import type {BlogPost} from '@/types/blog';
+import {ArrowLeft} from 'lucide-react';
+import {Helmet} from "react-helmet-async";
 import BlogPostMeta from "@/components/blog/BlogPostMeta";
 import BlogPostContent from "@/components/blog/BlogPostContent";
 
@@ -134,7 +133,7 @@ const mockPosts: BlogPost[] = [
 ];
 
 const BlogPostPage: React.FC = () => {
-    const { slug } = useParams<{ slug: string }>();
+    const {slug} = useParams<{ slug: string }>();
     const navigate = useNavigate();
     const [post, setPost] = useState<BlogPost | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -161,25 +160,25 @@ const BlogPostPage: React.FC = () => {
     if (isLoading) {
         return (
             <>
-                <Navbar />
+                <Navbar/>
                 <div className="container max-w-4xl mx-auto px-4 py-12">
                     <div className="mb-8">
-                        <Skeleton className="h-8 w-3/4 mb-4" />
+                        <Skeleton className="h-8 w-3/4 mb-4"/>
                         <div className="flex space-x-4 mb-6">
-                            <Skeleton className="h-5 w-24" />
-                            <Skeleton className="h-5 w-24" />
-                            <Skeleton className="h-5 w-24" />
+                            <Skeleton className="h-5 w-24"/>
+                            <Skeleton className="h-5 w-24"/>
+                            <Skeleton className="h-5 w-24"/>
                         </div>
-                        <Skeleton className="h-64 w-full mb-8" />
+                        <Skeleton className="h-64 w-full mb-8"/>
                         <div className="space-y-4">
-                            <Skeleton className="h-6 w-full" />
-                            <Skeleton className="h-6 w-full" />
-                            <Skeleton className="h-6 w-5/6" />
-                            <Skeleton className="h-6 w-4/5" />
+                            <Skeleton className="h-6 w-full"/>
+                            <Skeleton className="h-6 w-full"/>
+                            <Skeleton className="h-6 w-5/6"/>
+                            <Skeleton className="h-6 w-4/5"/>
                         </div>
                     </div>
                 </div>
-                <Footer />
+                <Footer/>
             </>
         );
     }
@@ -187,7 +186,7 @@ const BlogPostPage: React.FC = () => {
     if (!post) {
         return (
             <>
-                <Navbar />
+                <Navbar/>
                 <div className="container mx-auto px-4 py-24 text-center">
                     <h1 className="text-3xl font-bold mb-6">Blog Post Not Found</h1>
                     <p className="mb-8">The blog post you're looking for doesn't exist or has been removed.</p>
@@ -195,11 +194,11 @@ const BlogPostPage: React.FC = () => {
                         onClick={handleBack}
                         className="flex items-center text-primary hover:text-primary/80 font-medium mx-auto"
                     >
-                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        <ArrowLeft className="mr-2 h-4 w-4"/>
                         Back to Blog
                     </button>
                 </div>
-                <Footer />
+                <Footer/>
             </>
         );
     }
@@ -211,38 +210,46 @@ const BlogPostPage: React.FC = () => {
         <>
             <Helmet>
                 <title>{post?.title} | Blinkly Blog</title>
-                <meta name="description" content={post?.excerpt} />
+                <meta name="description" content={post?.excerpt}/>
 
-                {/* OpenGraph tags for social sharing */}
-                <meta property="og:title" content={post?.title} />
-                <meta property="og:description" content={post?.excerpt} />
-                <meta property="og:url" content={shareUrl} />
-                <meta property="og:type" content="article" />
-                {post?.image && <meta property="og:image" content={post.image} />}
-                <meta property="og:site_name" content="Blinkly" />
+                {/* OpenGraph Meta Tags */}
+                <meta property="og:title" content={post?.title}/>
+                <meta property="og:description" content={post?.excerpt}/>
+                <meta property="og:url" content={shareUrl}/>
+                <meta property="og:type" content="article"/>
+                <meta property="og:site_name" content="Blinkly"/>
+                {post?.image && (
+                    <>
+                        <meta property="og:image" content={post.image}/>
+                        <meta property="og:image:type" content="image/png"/>
+                        <meta property="og:image:width" content="1200"/>
+                        <meta property="og:image:height" content="630"/>
+                    </>
+                )}
+                <meta property="fb:app_id" content="1208594394302399"/>
 
-                {/* Twitter Card tags */}
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={post?.title} />
-                <meta name="twitter:description" content={post?.excerpt} />
-                {post?.image && <meta name="twitter:image" content={post.image} />}
+                {/* Twitter Card Meta Tags */}
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta name="twitter:title" content={post?.title}/>
+                <meta name="twitter:description" content={post?.excerpt}/>
+                {post?.image && <meta name="twitter:image" content={post.image}/>}
             </Helmet>
 
-            <Navbar />
+            <Navbar/>
             <div className="container max-w-4xl mx-auto px-4 py-12">
                 <button
                     onClick={handleBack}
                     className="flex items-center text-primary hover:text-primary/80 font-medium mb-8"
                 >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    <ArrowLeft className="mr-2 h-4 w-4"/>
                     Back to Blog
                 </button>
 
-                <BlogPostMeta post={post} shareUrl={shareUrl} />
+                <BlogPostMeta post={post} shareUrl={shareUrl}/>
 
-                <BlogPostContent post={post} />
+                <BlogPostContent post={post}/>
             </div>
-            <Footer />
+            <Footer/>
         </>
     );
 };

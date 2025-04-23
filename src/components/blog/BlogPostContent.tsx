@@ -21,7 +21,7 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({ post }) => (
 
         {post.content && (
             <div
-                className="markdown-content"
+                className="prose prose-slate lg:prose-lg max-w-none markdown-content"
                 dangerouslySetInnerHTML={{
                     __html: formatContent(post.content)
                 }}
