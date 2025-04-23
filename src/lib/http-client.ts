@@ -131,8 +131,8 @@ const httpClient = {
         return httpClient.get<TricksResponse>('/dashboard/tricks');
     },
 
-    getDashboardAnalytics: (days?: number): Promise<DashboardAnalyticsResponse> => {
-        return httpClient.get<DashboardAnalyticsResponse>('/analytics/dashboard', {
+    getDashboardAnalytics: (days?: number): Promise<AnalyticsResponse> => {
+        return httpClient.get<AnalyticsResponse>('/dashboard/analytics', {
             params: { days }
         });
     },

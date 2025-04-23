@@ -1,6 +1,5 @@
-
 import React, {useEffect, useState} from 'react';
-import {TrendingUp, TrendingDown, Link as LinkIcon, Globe, MousePointer, ArrowUp, ArrowDown} from 'lucide-react';
+import {TrendingUp, TrendingDown, Link as LinkIcon, Globe, MousePointer} from 'lucide-react';
 import {Card} from "@/components/ui/card";
 import {Skeleton} from '@/components/ui/skeleton';
 import {animate} from 'framer-motion';
@@ -21,31 +20,31 @@ const KpiStrip = () => {
             id: 'clicks-today',
             icon: <TrendingUp className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Clicks Today',
-            value: analyticsData.sessions.totalSessions || 0,
-            change: `${(analyticsData.sessions.totalSessions > 0 ? 5 : 0)}%`, // Use placeholder change percentage
-            isPositive: true
+            value: analyticsData.clicks_today.count,
+            change: `${analyticsData.clicks_today.change_percentage}%`,
+            isPositive: analyticsData.clicks_today.change_percentage >= 0
         },
         {
             id: 'links-created',
             icon: <LinkIcon className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Links Created (24h)',
-            value: analyticsData.linkCreation.totalLinks || 0,
-            change: `${(analyticsData.linkCreation.totalLinks > 0 ? 10 : 0)}%`, // Use placeholder change percentage
-            isPositive: true
+            value: analyticsData.links_24h.count,
+            change: `${analyticsData.links_24h.change_percentage}%`,
+            isPositive: analyticsData.links_24h.change_percentage >= 0
         },
         {
             id: 'unique-countries',
             icon: <Globe className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Unique Countries (24h)',
-            value: analyticsData.linkCreation.newLinksPerDay?.length || 0,
-            change: `${(analyticsData.linkCreation.newLinksPerDay?.length > 0 ? 8 : 0)}%`, // Use placeholder change percentage
-            isPositive: true
+            value: analyticsData.unique_countries_24h.count,
+            change: `${analyticsData.unique_countries_24h.change_percentage}%`,
+            isPositive: analyticsData.unique_countries_24h.change_percentage >= 0
         },
         {
             id: 'avg-ctr',
             icon: <MousePointer className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Avg. CTR (7d)',
-            value: analyticsData.conversions.conversionRate || 0,
+            value: analyticsData.avg_ctr_7d.percentage,
             change: 'N/A',
             isPositive: true
         },

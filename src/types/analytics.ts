@@ -1,4 +1,3 @@
-
 export interface DistributionData {
     distribution: Record<string, number>;
     percentages: Record<string, number>;
@@ -146,5 +145,23 @@ export interface DashboardAnalyticsResponse {
         totalErrors: number;
         errorsByType: Record<string, number>;
         averageResponseTime: number;
+    };
+}
+
+export interface AnalyticsResponse {
+    clicks_today: {
+        count: number;
+        change_percentage: number;
+    };
+    links_24h: {
+        count: number;
+        change_percentage: number;
+    };
+    unique_countries_24h: {
+        count: number;
+        change_percentage: number;
+    };
+    avg_ctr_7d: {
+        percentage: number;
     };
 }
