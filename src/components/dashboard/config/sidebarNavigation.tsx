@@ -1,5 +1,6 @@
+
 import {
-    BarChart2, HelpCircle, LinkIcon, QrCode, User
+    BarChart2, HelpCircle, LinkIcon, QrCode, User, Activity, Map as MapIcon, PieChart, LineChart
 } from "lucide-react";
 import React from "react";
 
@@ -68,7 +69,7 @@ export const analyticsSections = [
         id: 'geography',
         label: 'Geographic Data',
         to: '/dashboard/analytics/geography',
-        icon: <Map className="h-4 w-4 mr-2" />
+        icon: <MapIcon className="h-4 w-4 mr-2" />
     },
     {
         id: 'campaigns',

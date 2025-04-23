@@ -30,7 +30,7 @@ const Analytics = () => {
 
     return (
         <DashboardLayout>
-            <div className={`min-h-screen ${sectionStyles[currentSection as keyof typeof sectionStyles]}`}>
+            <div className="min-h-screen">
                 {/* KPI Strip - Desktop only */}
                 {!isMobile && <KpiStrip />}
 
