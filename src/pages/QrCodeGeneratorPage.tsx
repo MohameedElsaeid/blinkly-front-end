@@ -77,9 +77,9 @@ export default function QrCodeGeneratorPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="max-w-5xl mx-auto w-full p-4 md:p-8 mt-4">
-        <Card>
+    <div className="min-h-screen flex flex-col w-full">
+      <div className="w-full p-4 md:p-8 mt-4">
+        <Card className="w-full">
           <CardHeader>
             <CardTitle className="text-2xl md:text-3xl font-bold text-blinkly-blue">
               Generate QR Code
@@ -102,3 +102,4 @@ export default function QrCodeGeneratorPage() {
     </div>
   );
 }
+
