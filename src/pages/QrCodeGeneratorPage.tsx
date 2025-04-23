@@ -1,15 +1,14 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-
 import QrFormSections, { QrFormValues, QrLink } from "@/components/qr/QrFormSections";
 import QrPreviewPanel from "@/components/qr/QrPreviewPanel";
+import { useCreateQrCode, QrCodeApiPayload } from "@/hooks/useCreateQrCode";
 
-// Validation schema with defaults
 const formSchema = z.object({
   targetUrl: z.string().url("Enter a valid URL"),
   linkId: z.string().optional(),
@@ -25,7 +24,6 @@ const DEFAULTS = {
   backgroundColor: "#FFFFFF",
 };
 
-// Mock get user's links (replace with real API later)
 const useUserLinks = (): QrLink[] => {
   const [links, setLinks] = useState<QrLink[]>([]);
   useEffect(() => {
@@ -49,9 +47,13 @@ export default function QrCodeGeneratorPage() {
     backgroundColor: DEFAULTS.backgroundColor,
     logoUrl: "",
   });
-
-  // Track if QR code is ready for download
   const [isQrReady, setIsQrReady] = useState(false);
+
+  // The image URL returned by the API after successful creation.
+  const [apiQrImageUrl, setApiQrImageUrl] = useState<string>("");
+
+  // To maintain latest payload for downloading (when not re-posting)
+  const lastPayloadRef = useRef<QrCodeApiPayload | null>(null);
 
   const { control, register, watch, setValue, formState: { errors } } = useForm<QrFormValues>({
     resolver: zodResolver(formSchema),
@@ -59,7 +61,6 @@ export default function QrCodeGeneratorPage() {
     mode: "onChange"
   });
 
-  // Live watch for form changes to update preview
   const watched = watch();
   useEffect(() => {
     const newQrData = {
@@ -70,11 +71,9 @@ export default function QrCodeGeneratorPage() {
       logoUrl: watched.logoUrl || "",
     };
     setQrData(newQrData);
-    // QR is ready if we have a target URL
     setIsQrReady(!!newQrData.targetUrl);
   }, [watched]);
 
-  // When user picks a link, set targetUrl to its originalUrl
   const handleLinkChange = (linkId: string) => {
     setValue("linkId", linkId);
     if (linkId && links.length) {
@@ -83,17 +82,45 @@ export default function QrCodeGeneratorPage() {
     }
   };
 
-  // Demo submit handler
-  const handleSubmit = (e: React.FormEvent) => {
+  // ==== API integration ====
+  const createQrCodeMutation = useCreateQrCode();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "QR Code Ready!",
-      description: "Your QR code is ready for download.",
+
+    // Build the payload for the API
+    const payload: QrCodeApiPayload = {
+      targetUrl: qrData.targetUrl,
+      linkId: qrData.linkId || undefined,
+      size: qrData.size || DEFAULTS.size,
+      color: qrData.color || DEFAULTS.color,
+      backgroundColor: qrData.backgroundColor || DEFAULTS.backgroundColor,
+      logoUrl: qrData.logoUrl || undefined,
+    };
+    lastPayloadRef.current = payload; // Save for potential re-download
+
+    createQrCodeMutation.mutate(payload, {
+      onSuccess: (response) => {
+        setApiQrImageUrl(response.imageUrl);
+        toast({
+          title: "QR Code Created!",
+          description: "Your QR code has been successfully created. You can now download it.",
+        });
+      },
+      onError: (error: any) => {
+        toast({
+          title: "Failed to generate QR code",
+          description: error?.message || "Please check your settings and try again.",
+          variant: "destructive",
+        });
+      }
     });
   };
 
-  // Get QR image URL for download
+  // Download button gets the most recent API-returned QR image url if available
   const getQrImageUrl = () => {
+    if (apiQrImageUrl) return apiQrImageUrl;
+    // fallback: live preview mode (should rarely be used if API returns the image url)
     const { targetUrl, size, color, backgroundColor } = qrData;
     if (!targetUrl) return "";
     return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(
@@ -135,10 +162,14 @@ export default function QrCodeGeneratorPage() {
                 logoUrl={qrData.logoUrl}
               />
             </div>
+            {createQrCodeMutation.isPending && (
+              <div className="flex justify-center items-center mt-4">
+                <span className="text-muted-foreground animate-pulse">Generating QR code...</span>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
     </div>
   );
 }
-// NOTE: This file is still over 100 lines and should be split further if it grows more.
