@@ -3,6 +3,7 @@ import BaseHttpClient from './base-http-client';
 import {LinkDetails, LinksResponse, TopLinksResponse as LinkTopLinksResponse} from '@/types/link';
 import {
     ClickPerformanceResponse,
+    DashboardAnalyticsResponse,
     DeviceDistributionResponse,
     GeoDistributionResponse,
     ReferrerResponse
@@ -130,8 +131,10 @@ const httpClient = {
         return httpClient.get<TricksResponse>('/dashboard/tricks');
     },
 
-    getDashboardAnalytics: (): Promise<AnalyticsResponse> => {
-        return httpClient.get<AnalyticsResponse>('/dashboard/analytics');
+    getDashboardAnalytics: (days?: number): Promise<DashboardAnalyticsResponse> => {
+        return httpClient.get<DashboardAnalyticsResponse>('/analytics/dashboard', {
+            params: { days }
+        });
     },
 
     // Method to update the auth token across all HTTP clients

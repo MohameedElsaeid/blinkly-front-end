@@ -15,12 +15,17 @@ import SessionDurationChart from '@/components/analytics/charts/SessionDurationC
 import CampaignPerformanceChart from '@/components/analytics/charts/CampaignPerformanceChart';
 import QrVsLinkClicksChart from '@/components/analytics/charts/QrVsLinkClicksChart';
 import StatusCodesChart from '@/components/analytics/charts/StatusCodesChart';
+import LinkCreationChart from '@/components/analytics/charts/LinkCreationChart';
+import RetentionChart from '@/components/analytics/charts/RetentionChart';
+import CampaignSourceTable from '@/components/analytics/charts/CampaignSourceTable';
+import { DashboardAnalyticsResponse } from '@/types/analytics';
 
 interface AnalyticsGridProps {
   section: string;
+  analyticsData?: DashboardAnalyticsResponse;
 }
 
-const AnalyticsGrid: React.FC<AnalyticsGridProps> = ({ section }) => {
+const AnalyticsGrid: React.FC<AnalyticsGridProps> = ({ section, analyticsData }) => {
   const isLargeScreen = useMediaQuery("(min-width: 1440px)");
   const isExtraLargeScreen = useMediaQuery("(min-width: 1920px)");
 
@@ -31,18 +36,43 @@ const AnalyticsGrid: React.FC<AnalyticsGridProps> = ({ section }) => {
       case 'overview':
         return (
           <div className={`grid grid-cols-1 lg:grid-cols-${columns} gap-4 md:gap-6`}>
-            <WidgetCard title="Clicks Over Time" info="Shows the number of clicks per day over time">
-              <TimeSeriesChart />
+            <WidgetCard title="New Links Over Time" info="Shows the number of new links created per day">
+              {analyticsData?.linkCreation.newLinksPerDay && analyticsData.linkCreation.newLinksPerDay.length > 0 ? (
+                <LinkCreationChart data={analyticsData.linkCreation.newLinksPerDay} />
+              ) : (
+                <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+                  No link creation data available
+                </div>
+              )}
+            </WidgetCard>
+            
+            <WidgetCard title="Retention by Week" info="User retention rate week over week">
+              {analyticsData?.retention.retentionByWeek && analyticsData.retention.retentionByWeek.length > 0 ? (
+                <RetentionChart data={analyticsData.retention.retentionByWeek} />
+              ) : (
+                <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+                  No retention data available
+                </div>
+              )}
+            </WidgetCard>
+            
+            <WidgetCard title="Traffic Sources" info="Where your traffic is coming from" className="lg:col-span-2">
+              {analyticsData?.campaigns.bySources && analyticsData.campaigns.bySources.length > 0 ? (
+                <CampaignSourceTable data={analyticsData.campaigns.bySources} />
+              ) : (
+                <div className="flex items-center justify-center h-[200px] text-muted-foreground">
+                  No campaign source data available
+                </div>
+              )}
               <CardFooter className="pt-2 px-0 border-t">
-                <p className="text-sm text-muted-foreground">72% increase from last month</p>
+                <p className="text-sm text-muted-foreground">Data based on tracked campaign parameters</p>
               </CardFooter>
             </WidgetCard>
-            <WidgetCard title="Device Distribution" info="Breakdown of clicks by device type">
-              <DeviceDistribution />
-            </WidgetCard>
+            
             <WidgetCard title="Geographic Distribution" info="Distribution of clicks by country and city">
               <GeoHeatmap />
             </WidgetCard>
+            
             <WidgetCard title="Top Links" info="Your most clicked links" className="lg:col-span-2">
               <TopLinksTable />
             </WidgetCard>
@@ -79,6 +109,15 @@ const AnalyticsGrid: React.FC<AnalyticsGridProps> = ({ section }) => {
             <WidgetCard title="QR vs Link Clicks" info="Comparison of QR code scans vs direct link clicks">
               <QrVsLinkClicksChart />
             </WidgetCard>
+            <WidgetCard title="Campaign Sources" info="Traffic sources by campaign">
+              {analyticsData?.campaigns.bySources && analyticsData.campaigns.bySources.length > 0 ? (
+                <CampaignSourceTable data={analyticsData.campaigns.bySources} />
+              ) : (
+                <div className="flex items-center justify-center h-[200px] text-muted-foreground">
+                  No campaign source data available
+                </div>
+              )}
+            </WidgetCard>
           </div>
         );
       case 'trends':
@@ -89,6 +128,15 @@ const AnalyticsGrid: React.FC<AnalyticsGridProps> = ({ section }) => {
             </WidgetCard>
             <WidgetCard title="Clicks Over Time" info="Shows the number of clicks per day over time">
               <TimeSeriesChart />
+            </WidgetCard>
+            <WidgetCard title="Retention Trends" info="User retention over time">
+              {analyticsData?.retention.retentionByWeek && analyticsData.retention.retentionByWeek.length > 0 ? (
+                <RetentionChart data={analyticsData.retention.retentionByWeek} />
+              ) : (
+                <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+                  No retention data available
+                </div>
+              )}
             </WidgetCard>
           </div>
         );
