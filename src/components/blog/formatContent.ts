@@ -1,4 +1,3 @@
-
 import {marked} from "marked";
 import DOMPurify from 'dompurify';
 
@@ -10,8 +9,8 @@ import DOMPurify from 'dompurify';
 marked.setOptions({
     gfm: true,
     breaks: true,
-    headerIds: false, // Set headerIds to false instead of using headerPrefix
-    smartLists: true,
+    async: true,
+    pedantic: true,
 });
 
 
