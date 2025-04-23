@@ -138,7 +138,7 @@ export default function QrCodeGeneratorPage() {
                           <SelectValue placeholder="Choose a link" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">None</SelectItem>
+                          <SelectItem value="none">None</SelectItem>
                           {links.map(link => (
                             <SelectItem key={link.id} value={link.id}>
                               {link.alias} ({link.originalUrl})
