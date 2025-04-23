@@ -29,6 +29,8 @@ import NotFound from "./pages/NotFound";
 import LinkDetails from "./pages/LinkDetails";
 import Account from "./pages/Account";
 import QrCodesPage from "./pages/QrCodesPage";
+import QrCodeGeneratorPage from "./pages/QrCodeGeneratorPage";
+import Analytics from "./pages/Analytics";
 
 const queryClient = new QueryClient();
 
@@ -92,18 +94,42 @@ const App = () => (
                                 }
                             />
                             <Route
-                                path="/dashboard/account"
-                                element={
-                                    <ProtectedRoute>
-                                        <Account/>
-                                    </ProtectedRoute>
-                                }
-                            />
-                            <Route
                                 path="/dashboard/qr-codes"
                                 element={
                                     <ProtectedRoute>
                                         <QrCodesPage/>
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/dashboard/qr-codes/create"
+                                element={
+                                    <ProtectedRoute>
+                                        <QrCodeGeneratorPage/>
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/dashboard/analytics"
+                                element={
+                                    <ProtectedRoute>
+                                        <Analytics/>
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/dashboard/analytics/:section"
+                                element={
+                                    <ProtectedRoute>
+                                        <Analytics/>
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/dashboard/account"
+                                element={
+                                    <ProtectedRoute>
+                                        <Account/>
                                     </ProtectedRoute>
                                 }
                             />
