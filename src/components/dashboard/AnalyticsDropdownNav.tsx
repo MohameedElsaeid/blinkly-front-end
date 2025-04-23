@@ -18,18 +18,18 @@ const AnalyticsDropdownNav = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors hover:bg-gray-100">
+      <DropdownMenuTrigger className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 hover:text-blinkly-blue">
         <span className="flex-1 text-left">
           {currentSection?.label || "Analytics"}
         </span>
         <ChevronDown className="h-4 w-4 ml-2" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-56 bg-white">
         {analyticsSections.map((section) => (
           <DropdownMenuItem key={section.id} asChild>
             <Link
               to={section.to}
-              className="w-full"
+              className="w-full text-gray-700 hover:text-blinkly-blue"
             >
               {section.label}
             </Link>

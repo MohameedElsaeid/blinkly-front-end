@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { NavItem } from "./config/sidebarNavigation";
@@ -16,12 +15,11 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({item}) => {
 
     if (item.isDropdown) {
         return (
-            <div className={`${
-                isActive
-                    ? "bg-blinkly-blue/10 text-blinkly-blue font-semibold"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-blinkly-blue"
-            } rounded-lg`}>
-                <AnalyticsDropdownNav />
+            <div className="flex items-center">
+                {item.icon}
+                <div className="flex-1">
+                    <AnalyticsDropdownNav />
+                </div>
             </div>
         );
     }
