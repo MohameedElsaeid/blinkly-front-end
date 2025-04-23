@@ -1,0 +1,120 @@
+
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Download, Save } from "lucide-react";
+import { QrFormValues } from "../QrFormSections";
+import { QrPreview } from "../QrPreview";
+
+interface PreviewSaveStepProps {
+  formData: QrFormValues;
+  generatedQrUrl?: string;
+  isGenerating: boolean;
+  onBack: () => void;
+}
+
+const PreviewSaveStep: React.FC<PreviewSaveStepProps> = ({
+  formData,
+  generatedQrUrl,
+  isGenerating,
+  onBack,
+}) => {
+  const handleDownload = async (format: "png" | "svg") => {
+    try {
+      // Use generated URL if available, otherwise use preview URL
+      const qrImageUrl = generatedQrUrl || getPreviewUrl();
+      
+      // Trigger download of QR image
+      const response = await fetch(qrImageUrl, { mode: "cors" });
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `qr-code-${Date.now()}.${format}`;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error(`Error downloading QR code as ${format}:`, error);
+    }
+  };
+
+  const getPreviewUrl = () => {
+    const { targetUrl, size, color, backgroundColor } = formData;
+    if (!targetUrl) return "";
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(
+      targetUrl
+    )}&color=${color?.replace("#", "")}&bgcolor=${backgroundColor?.replace("#", "")}`;
+  };
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold">Preview & Save</h2>
+      
+      <div className="flex flex-col items-center space-y-6">
+        {isGenerating ? (
+          <div className="animate-pulse flex flex-col items-center justify-center h-64 w-64 bg-slate-100 rounded-lg">
+            <p className="text-center text-muted-foreground">Generating QR code...</p>
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg border p-8 shadow-sm max-w-md mx-auto">
+            <QrPreview
+              targetUrl={formData.targetUrl}
+              size={300}
+              color={formData.color}
+              backgroundColor={formData.backgroundColor}
+              logoUrl={formData.logoUrl}
+              pattern={formData.pattern}
+              cornerStyle={formData.cornerStyle}
+              frame={formData.frame}
+            />
+          </div>
+        )}
+        
+        <div className="space-y-2 w-full max-w-md">
+          {formData.title && (
+            <h3 className="text-lg font-medium text-center">{formData.title}</h3>
+          )}
+          <p className="text-sm text-muted-foreground text-center truncate">
+            {formData.targetUrl}
+          </p>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+          <Button 
+            onClick={() => handleDownload("png")} 
+            className="flex-1 bg-green-600 hover:bg-green-700"
+            disabled={isGenerating}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Download PNG
+          </Button>
+          <Button 
+            onClick={() => handleDownload("svg")} 
+            className="flex-1 bg-green-600 hover:bg-green-700"
+            disabled={isGenerating}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Download SVG
+          </Button>
+          <Button 
+            className="flex-1 bg-blinkly-blue hover:bg-blinkly-purple"
+            disabled={isGenerating}
+          >
+            <Save className="mr-2 h-4 w-4" />
+            Save to Library
+          </Button>
+        </div>
+      </div>
+      
+      <div className="flex justify-start pt-4">
+        <Button variant="outline" onClick={onBack}>
+          Back to Design
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default PreviewSaveStep;

@@ -10,6 +10,9 @@ type QrPreviewProps = {
   color?: string;
   backgroundColor?: string;
   logoUrl?: string;
+  pattern?: string;
+  cornerStyle?: string;
+  frame?: string;
 };
 
 export const QrPreview: React.FC<QrPreviewProps> = ({
@@ -18,6 +21,9 @@ export const QrPreview: React.FC<QrPreviewProps> = ({
   color = "#000000",
   backgroundColor = "#FFFFFF",
   logoUrl,
+  pattern = "square",
+  cornerStyle = "standard",
+  frame = "none",
 }) => {
   if (!targetUrl) {
     // Show a placeholder QR or instruction
@@ -30,21 +36,42 @@ export const QrPreview: React.FC<QrPreviewProps> = ({
   }
 
   // Use goqr.me API for easy preview
+  // Note: The pattern, cornerStyle, and frame would normally be implemented with a proper QR library
+  // Here we're only modifying the URL for demo purposes - some features not fully supported by this API
   const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(
     targetUrl
   )}&color=${color.replace("#", "")}&bgcolor=${backgroundColor.replace("#", "")}`;
 
+  // Add frame styles
+  let frameStyles = {};
+  if (frame !== "none") {
+    frameStyles = {
+      padding: "20px",
+      border: `2px solid ${color}`,
+      borderRadius: frame === "rounded" ? "12px" : "0",
+    };
+  }
+
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-      <img
-        src={apiUrl}
-        alt="QR code preview"
-        width={size}
-        height={size}
-        className="rounded-lg transition"
-        style={{ background: backgroundColor }}
-        draggable={false}
-      />
+      <div style={frameStyles} className="flex items-center justify-center">
+        <img
+          src={apiUrl}
+          alt="QR code preview"
+          width={frame !== "none" ? size - 40 : size}
+          height={frame !== "none" ? size - 40 : size}
+          className="rounded-lg transition"
+          style={{ background: backgroundColor }}
+          draggable={false}
+        />
+      </div>
+      
+      {frame === "scan-me" && (
+        <div className="absolute -bottom-6 left-0 right-0 text-center bg-white py-1 text-xs font-bold rounded-b-lg border-t" style={{ color }}>
+          SCAN ME
+        </div>
+      )}
+      
       {logoUrl && (
         <img
           src={logoUrl}

@@ -5,10 +5,14 @@ import httpClient from "@/lib/http-client";
 export interface QrCodeApiPayload {
   targetUrl: string;
   linkId?: string;
+  title?: string;
   size?: number;
   color?: string;
   backgroundColor?: string;
   logoUrl?: string;
+  pattern?: string;
+  cornerStyle?: string;
+  frame?: string;
 }
 
 export interface QrCodeApiResponse {
