@@ -59,7 +59,7 @@ export const QrFormSections: React.FC<QrFormSectionsProps> = ({
         name="linkId"
         render={({ field }) => (
           <Select
-            value={field.value || ""}
+            value={field.value || "none"}
             onValueChange={handleLinkChange}
             disabled={linksLoading}
           >
@@ -67,7 +67,7 @@ export const QrFormSections: React.FC<QrFormSectionsProps> = ({
               <SelectValue placeholder={linksLoading ? "Loading..." : "Choose a link"} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">
+              <SelectItem value="none">
                 None
               </SelectItem>
               {links.map(link => (

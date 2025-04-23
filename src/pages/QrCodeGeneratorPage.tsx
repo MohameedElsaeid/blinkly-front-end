@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -82,7 +83,7 @@ export default function QrCodeGeneratorPage() {
 
   // When "None" is selected or empty is passed, clear the linkId state
   const handleLinkChange = (linkId: string) => {
-    if (!linkId) {
+    if (linkId === "none") {
       setValue("linkId", undefined);
       return;
     }
