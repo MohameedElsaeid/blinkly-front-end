@@ -1,5 +1,6 @@
-
-import {BarChart2, HelpCircle, LinkIcon, QrCode, User, PieChart, Activity, Map, LineChart} from "lucide-react";
+import {
+    BarChart2, HelpCircle, LinkIcon, QrCode, User, PieChart, Activity, Map, LineChart
+} from "lucide-react";
 import React from "react";
 
 export interface NavItem {
@@ -8,6 +9,7 @@ export interface NavItem {
     label: React.ReactNode;
     exact?: boolean;
     disabled?: boolean;
+    isDropdown?: boolean;
 }
 
 export const navigationItems: NavItem[] = [
@@ -36,30 +38,7 @@ export const navigationItems: NavItem[] = [
         to: "/dashboard/analytics",
         icon: <BarChart2 className="mr-3 h-5 w-5"/>,
         label: "Analytics",
-    },
-    {
-        to: "/dashboard/analytics/traffic",
-        icon: <Activity className="mr-3 h-5 w-5"/>,
-        label: "Traffic Analysis",
-        disabled: false
-    },
-    {
-        to: "/dashboard/analytics/geography",
-        icon: <Map className="mr-3 h-5 w-5"/>,
-        label: "Geographic Data",
-        disabled: false
-    },
-    {
-        to: "/dashboard/analytics/campaigns",
-        icon: <PieChart className="mr-3 h-5 w-5"/>,
-        label: "Campaign Performance",
-        disabled: false
-    },
-    {
-        to: "/dashboard/analytics/trends",
-        icon: <LineChart className="mr-3 h-5 w-5"/>,
-        label: "Performance Trends",
-        disabled: false
+        isDropdown: true
     },
     {
         to: "/dashboard/account",
