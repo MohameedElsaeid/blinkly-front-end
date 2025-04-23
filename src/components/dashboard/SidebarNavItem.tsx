@@ -16,16 +16,14 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({item}) => {
 
     if (item.isDropdown) {
         return (
-            <div className={`flex items-center rounded-lg ${
+            <div className={`flex items-center rounded-lg px-3 py-2 ${
                 isActive
                     ? "text-blinkly-blue"
                     : "text-gray-700"
             }`}>
+                {item.icon}
                 <div className="flex w-full flex-col">
-                    <div className="flex items-center px-3">
-                        {item.icon}
-                        <AnalyticsDropdownNav />
-                    </div>
+                    <AnalyticsDropdownNav />
                 </div>
             </div>
         );
@@ -44,7 +42,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({item}) => {
             onClick={item.disabled ? (e) => e.preventDefault() : undefined}
         >
             {item.icon}
-            {item.label}
+            <span>{item.label}</span>
         </Link>
     );
 };

@@ -5,8 +5,13 @@ import {Card} from "@/components/ui/card";
 import {Skeleton} from '@/components/ui/skeleton';
 import {animate} from 'framer-motion';
 import { useDashboardAnalytics } from '@/hooks/use-dashboard-analytics';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 const KpiStrip = () => {
+    // Check if screen is mobile or tablet
+    const isMobile = useMediaQuery("(max-width: 640px)");
+    const isTablet = useMediaQuery("(min-width: 641px) and (max-width: 1024px)");
+    
     // Fetch analytics data using the custom hook
     const { data: analyticsData, isLoading } = useDashboardAnalytics();
 
@@ -46,11 +51,18 @@ const KpiStrip = () => {
         },
     ] : [];
 
+    // Determine column count based on screen size
+    const getColumnCount = () => {
+        if (isMobile) return 1;
+        if (isTablet) return 2;
+        return 4;
+    };
+
     return (
         <div className="bg-card/50 border-y px-4 py-3">
-            <div className="mx-auto grid grid-cols-4 gap-4">
+            <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {isLoading ? (
-                    [...Array(4)].map((_, i) => (
+                    [...Array(getColumnCount())].map((_, i) => (
                         <Card key={`skeleton-${i}`}
                               className="border shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-1">
                             <div className="p-4">
@@ -102,7 +114,7 @@ const KpiCard = ({kpi}) => {
                     {kpi.icon}
                     <p className="text-sm text-muted-foreground">{kpi.label}</p>
                 </div>
-                <p className="text-2xl font-bold mb-1">{displayValue}{kpi.id === 'avg-ctr' ? '%' : ''}</p>
+                <p className="text-xl sm:text-2xl font-bold mb-1">{displayValue}{kpi.id === 'avg-ctr' ? '%' : ''}</p>
                 <div className={`text-sm flex items-center ${kpi.isPositive ? 'text-green-600' : 'text-red-600'}`}>
                     {kpi.change}
                     {kpi.isPositive ? (
