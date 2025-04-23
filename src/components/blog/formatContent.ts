@@ -1,4 +1,5 @@
-import {marked, Tokens} from "marked";
+
+import {marked} from "marked";
 import DOMPurify from 'dompurify';
 
 /**
@@ -6,14 +7,14 @@ import DOMPurify from 'dompurify';
  * Converts markdown-style content to sanitized HTML for blog posts.
  */
 
-// Create a custom renderer to disable header IDs
+// Configure marked options
 marked.setOptions({
-    gfm: true,
-    breaks: true,
+  gfm: true,
+  breaks: true,
 });
 
 export function formatContent(content: string): string {
-    // Convert to string explicitly to handle the Promise return type
-    const html = marked.parse(content) as string;
-    return DOMPurify.sanitize(html);
+  // Convert to string explicitly to handle the Promise return type
+  const html = marked.parse(content) as string;
+  return DOMPurify.sanitize(html);
 }

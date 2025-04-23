@@ -28,6 +28,7 @@ import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import LinkDetails from "./pages/LinkDetails";
 import Account from "./pages/Account";
+import QrCodesPage from "./pages/QrCodesPage";
 
 const queryClient = new QueryClient();
 
@@ -95,6 +96,14 @@ const App = () => (
                                 element={
                                     <ProtectedRoute>
                                         <Account/>
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/dashboard/qr-codes"
+                                element={
+                                    <ProtectedRoute>
+                                        <QrCodesPage/>
                                     </ProtectedRoute>
                                 }
                             />
