@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,24 +25,28 @@ const DEFAULTS = {
   backgroundColor: "#FFFFFF",
 };
 
+interface LinksResponse {
+  links: QrLink[];
+}
+
 export default function QrCodeGeneratorPage() {
   // Fetch actual user links (paginated, fetch first page with size 20)
-  const { data: linksData, isLoading: linksLoading } = useQuery({
+  const { data: linksData, isLoading: linksLoading } = useQuery<LinksResponse>({
     queryKey: ["qr-links"],
     queryFn: async () => {
       const res = await httpClient.get("/api/links?page=1&limit=20");
       // Format to match QrLink[]
-      return (
-        res?.links?.map((l: any) => ({
+      return {
+        links: res?.links?.map((l: any) => ({
           id: l.id,
           alias: l.alias,
           originalUrl: l.originalUrl,
         })) ?? []
-      );
+      };
     },
   });
 
-  const links: QrLink[] = linksData ?? [];
+  const links: QrLink[] = linksData?.links ?? [];
 
   const [qrData, setQrData] = useState<QrFormValues>({
     targetUrl: "",
