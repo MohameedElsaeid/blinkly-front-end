@@ -1,7 +1,5 @@
-
-import {BarChart2, LinkIcon, QrCode, User, HelpCircle} from "lucide-react";
+import {BarChart2, HelpCircle, LinkIcon, QrCode, User} from "lucide-react";
 import React from "react";
-import PremiumBadge from "../PremiumBadge"; // Import the badge
 
 export interface NavItem {
     to: string;
@@ -26,23 +24,17 @@ export const navigationItems: NavItem[] = [
     {
         to: "/dashboard/dynamic-links",
         icon: <LinkIcon className="mr-3 h-5 w-5"/>,
-        label: (
-          <span className="flex items-center">
-            Dynamic Links
-            <PremiumBadge />
-          </span>
-        )
-    },
-    {
-        to: "/dashboard/analytics",
-        icon: <BarChart2 className="mr-3 h-5 w-5"/>,
-        label: "Analytics",
-        disabled: true
+        label: "Dynamic Links"
     },
     {
         to: "/dashboard/qr-codes",
         icon: <QrCode className="mr-3 h-5 w-5"/>,
         label: "QR Codes",
+    },
+    {
+        to: "/dashboard/analytics",
+        icon: <BarChart2 className="mr-3 h-5 w-5"/>,
+        label: "Analytics",
         disabled: true
     },
     {
