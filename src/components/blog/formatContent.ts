@@ -10,7 +10,7 @@ import DOMPurify from 'dompurify';
 marked.setOptions({
     gfm: true,
     breaks: true,
-    headerPrefix: '', // Use headerPrefix instead of headerIds
+    headerIds: false, // Set headerIds to false instead of using headerPrefix
     smartLists: true,
 });
 
