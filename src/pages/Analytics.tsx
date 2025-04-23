@@ -8,31 +8,15 @@ import KpiStrip from "@/components/dashboard/KpiStrip";
 import AnalyticsGrid from "@/components/analytics/AnalyticsGrid";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileKpiCarousel from "@/components/dashboard/MobileKpiCarousel";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDashboardAnalytics } from "@/hooks/use-dashboard-analytics";
-import MetricCard from "@/components/analytics/MetricCard";
-import { 
-    BarChart2, 
-    Activity, 
-    Users, 
-    Clock, 
-    TagIcon, 
-    PieChart, 
-    QrCode 
-} from "lucide-react";
-
-const sectionStyles = {
-  overview: "bg-gradient-to-tr from-blue-50 via-white to-indigo-50",
-  traffic: "bg-gradient-to-tr from-green-50 via-white to-emerald-50",
-  geography: "bg-gradient-to-tr from-amber-50 via-white to-yellow-50",
-  campaigns: "bg-gradient-to-tr from-purple-50 via-white to-violet-50",
-  trends: "bg-gradient-to-tr from-pink-50 via-white to-rose-50"
-};
+import { Button } from "@/components/ui/button";
 
 const Analytics = () => {
     const [days, setDays] = useState(30);
     const isMobile = useIsMobile();
     const location = useLocation();
+    const navigate = useNavigate();
     const currentSection = analyticsSections.find(section => 
         location.pathname === section.to
     )?.id || 'overview';
@@ -65,6 +49,21 @@ const Analytics = () => {
                         </div>
                     </div>
 
+                    {/* Analytics Navigation */}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                        {analyticsSections.map((section) => (
+                            <Button
+                                key={section.id}
+                                variant={location.pathname === section.to ? "default" : "outline"}
+                                className="flex items-center gap-2"
+                                onClick={() => navigate(section.to)}
+                            >
+                                {section.icon}
+                                {section.label}
+                            </Button>
+                        ))}
+                    </div>
+
                     {/* Global Filters */}
                     <Card className="mb-6 shadow-sm backdrop-blur-sm bg-white/80">
                         <CardContent className="p-4">
@@ -73,66 +72,7 @@ const Analytics = () => {
                     </Card>
 
                     {/* Analytics Content based on route */}
-                    {currentSection === 'overview' && analyticsData && (
-                        <div className="space-y-6">
-                            {/* Metric Cards */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                <MetricCard 
-                                    title="Total Links" 
-                                    value={analyticsData.linkCreation.totalLinks}
-                                    icon={BarChart2}
-                                />
-                                <MetricCard 
-                                    title="Daily Active Users" 
-                                    value={analyticsData.retention.dailyActiveUsers}
-                                    icon={Users}
-                                    change={analyticsData.retention.dailyActiveUsers > 0 ? 0 : 0}
-                                />
-                                <MetricCard 
-                                    title="Monthly Active Users" 
-                                    value={analyticsData.retention.monthlyActiveUsers}
-                                    icon={Users}
-                                />
-                                <MetricCard 
-                                    title="Sessions" 
-                                    value={analyticsData.sessions.totalSessions}
-                                    icon={Activity}
-                                    change={0}
-                                    changeLabel="vs. last period"
-                                />
-                                <MetricCard 
-                                    title="Average Session" 
-                                    value={`${analyticsData.sessions.averageSessionDuration.toFixed(1)}s`}
-                                    icon={Clock}
-                                />
-                                <MetricCard 
-                                    title="Bounce Rate" 
-                                    value={`${analyticsData.sessions.bounceRate}%`}
-                                    icon={Activity}
-                                    variant={analyticsData.sessions.bounceRate > 70 ? 'warning' : 'default'}
-                                />
-                                <MetricCard 
-                                    title="Total QR Scans" 
-                                    value={analyticsData.qrCodes.totalScans}
-                                    icon={QrCode}
-                                />
-                                <MetricCard 
-                                    title="Conversions" 
-                                    value={analyticsData.conversions.totalConversions}
-                                    icon={TagIcon}
-                                    change={0}
-                                    variant={analyticsData.conversions.totalConversions > 0 ? 'success' : 'default'}
-                                />
-                            </div>
-
-                            {/* Regular Analytics Grid */}
-                            <AnalyticsGrid section={currentSection} analyticsData={analyticsData} />
-                        </div>
-                    )}
-                    
-                    {currentSection !== 'overview' && (
-                        <AnalyticsGrid section={currentSection} analyticsData={analyticsData} />
-                    )}
+                    <AnalyticsGrid section={currentSection} analyticsData={analyticsData} />
                 </div>
             </div>
         </DashboardLayout>

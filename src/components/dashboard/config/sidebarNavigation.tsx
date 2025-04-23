@@ -1,6 +1,5 @@
-
 import {
-    BarChart2, HelpCircle, LinkIcon, QrCode, User, PieChart, Activity, Map, LineChart
+    BarChart2, HelpCircle, LinkIcon, QrCode, User
 } from "lucide-react";
 import React from "react";
 
@@ -38,8 +37,7 @@ export const navigationItems: NavItem[] = [
     {
         to: "/dashboard/analytics",
         icon: <BarChart2 className="mr-3 h-5 w-5"/>,
-        label: "Analytics",
-        isDropdown: true
+        label: "Analytics"
     },
     {
         to: "/dashboard/account",
