@@ -1,5 +1,4 @@
-
-import {marked} from "marked";
+import {marked, Tokens} from "marked";
 import DOMPurify from 'dompurify';
 
 /**
@@ -8,16 +7,9 @@ import DOMPurify from 'dompurify';
  */
 
 // Create a custom renderer to disable header IDs
-const renderer = new marked.Renderer();
-renderer.heading = function(text, level) {
-    // Custom heading renderer without generating IDs
-    return `<h${level}>${text}</h${level}>`;
-};
-
 marked.setOptions({
     gfm: true,
     breaks: true,
-    renderer: renderer  // Use the custom renderer
 });
 
 export function formatContent(content: string): string {
