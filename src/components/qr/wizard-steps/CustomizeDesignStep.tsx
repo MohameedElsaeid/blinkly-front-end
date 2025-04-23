@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,6 +35,15 @@ const frames = [
   { id: "scan-me", label: "Scan Me", premium: true },
 ];
 
+const isValidUrl = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 const CustomizeDesignStep: React.FC<CustomizeDesignStepProps> = ({
   formData,
   updateFormData,
@@ -46,16 +54,30 @@ const CustomizeDesignStep: React.FC<CustomizeDesignStepProps> = ({
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // Validate file size (5MB max)
       if (file.size > 5 * 1024 * 1024) {
         alert("Logo file must be less than 5MB");
         return;
       }
       
-      // Create object URL for preview
       const logoUrl = URL.createObjectURL(file);
       updateFormData({ logoUrl });
     }
+  };
+
+  const handleLogoUrlInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value.trim();
+    
+    if (!url) {
+      updateFormData({ logoUrl: "" });
+      return;
+    }
+    
+    let formattedUrl = url;
+    if (!url.startsWith('http')) {
+      formattedUrl = `https://${url}`;
+    }
+    
+    updateFormData({ logoUrl: formattedUrl });
   };
 
   return (
@@ -64,7 +86,6 @@ const CustomizeDesignStep: React.FC<CustomizeDesignStepProps> = ({
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-6">
-          {/* Patterns */}
           <div className="space-y-2">
             <Label>Patterns</Label>
             <div className="grid grid-cols-4 gap-2">
@@ -86,7 +107,6 @@ const CustomizeDesignStep: React.FC<CustomizeDesignStepProps> = ({
             </div>
           </div>
 
-          {/* Corners */}
           <div className="space-y-2">
             <Label>Corners</Label>
             <RadioGroup
@@ -120,7 +140,6 @@ const CustomizeDesignStep: React.FC<CustomizeDesignStepProps> = ({
             </RadioGroup>
           </div>
 
-          {/* Colors */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="color">Code Color</Label>
@@ -142,10 +161,18 @@ const CustomizeDesignStep: React.FC<CustomizeDesignStepProps> = ({
             </div>
           </div>
 
-          {/* Logo Upload */}
           <div className="space-y-2">
             <Label>Logo (Optional)</Label>
-            <div className="flex items-center">
+            <div className="flex flex-col gap-2">
+              <Input
+                placeholder="Enter logo URL (https://example.com/logo.png)"
+                value={formData.logoUrl || ""}
+                onChange={handleLogoUrlInput}
+                className="w-full"
+              />
+              <div className="text-xs text-muted-foreground">
+                Or upload a file:
+              </div>
               <label 
                 htmlFor="logoUpload" 
                 className="cursor-pointer flex items-center justify-center border border-dashed rounded-md p-3 w-full hover:bg-gray-50"
@@ -163,7 +190,7 @@ const CustomizeDesignStep: React.FC<CustomizeDesignStepProps> = ({
             </div>
             {formData.logoUrl && (
               <div className="flex items-center mt-2">
-                <img src={formData.logoUrl} className="h-8 w-8 object-contain mr-2" />
+                <img src={formData.logoUrl} className="h-8 w-8 object-contain mr-2" alt="Logo preview" />
                 <Button 
                   variant="outline" 
                   size="sm"
@@ -175,7 +202,6 @@ const CustomizeDesignStep: React.FC<CustomizeDesignStepProps> = ({
             )}
           </div>
 
-          {/* Frame */}
           <div className="space-y-2">
             <Label>Frame</Label>
             <RadioGroup
@@ -210,7 +236,6 @@ const CustomizeDesignStep: React.FC<CustomizeDesignStepProps> = ({
           </div>
         </div>
 
-        {/* QR Code Preview */}
         <div className="flex flex-col items-center space-y-4 bg-slate-50 rounded-xl p-6">
           <Label className="font-semibold">Live Preview</Label>
           <div className="bg-white rounded-lg p-4 shadow-inner" style={{ minHeight: 250, minWidth: 250 }}>

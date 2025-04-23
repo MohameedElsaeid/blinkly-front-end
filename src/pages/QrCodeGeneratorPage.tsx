@@ -38,9 +38,22 @@ export default function QrCodeGeneratorPage() {
   const createQrCodeMutation = useCreateQrCode();
 
   const handleSubmit = async (payload: QrCodeApiPayload) => {
-    lastPayloadRef.current = payload;
+    // Ensure we're submitting valid data
+    const validatedPayload = { ...payload };
+    
+    // Make sure URLs are properly formatted
+    if (validatedPayload.logoUrl && !validatedPayload.logoUrl.startsWith("http")) {
+      // Either fix the URL format by adding http:// prefix or remove it
+      if (validatedPayload.logoUrl.includes(".")) {
+        validatedPayload.logoUrl = `https://${validatedPayload.logoUrl}`;
+      } else {
+        delete validatedPayload.logoUrl;
+      }
+    }
+    
+    lastPayloadRef.current = validatedPayload;
 
-    createQrCodeMutation.mutate(payload, {
+    createQrCodeMutation.mutate(validatedPayload, {
       onSuccess: (response) => {
         setApiQrImageUrl(response.imageUrl);
         toast({
@@ -49,9 +62,14 @@ export default function QrCodeGeneratorPage() {
         });
       },
       onError: (error: any) => {
+        console.error("QR code generation error:", error);
+        const errorMessage = error?.response?.data?.message || 
+                            error?.message || 
+                            "Please check your settings and try again.";
+                            
         toast({
           title: "Failed to generate QR code",
-          description: error?.message || "Please check your settings and try again.",
+          description: Array.isArray(errorMessage) ? errorMessage.join(", ") : errorMessage,
           variant: "destructive",
         });
       }
