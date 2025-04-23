@@ -26,6 +26,7 @@ const DEFAULTS = {
   backgroundColor: "#FFFFFF",
 };
 
+// Define the expected API response type
 interface LinksResponse {
   links: QrLink[];
 }
