@@ -17,7 +17,6 @@ renderer.heading = function(text, level) {
 marked.setOptions({
     gfm: true,
     breaks: true,
-    smartLists: true,
     renderer: renderer  // Use the custom renderer
 });
 
