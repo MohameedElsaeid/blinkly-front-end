@@ -164,11 +164,11 @@ export interface AnalyticsResponse {
     avg_ctr_7d: {
         percentage: number;
     };
-    timeRange?: {
+    timeRange: {
         startDate: string;
         endDate: string;
     };
-    linkCreation?: {
+    linkCreation: {
         totalLinks: number;
         newLinksPerDay: Array<{
             date: string;
@@ -177,20 +177,20 @@ export interface AnalyticsResponse {
         deletedLinks: number;
         updatedLinks: number;
     };
-    sessions?: {
+    sessions: {
         totalSessions: number;
         averageSessionDuration: number;
         bounceRate: number;
         sessionsPerDay: any[];
     };
-    conversions?: {
+    conversions: {
         totalConversions: number;
         conversionRate: number;
         conversionsByType: Record<string, number>;
         conversionValue: number;
         conversionsPerDay: any[];
     };
-    campaigns?: {
+    campaigns: {
         bySources: Array<{
             source: string;
             clicks: number;
@@ -210,15 +210,15 @@ export interface AnalyticsResponse {
             value: number;
         }>;
     };
-    qrCodes?: {
+    qrCodes: {
         totalScans: number;
         scansByCode: any[];
         scansPerDay: any[];
     };
-    tags?: {
+    tags: {
         byTag: any[];
     };
-    retention?: {
+    retention: {
         dailyActiveUsers: number;
         monthlyActiveUsers: number;
         retentionByWeek: Array<{
@@ -226,7 +226,7 @@ export interface AnalyticsResponse {
             retentionRate: number;
         }>;
     };
-    errors?: {
+    errors: {
         totalErrors: number;
         errorsByType: Record<string, number>;
         averageResponseTime: number;
