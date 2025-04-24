@@ -2,18 +2,16 @@ import React, {useEffect, useState, useRef} from 'react';
 import {TrendingUp, TrendingDown, Link as LinkIcon, Globe, MousePointer, ArrowUp, ArrowDown} from 'lucide-react';
 import {Card} from "@/components/ui/card";
 import {useQuery} from '@tanstack/react-query';
-import httpClient from '@/lib/http-client';
 import {Skeleton} from '@/components/ui/skeleton';
 import {animate} from 'framer-motion';
+import analyticsClient from '@/lib/analytics/analytics-client';
+import { useDashboardAnalytics } from '@/hooks/use-dashboard-analytics';
 
 const MobileKpiCarousel = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Fetch data using React Query
-    const {data: dashboardData, isLoading} = useQuery({
-        queryKey: ['dashboardStats'],
-        queryFn: httpClient.getDashboardTotalClicks,
-    });
+    // Use the dashboard analytics hook
+    const { data: analyticsData, isLoading } = useDashboardAnalytics();
 
     // Demo KPI data - would be replaced with actual API data
     const kpis = [
@@ -21,7 +19,7 @@ const MobileKpiCarousel = () => {
             id: 'clicks-today',
             icon: <TrendingUp className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Clicks Today',
-            value: dashboardData?.totalClicks || 3482,
+            value: analyticsData?.clicks_today?.count || 3482,
             previousValue: 3312,
             change: '+5.1%',
             isPositive: true
@@ -30,7 +28,7 @@ const MobileKpiCarousel = () => {
             id: 'links-created',
             icon: <LinkIcon className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Links Created (24h)',
-            value: 218,
+            value: analyticsData?.links_24h?.count || 218,
             previousValue: 195,
             change: '+11.8%',
             isPositive: true
@@ -39,7 +37,7 @@ const MobileKpiCarousel = () => {
             id: 'unique-countries',
             icon: <Globe className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Unique Countries (24h)',
-            value: 45,
+            value: analyticsData?.unique_countries_24h?.count || 45,
             previousValue: 45,
             change: '0%',
             isPositive: true
@@ -48,7 +46,7 @@ const MobileKpiCarousel = () => {
             id: 'avg-ctr',
             icon: <MousePointer className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Avg. CTR (7d)',
-            value: 12.7,
+            value: analyticsData?.avg_ctr_7d?.percentage || 12.7,
             previousValue: 13.8,
             change: '-8.0%',
             isPositive: false

@@ -1,3 +1,4 @@
+
 import React, {useState} from 'react';
 import {useQuery} from "@tanstack/react-query";
 import {
@@ -9,17 +10,17 @@ import {
     TableCell,
 } from "@/components/ui/table";
 import {Skeleton} from "@/components/ui/skeleton";
-import {GeoDistributionResponse} from "@/types/analytics";
+import {GeoDistributionResponse} from '@/types/analytics';
 import {formatDate} from "@/utils/date-utils";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import httpClient from "@/lib/http-client";
+import analyticsClient from '@/lib/analytics/analytics-client';
 
 const GeoHeatmap = () => {
     const [activeTab, setActiveTab] = useState<"countries" | "cities">("countries");
 
     const {data, isLoading} = useQuery<GeoDistributionResponse>({
         queryKey: ['geoDistribution'],
-        queryFn: () => httpClient.getGeoDistribution(),
+        queryFn: () => analyticsClient.getGeoDistribution(),
     });
 
     const getTopLocations = (type: "countries" | "cities") => {

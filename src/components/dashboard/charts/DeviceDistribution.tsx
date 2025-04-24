@@ -1,10 +1,11 @@
+
 import React from 'react';
 import {Card, CardHeader, CardTitle, CardContent} from "@/components/ui/card";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Skeleton} from "@/components/ui/skeleton";
 import {useQuery} from "@tanstack/react-query";
 import {Smartphone, Laptop, Chrome, Apple} from "lucide-react";
-import httpClient from '@/lib/http-client';
+import analyticsClient from '@/lib/analytics/analytics-client';
 import {DeviceDistributionResponse} from '@/types/analytics';
 import PieChartDisplay from './PieChartDisplay';
 import {formatDate} from '@/utils/date-utils';
@@ -14,7 +15,7 @@ const COLORS = ['#0fa0ce', '#9b87f5', '#f1c40f', '#e74c3c', '#2ecc71'];
 const DeviceDistribution = () => {
     const {data, isLoading} = useQuery<DeviceDistributionResponse>({
         queryKey: ['deviceDistribution'],
-        queryFn: httpClient.getDeviceDistribution,
+        queryFn: () => analyticsClient.getDeviceDistribution(),
     });
 
     const getPieChartData = (distribution: Record<string, number> = {}) => {

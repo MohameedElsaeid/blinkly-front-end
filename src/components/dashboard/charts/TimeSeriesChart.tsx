@@ -10,7 +10,7 @@ import {DateRange} from "react-day-picker";
 import {ChartContainer} from "@/components/ui/chart";
 import {Skeleton} from "@/components/ui/skeleton";
 import {useQuery} from "@tanstack/react-query";
-import httpClient from "@/lib/http-client";
+import analyticsClient from "@/lib/analytics/analytics-client";
 import {LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip} from 'recharts';
 import {useIsMobile} from "@/hooks/use-mobile";
 import {ClickPerformanceResponse} from "@/types/analytics";
@@ -26,7 +26,7 @@ const TimeSeriesChart = () => {
     const {data, isLoading} = useQuery({
         queryKey: ['clickPerformance', dateRange, metric],
         queryFn: () => {
-            return httpClient.getClickPerformance({
+            return analyticsClient.getClickPerformance({
                 start_date: dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
                 end_date: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
                 metric,
@@ -166,7 +166,6 @@ const TimeSeriesChart = () => {
     );
 };
 
-// Date Range Picker Component
 interface DateRangePickerProps {
     dateRange: DateRange | undefined;
     onChange: (range: DateRange | undefined) => void;

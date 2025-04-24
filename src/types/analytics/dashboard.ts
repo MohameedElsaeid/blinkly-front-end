@@ -1,4 +1,6 @@
 
+import { BasicAnalyticsData } from './performance';
+
 export interface DashboardAnalyticsResponse {
     timeRange: {
         startDate: string;

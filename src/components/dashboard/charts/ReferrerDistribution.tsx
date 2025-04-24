@@ -1,3 +1,4 @@
+
 import React, {useState} from 'react';
 import {Card, CardHeader, CardTitle, CardContent} from "@/components/ui/card";
 import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
@@ -13,8 +14,8 @@ import {
     PaginationPrevious
 } from "@/components/ui/pagination";
 import {ArrowDown, ArrowUp} from "lucide-react";
-import httpClient from "@/lib/http-client";
-import type {ReferrerData} from "@/types/analytics";
+import analyticsClient from "@/lib/analytics/analytics-client";
+import {ReferrerData} from "@/types/analytics";
 
 const ReferrerDistribution = () => {
     const [page, setPage] = useState(1);
@@ -23,7 +24,7 @@ const ReferrerDistribution = () => {
 
     const {data, isLoading} = useQuery({
         queryKey: ['referrerData', page, sortBy],
-        queryFn: () => httpClient.getTopReferrers({page, limit, sort_by: sortBy}),
+        queryFn: () => analyticsClient.getTopReferrers({page, limit, sort_by: sortBy}),
     });
 
     const formatValue = (value: number, type: 'percentage' | 'duration' | 'currency' | 'number') => {

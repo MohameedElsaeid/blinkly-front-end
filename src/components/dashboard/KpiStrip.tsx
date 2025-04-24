@@ -21,31 +21,31 @@ const KpiStrip = () => {
             id: 'clicks-today',
             icon: <TrendingUp className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Clicks Today',
-            value: analyticsData.clicks_today.count,
-            change: `${analyticsData.clicks_today.change_percentage}%`,
-            isPositive: analyticsData.clicks_today.change_percentage >= 0
+            value: analyticsData.clicks_today?.count || 0,
+            change: `${analyticsData.clicks_today?.change_percentage || 0}%`,
+            isPositive: (analyticsData.clicks_today?.change_percentage || 0) >= 0
         },
         {
             id: 'links-created',
             icon: <LinkIcon className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Links Created (24h)',
-            value: analyticsData.links_24h.count,
-            change: `${analyticsData.links_24h.change_percentage}%`,
-            isPositive: analyticsData.links_24h.change_percentage >= 0
+            value: analyticsData.links_24h?.count || 0,
+            change: `${analyticsData.links_24h?.change_percentage || 0}%`,
+            isPositive: (analyticsData.links_24h?.change_percentage || 0) >= 0
         },
         {
             id: 'unique-countries',
             icon: <Globe className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Unique Countries (24h)',
-            value: analyticsData.unique_countries_24h.count,
-            change: `${analyticsData.unique_countries_24h.change_percentage}%`,
-            isPositive: analyticsData.unique_countries_24h.change_percentage >= 0
+            value: analyticsData.unique_countries_24h?.count || 0,
+            change: `${analyticsData.unique_countries_24h?.change_percentage || 0}%`,
+            isPositive: (analyticsData.unique_countries_24h?.change_percentage || 0) >= 0
         },
         {
             id: 'avg-ctr',
             icon: <MousePointer className="h-5 w-5 text-blinkly-blue"/>,
             label: 'Avg. CTR (7d)',
-            value: analyticsData.avg_ctr_7d.percentage,
+            value: analyticsData.avg_ctr_7d?.percentage || 0,
             change: 'N/A',
             isPositive: true
         },
