@@ -1,106 +1,12 @@
+
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import BaseHttpClient from './base-http-client';
-import {LinkDetails, LinksResponse, TopLinksResponse as LinkTopLinksResponse} from '@/types/link';
-import {
-    ClickPerformanceResponse,
-    DashboardAnalyticsResponse,
-    DeviceDistributionResponse,
-    GeoDistributionResponse,
-    ReferrerResponse
-} from '@/types/analytics';
+import {LinkDetails, LinksResponse, TopLinksResponse} from '@/types/link';
 import {UserProfile, UpdateUserProfileRequest} from '@/types/user';
 
 // Get the singleton instance of BaseHttpClient
 const baseClient = BaseHttpClient.getInstance();
-
-// Use the axios instance from BaseHttpClient
 const axiosInstance = baseClient.getAxiosInstance();
-
-// Type definitions for our API responses
-export interface AnalyticsResponse {
-    clicks_today: {
-        count: number;
-        change_percentage: number;
-    };
-    links_24h: {
-        count: number;
-        change_percentage: number;
-    };
-    unique_countries_24h: {
-        count: number;
-        change_percentage: number;
-    };
-    avg_ctr_7d: {
-        percentage: number;
-    };
-    timeRange: {
-        startDate: string;
-        endDate: string;
-    };
-    linkCreation: {
-        totalLinks: number;
-        newLinksPerDay: Array<{
-            date: string;
-            count: number;
-        }>;
-        deletedLinks: number;
-        updatedLinks: number;
-    };
-    sessions: {
-        totalSessions: number;
-        averageSessionDuration: number;
-        bounceRate: number;
-        sessionsPerDay: any[];
-    };
-    conversions: {
-        totalConversions: number;
-        conversionRate: number;
-        conversionsByType: Record<string, number>;
-        conversionValue: number;
-        conversionsPerDay: any[];
-    };
-    campaigns: {
-        bySources: Array<{
-            source: string;
-            clicks: number;
-            conversions: number;
-            value: number;
-        }>;
-        byMediums: Array<{
-            medium: string;
-            clicks: number;
-            conversions: number;
-            value: number;
-        }>;
-        byCampaigns: Array<{
-            campaign: string;
-            clicks: number;
-            conversions: number;
-            value: number;
-        }>;
-    };
-    qrCodes: {
-        totalScans: number;
-        scansByCode: any[];
-        scansPerDay: any[];
-    };
-    tags: {
-        byTag: any[];
-    };
-    retention: {
-        dailyActiveUsers: number;
-        monthlyActiveUsers: number;
-        retentionByWeek: Array<{
-            week: string;
-            retentionRate: number;
-        }>;
-    };
-    errors: {
-        totalErrors: number;
-        errorsByType: Record<string, number>;
-        averageResponseTime: number;
-    };
-}
 
 export interface Package {
     id: string;
@@ -116,46 +22,8 @@ export interface PackagesResponse {
     yearly: Package[];
 }
 
-export interface TotalClicksResponse {
-    totalClicks: number;
-    trend: number;
-    periodStart: string;
-    periodEnd: string;
-}
-
-export interface TopLink {
-    id: string;
-    alias: string;
-    originalUrl: string;
-    clickCount: number;
-}
-
-export interface TopLinksResponse {
-    links: TopLink[];
-}
-
-export interface Tip {
-    title: string;
-    description: string;
-}
-
-export interface TipsResponse {
-    tips: Tip[];
-}
-
-export interface TricksResponse {
-    tricks: string[];
-}
-
-interface GetClickPerformanceParams {
-    start_date?: string;
-    end_date?: string;
-    metric?: 'clicks' | 'visitors';
-}
-
-// API client with typed methods
 const httpClient = {
-    // Generic GET method with type safety
+    // Generic methods
     get: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
         return axiosInstance.get<T, AxiosResponse<T>>(url, config)
             .then(response => response.data);
@@ -181,34 +49,6 @@ const httpClient = {
         return httpClient.get<PackagesResponse>('/packages');
     },
 
-    // Dashboard specific API methods
-    getDashboardTotalClicks: (): Promise<TotalClicksResponse> => {
-        return httpClient.get<TotalClicksResponse>('/dashboard/total-clicks');
-    },
-
-    getDashboardTopLinks: (): Promise<TopLinksResponse> => {
-        return httpClient.get<TopLinksResponse>('/dashboard/top-links');
-    },
-
-    getDashboardTips: (): Promise<TipsResponse> => {
-        return httpClient.get<TipsResponse>('/dashboard/tips');
-    },
-
-    getDashboardTricks: (): Promise<TricksResponse> => {
-        return httpClient.get<TricksResponse>('/dashboard/tricks');
-    },
-
-    getDashboardAnalytics: (days?: number): Promise<AnalyticsResponse> => {
-        return httpClient.get<AnalyticsResponse>('/dashboard/analytics', {
-            params: { days }
-        });
-    },
-
-    // Method to update the auth token across all HTTP clients
-    updateToken: (token: string): void => {
-        baseClient.updateToken(token);
-    },
-
     // Links specific API methods
     getLinks: (page: number = 1, limit: number = 10): Promise<LinksResponse> => {
         return httpClient.get<LinksResponse>(`/api/links?page=${page}&limit=${limit}`);
@@ -218,39 +58,11 @@ const httpClient = {
         return httpClient.get<LinkDetails>(`/api/links/${id}`);
     },
 
-    // Add the getTopLinks method
-    getTopLinks: (): Promise<LinkTopLinksResponse> => {
-        return httpClient.get<LinkTopLinksResponse>('/dashboard/top-links');
+    getTopLinks: (): Promise<TopLinksResponse> => {
+        return httpClient.get<TopLinksResponse>('/dashboard/top-links');
     },
 
-    getDeviceDistribution: (): Promise<DeviceDistributionResponse> => {
-        return httpClient.get<DeviceDistributionResponse>('/dashboard/device-distribution');
-    },
-
-    getGeoDistribution: (): Promise<GeoDistributionResponse> => {
-        return httpClient.get<GeoDistributionResponse>('/dashboard/geographic-distribution');
-    },
-
-    // Add the getDeviceDistribution method
-    // getDeviceDistribution: (): Promise<DeviceDistributionResponse> => {
-    //     return httpClient.get<DeviceDistributionResponse>('/dashboard/device-distribution');
-    // },
-
-    getTopReferrers: (params?: {
-        start_date?: string;
-        end_date?: string;
-        limit?: number;
-        page?: number;
-        sort_by?: 'revenue' | 'visits' | 'conversion_rate';
-    }): Promise<ReferrerResponse> => {
-        return httpClient.get<ReferrerResponse>('/dashboard/top-referrers', {params});
-    },
-
-    getClickPerformance: (params?: GetClickPerformanceParams): Promise<ClickPerformanceResponse> => {
-        return httpClient.get<ClickPerformanceResponse>('/dashboard/click-performance', {params});
-    },
-
-    // Add dynamic links API endpoints
+    // Dynamic links API endpoints
     createDynamicLink: (data: any) => {
         return httpClient.post('/api/dynamic-links', data);
     },
@@ -278,6 +90,11 @@ const httpClient = {
 
     updateUserProfile: (data: UpdateUserProfileRequest): Promise<UserProfile> => {
         return httpClient.put<UserProfile>('/users/profile', data);
+    },
+
+    // Token management
+    updateToken: (token: string): void => {
+        baseClient.updateToken(token);
     },
 };
 
